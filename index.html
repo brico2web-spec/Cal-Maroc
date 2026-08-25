@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="مناسبات المغرب: الأعياد الوطنية والدينية والعطل الوظيفية والمدرسية." />
+  <meta name="theme-color" content="#0b6b4b" />
+  <title>مناسبات المغرب</title>
+  <link rel="icon" href="assets/site/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">✦</div><div><span>التقويم المغربي</span><h1>مناسبات المغرب</h1></div></div>
+      <button id="notifyTop" class="icon-btn" aria-label="تفعيل التنبيهات">♧</button>
+    </header>
+    <section class="time-strip" aria-label="الوقت والتاريخ الحاليان">
+      <div class="time-main"><span class="live-dot"></span><span id="liveTime">--:--:--</span><small>بتوقيت المغرب</small></div>
+      <div class="time-date"><span id="liveDate">جاري تحميل التاريخ...</span><span class="sync-status">● متزامن مع ساعة الجهاز</span></div>
+    </section>
+    <main>
+      <section class="hero-grid">
+        <div class="intro"><p class="kicker">كل مواعيدك المهمة في مكان واحد</p><h2>خطط لعطلتك القادمة<br /><em>بوضوح وراحة.</em></h2><p class="intro-copy">تعرّف على الأعياد الوطنية والدينية، العطل الوظيفية، والفترات المدرسية بالمغرب مع عدد الأيام المتبقية.</p><div class="quick-actions"><button id="enableBtn" class="primary-btn">تفعيل التنبيهات <span>←</span></button><a href="#calendar" class="text-link">استكشف التقويم</a></div></div>
+        <div id="nextHoliday" class="next-card"></div>
+      </section>
+      <section class="stats" id="stats"></section>
+      <section id="calendar" class="calendar-section"><div class="section-heading"><div><p class="kicker">نظرة شاملة</p><h2>التقويم القادم</h2></div><div class="filters" id="filters"></div></div><div id="holidayGrid" class="holiday-grid"></div></section>
+    </main>
+    <footer><span>مناسبات المغرب</span><span>تُحدّث التواريخ الدينية وفق الإعلان الرسمي ورؤية الهلال.</span></footer>
+    <nav class="calendar-switch" aria-label="اختيار نوع التقويم"><span class="switch-label">عرض التاريخ حسب:</span><button class="calendar-btn active" data-calendar="gregorian">التقويم الميلادي</button><button class="calendar-btn" data-calendar="hijri">التقويم الهجري</button></nav>
+  </div>
+  <dialog id="detailDialog"><button class="dialog-close" id="closeDialog">×</button><div id="detailContent"></div></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
