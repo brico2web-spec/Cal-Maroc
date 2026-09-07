@@ -3,214 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed TOUR - Groupe Bahia | Location de Voitures</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Ahmed TOUR | تأجير السيارات - Groupe Bahia</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #dc2626;
+            --red-dark: #b91c1c;
+            --red-light: #fca5a5;
+            --dark: #0a0a0a;
+            --gray-900: #111827;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-400: #9ca3af;
+            --white: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 50%, #000 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: white; }
+        .brand img { height: 3rem; width: auto; border-radius: 0.5rem; border: 1px solid rgba(220,38,38,0.5); }
+        .brand h1 { font-size: 1.25rem; font-weight: 900; }
+        .admin-link {
+            background: rgba(220,38,38,0.2); color: var(--red-light);
+            padding: 0.5rem 1rem; border-radius: 0.75rem; text-decoration: none;
+            font-weight: 700; border: 1px solid rgba(220,38,38,0.3); transition: 0.3s;
+        }
+        .admin-link:hover { background: var(--red); color: white; }
+        
+        .hero {
+            text-align: center; padding: 4rem 2rem 2rem;
+            max-width: 800px; margin: 0 auto;
+        }
+        .hero h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; color: #fff; }
+        .hero p { color: var(--gray-400); font-size: 1.1rem; line-height: 1.6; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .section-title { font-size: 1.75rem; font-weight: 900; margin-bottom: 2rem; border-right: 4px solid var(--red); padding-right: 0.75rem; }
+        
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .car-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            padding: 1rem;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .car-card:hover { transform: translateY(-5px); border-color: rgba(220,38,38,0.5); }
+        .car-card img {
+            width: 100%; height: 180px; object-fit: cover;
+            border-radius: 0.75rem;
+        }
+        .car-badge {
+            display: inline-block;
+            background: rgba(220,38,38,0.2); color: var(--red-light);
+            padding: 0.25rem 0.75rem; border-radius: 9999px;
+            font-size: 0.8rem; font-weight: bold; margin-top: 1rem;
+        }
+        .car-title { font-size: 1.25rem; font-weight: bold; margin: 0.5rem 0; color: #fff; }
+        .car-price { font-size: 1.1rem; font-weight: 900; color: var(--red-light); margin-bottom: 1rem; }
+        .btn-book {
+            display: block; text-align: center; background: var(--red);
+            color: white; padding: 0.75rem; border-radius: 0.75rem;
+            text-decoration: none; font-weight: bold; transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(220,38,38,0.3);
+        }
+        .btn-book:hover { background: var(--red-dark); }
+
+        footer {
+            background: rgba(0,0,0,0.9); border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center;
+            color: var(--gray-400); font-size: 0.9rem;
+        }
+        .footer-info { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .footer-info div { display: flex; align-items: center; gap: 0.5rem; }
+    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-brand">
-            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Groupe Bahia Logo" class="logo-img">
+
+    <header>
+        <a href="index.html" class="brand">
+            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
             <div>
-                <h1><span class="text-red">Groupe</span> Bahia</h1>
-                <p class="subtitle">AHMED TOUR - Location de Voitures</p>
+                <h1>Ahmed TOUR</h1>
+                <small style="color: var(--gray-400); font-size: 0.75rem;">Groupe Bahia</small>
             </div>
-        </div>
-        <div class="nav-links">
-            <a href="#accueil">الرئيسية</a>
-            <a href="#vehicules">المركبات</a>
-            <a href="#tarifs">الأسعار</a>
-            <a href="#contact">اتصل بنا</a>
-        </div>
-        <div class="nav-actions">
-            <a href="admin.html" class="btn-admin">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                لوحة الإدارة
-            </a>
-            <a href="tel:0661170182" class="btn-primary">احجز الآن</a>
-        </div>
-    </nav>
+        </a>
+        <a href="admin.html" class="admin-link">⚙️ لوحة الإدارة</a>
+    </header>
 
-    <!-- Hero -->
-    <section id="accueil" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <div class="hero-logo-wrap">
-                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" class="hero-logo">
-            </div>
-            <span class="badge">🚗 Location de Voitures - Kénitra</span>
-            <h2>أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
-            <p id="hero-desc">أفضل أسعار تأجير السيارات في كénitra. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
-            <div class="hero-buttons">
-                <button onclick="scrollToSection('vehicules')" class="btn-primary btn-large">استكشف المركبات</button>
-                <button onclick="scrollToSection('contact')" class="btn-outline btn-large">تواصل معنا</button>
-            </div>
-        </div>
+    <section class="hero">
+        <h2>استأجر سيارتك المفضلة بكل سهولة</h2>
+        <p id="display-desc">نقدم لك أسطولاً متنوعاً من أفضل السيارات لتلبية جميع احتياجات تنقلك وبأفضل الأسعار في السوق.</p>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-        <div class="container grid-3">
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3>أفضل الأسعار</h3>
-                <p>أسعار تنافسية وشفافة بدون رسوم خفية</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚗</div>
-                <h3>أسطول حديث</h3>
-                <p>سيارات جديدة ومجهزة بأحدث التقنيات</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⏰</div>
-                <h3>خدمة 24/7</h3>
-                <p>متاحون على مدار الساعة لخدمتكم</p>
-            </div>
+    <main class="container">
+        <h3 class="section-title">🚗 أسطول السيارات المتاحة</h3>
+        <div id="cars-container" class="cars-grid">
+            <!-- سيتم تحميل السيارات تلقائياً هنا من لوحة الإدارة -->
         </div>
-    </section>
+    </main>
 
-    <!-- Vehicles -->
-    <section id="vehicules" class="vehicles">
-        <div class="container">
-            <div class="section-header">
-                <h2>أسطول المركبات</h2>
-                <p>اختر السيارة المناسبة لاحتياجاتك</p>
-            </div>
-            <div class="grid-3" id="cars-grid"></div>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="tarifs" class="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2>أسعار التأجير</h2>
-                <p>أسعار تبدأ من 250 درهم/يوم</p>
-            </div>
-            <div class="grid-3">
-                <div class="pricing-card">
-                    <h3>اقتصادية</h3>
-                    <div class="price">250 <span>درهم/يوم</span></div>
-                    <ul>
-                        <li>✓ تأمين شامل</li>
-                        <li>✓ مسافة غير محدودة</li>
-                        <li>✓ خدمة التوصيل</li>
-                        <li>✓ دعم على مدار الساعة</li>
-                    </ul>
-                    <button onclick="openReserve('اقتصادية')" class="btn-secondary">احجز الآن</button>
-                </div>
-                <div class="pricing-card featured">
-                    <div class="badge-popular">الأكثر طلباً</div>
-                    <h3>عائلية</h3>
-                    <div class="price">450 <span>درهم/يوم</span></div>
-                    <ul>
-                        <li>✓ تأمين شامل</li>
-                        <li>✓ مسافة غير محدودة</li>
-                        <li>✓ خدمة التوصيل المجاني</li>
-                        <li>✓ مقعد أطفال مجاني</li>
-                        <li>✓ دعم على مدار الساعة</li>
-                    </ul>
-                    <button onclick="openReserve('عائلية')" class="btn-primary">احجز الآن</button>
-                </div>
-                <div class="pricing-card">
-                    <h3>فاخرة</h3>
-                    <div class="price">800 <span>درهم/يوم</span></div>
-                    <ul>
-                        <li>✓ تأمين شامل</li>
-                        <li>✓ مسافة غير محدودة</li>
-                        <li>✓ سائق خاص (اختياري)</li>
-                        <li>✓ دعم VIP</li>
-                    </ul>
-                    <button onclick="openReserve('فاخرة')" class="btn-secondary">احجز الآن</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2>اتصل بنا</h2>
-                <p>نحن هنا لمساعدتك في أي وقت</p>
-            </div>
-            <div class="grid-2">
-                <div class="contact-info">
-                    <h3>معلومات التواصل</h3>
-                    <div class="info-item">
-                        <span class="icon">📱</span>
-                        <div><small>الهاتف</small><strong id="info-phone">06 61 17 01 82</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">☎️</span>
-                        <div><small>الهاتف الثابت</small><strong id="info-phone2">05 37 37 88 89</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">✉️</span>
-                        <div><small>البريد الإلكتروني</small><strong id="info-email">ahmadi2011@live.fr</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">📍</span>
-                        <div><small>العنوان</small><strong id="info-address">زاوية شارع الإمام علي وشارع ياريك زياد - كénitra</strong></div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <h3>أرسل رسالة</h3>
-                    <form onsubmit="handleSubmit(event)">
-                        <input type="text" placeholder="الاسم الكامل" required>
-                        <input type="tel" placeholder="رقم الهاتف" required>
-                        <textarea placeholder="رسالتك..." rows="4" required></textarea>
-                        <button type="submit" class="btn-primary">إرسال</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer>
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" class="footer-logo">
-                <div>
-                    <p><span class="text-red">Groupe</span> Bahia - Ahmed TOUR</p>
-                    <small>Location de Voitures - Kénitra</small>
-                </div>
-            </div>
-            <div class="footer-links">
-                <a href="admin.html" class="admin-link">
-                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                    لوحة الإدارة
-                </a>
-                <p class="copyright">© 2026 جميع الحقوق محفوظة</p>
-            </div>
+        <div class="footer-info">
+            <div>📞 هاتف: <span id="display-phone">---</span></div>
+            <div>☎️ ثابت: <span id="display-phone2">---</span></div>
+            <div>📧 إيميل: <span id="display-email">---</span></div>
+            <div>📍 العنوان: <span id="display-address">---</span></div>
         </div>
+        <p>&copy; 2026 Ahmed TOUR - Groupe Bahia. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <!-- Modal -->
-    <div id="reserve-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>حجز سيارة</h3>
-                <button onclick="closeModal()" class="close-btn">&times;</button>
-            </div>
-            <form onsubmit="handleReserve(event)">
-                <input type="text" id="car-type" readonly>
-                <input type="text" placeholder="الاسم الكامل" required>
-                <input type="tel" placeholder="رقم الهاتف" required>
-                <div class="grid-2">
-                    <input type="date" required>
-                    <input type="date" required>
-                </div>
-                <button type="submit" class="btn-primary">تأكيد الحجز</button>
-            </form>
-        </div>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحميل معلومات الشركة من لوحة الإدارة وتحديثها في الصفحة
+            const siteData = JSON.parse(localStorage.getItem('siteData'));
+            if (siteData) {
+                if(document.getElementById('display-phone')) document.getElementById('display-phone').textContent = siteData.phone || '---';
+                if(document.getElementById('display-phone2')) document.getElementById('display-phone2').textContent = siteData.phone2 || '---';
+                if(document.getElementById('display-email')) document.getElementById('display-email').textContent = siteData.email || '---';
+                if(document.getElementById('display-address')) document.getElementById('display-address').textContent = siteData.address || '---';
+                if(document.getElementById('display-desc')) document.getElementById('display-desc').textContent = siteData.description || '';
+            }
 
-    <!-- Toast -->
-    <div id="toast" class="toast">تم إرسال طلبك بنجاح!</div>
-
-    <script src="script.js"></script>
+            // 2. تحميل وعرض السيارات المضافة من لوحة الإدارة
+            const carsContainer = document.getElementById('cars-container');
+            const cars = JSON.parse(localStorage.getItem('carsData')) || [];
+            
+            if (carsContainer) {
+                if (cars.length === 0) {
+                    carsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 3rem; color: #9ca3af; font-size: 1.1rem;">لا توجد سيارات متاحة حالياً، يرجى إضافتها من لوحة الإدارة.</p>';
+                } else {
+                    carsContainer.innerHTML = cars.map(car => `
+                        <div class="car-card">
+                            <img src="${car.img}" alt="${car.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Car'">
+                            <span class="car-badge">${car.type}</span>
+                            <h3 class="car-title">${car.name}</h3>
+                            <p class="car-price">${car.price}</p>
+                            <a href="https://wa.me/212600000000?text=${encodeURIComponent('السلام عليكم، مهتم بحجز سيارة ' + car.name)}" target="_blank" class="btn-book">احجز عبر واتساب</a>
+                        </div>
+                    `).join('');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
