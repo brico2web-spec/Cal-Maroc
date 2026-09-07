@@ -165,7 +165,7 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// 📦 السيارات الافتراضية (تظهر دائماً)
+// 📦 السيارات الافتراضية
 // ============================================================
 const DEFAULT_CARS = [
     {
@@ -257,7 +257,7 @@ let siteData = {
 };
 
 // ============================================================
-// 🌐 جلب البيانات من السحابة مع إنشاء البيانات إذا كانت فارغة
+// 🌐 جلب البيانات من السحابة
 // ============================================================
 let carsData = [];
 let isCloudDataLoaded = false;
@@ -278,32 +278,34 @@ async function fetchCarsFromCloud() {
         const data = await response.json();
         const record = data.record;
         
-        // التحقق من وجود بيانات
         if (record && record.cars && Array.isArray(record.cars) && record.cars.length > 0) {
             carsData = record.cars;
             isCloudDataLoaded = true;
             console.log('✅ تم جلب البيانات من السحابة:', carsData.length, 'سيارة');
             return true;
         } else {
-            // إذا كانت البيانات فارغة، نرسل البيانات الافتراضية إلى السحابة
-            console.log('📦 البيانات في السحابة فارغة، جاري إرسال البيانات الافتراضية...');
-            await sendDefaultDataToCloud();
+            console.log('📦 البيانات في السحابة فارغة، استخدام البيانات الافتراضية');
+            carsData = DEFAULT_CARS;
+            isCloudDataLoaded = true;
+            // محاولة إرسال البيانات الافتراضية إلى السحابة
+            try {
+                await sendDefaultDataToCloud();
+            } catch (e) {}
             return true;
         }
     } catch (error) {
         console.warn('⚠️ تعذر جلب البيانات من السحابة:', error.message);
+        carsData = DEFAULT_CARS;
         return false;
     }
 }
 
-// دالة لإرسال البيانات الافتراضية إلى السحابة
 async function sendDefaultDataToCloud() {
     try {
         const payload = {
             cars: DEFAULT_CARS,
             site: siteData
         };
-        
         const response = await fetch(JSONBIN_URL, {
             method: 'PUT',
             headers: {
@@ -312,27 +314,33 @@ async function sendDefaultDataToCloud() {
             },
             body: JSON.stringify(payload)
         });
-        
         if (response.ok) {
-            carsData = DEFAULT_CARS;
-            isCloudDataLoaded = true;
-            console.log('✅ تم إرسال البيانات الافتراضية إلى السحابة بنجاح!');
+            console.log('✅ تم إرسال البيانات الافتراضية إلى السحابة');
             return true;
-        } else {
-            throw new Error('فشل في حفظ البيانات');
         }
-    } catch (error) {
-        console.warn('⚠️ تعذر حفظ البيانات في السحابة:', error.message);
-        return false;
+    } catch (e) {}
+    return false;
+}
+
+// ============================================================
+// 🔥 دالة تحديث البيانات من الإدارة
+// ============================================================
+function updateCarsData(newData) {
+    if (newData && Array.isArray(newData) && newData.length > 0) {
+        carsData = newData;
+        isCloudDataLoaded = true;
+        console.log('🔄 تم تحديث البيانات من الإدارة:', carsData.length, 'سيارة');
+        renderCars();
+        renderPricing();
+        return true;
     }
+    return false;
 }
 
 function getCars() {
-    // إذا كانت البيانات من السحابة محملة، نستخدمها
     if (isCloudDataLoaded && carsData && carsData.length > 0) {
         return carsData;
     }
-    // وإلا نستخدم البيانات الافتراضية
     return DEFAULT_CARS;
 }
 
@@ -578,7 +586,7 @@ function showToast(msg) {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3500);
+    setTimeout(() => toast.classList.remove('show'), 4000);
 }
 
 function scrollToSection(id) {
@@ -593,7 +601,7 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 });
 
 // ============================================================
-// 🚀 INIT - جلب البيانات من السحابة
+// 🚀 INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
     // عرض البيانات الافتراضية فوراً
@@ -603,15 +611,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadSiteInfo();
     switchLanguage('ar');
     
-    // محاولة جلب البيانات من السحابة في الخلفية
+    // محاولة جلب البيانات من السحابة
     const success = await fetchCarsFromCloud();
     if (success && isCloudDataLoaded) {
-        // تحديث الصفحة بالبيانات الجديدة
         renderCars();
         renderPricing();
         showToast('✅ تم تحديث البيانات بنجاح!');
-    } else {
-        console.log('✅ يتم عرض البيانات الافتراضية');
     }
 });
 
@@ -623,3 +628,5 @@ window.loadSiteInfo = loadSiteInfo;
 window.carsData = carsData;
 window.siteData = siteData;
 window.DEFAULT_CARS = DEFAULT_CARS;
+window.updateCarsData = updateCarsData;
+window.showToast = showToast;
