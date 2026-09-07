@@ -119,7 +119,6 @@ function closeCarModal() {
     document.getElementById('car-modal').classList.remove('active');
 }
 
-// Handle Image File Upload (JPG / PNG)
 function handleImageUpload(e) {
     const file = e.target.files[0];
     if (file) {
