@@ -89,27 +89,121 @@ function renderCarsTable() {
     const cars = getCars();
 
     if (cars.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-500);padding:2rem;">لا توجد سيارات مضافة بعد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:2rem;">لا توجد سيارات مضافة بعد</td></tr>';
         return;
     }
 
-    tbody.innerHTML = cars.map(car => `
-        <tr>
-            <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2250%22%3E%3Crect fill=%22%23111827%22 width=%2280%22 height=%2250%22/%3E%3Ctext x=%2240%22 y=%2225%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2212%22 font-family=%22sans-serif%22%3E🚗%3C/text%3E%3C/svg%3E'"></td>
-            <td><strong>${car.name}</strong></td>
-            <td><span style="background:rgba(225,29,72,0.15);color:var(--primary-light);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
-            <td>${car.price}</td>
-            <td>
-                <button onclick="editCar(${car.id})" class="btn-edit">✏️ تعديل</button>
-                <button onclick="deleteCar(${car.id})" class="btn-delete">🗑️ حذف</button>
-            </td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = cars.map(car => {
+        const statusText = car.status === 'available' ? '✅ متاحة' : '🔴 محجوزة';
+        const statusClass = car.status === 'available' ? 'available' : 'reserved';
+
+        let periodsHtml = '';
+        if (car.periods && car.periods.length > 0) {
+            periodsHtml = car.periods.map(p =>
+                `<span class="period-entry">${p.days}j: ${p.price}DH</span>`
+            ).join(' ');
+        } else {
+            periodsHtml = 'لا توجد فترات';
+        }
+
+        return `
+            <tr>
+                <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2250%22%3E%3Crect fill=%22%23111827%22 width=%2280%22 height=%2250%22/%3E%3Ctext x=%2240%22 y=%2225%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2212%22 font-family=%22sans-serif%22%3E🚗%3C/text%3E%3C/svg%3E'"></td>
+                <td><strong>${car.name}</strong></td>
+                <td><span style="background:rgba(225,29,72,0.15);color:var(--primary-light);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td class="periods-cell">${periodsHtml}</td>
+                <td>
+                    <button onclick="editCar(${car.id})" class="btn-edit">✏️ تعديل</button>
+                    <button onclick="deleteCar(${car.id})" class="btn-delete">🗑️ حذف</button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 let editingCarId = null;
 let uploadedImageData = null;
+let periodsData = [];
 
+// ===== PERIOD MANAGEMENT =====
+function addPeriod(days = '', price = '') {
+    const container = document.getElementById('periods-container');
+    const index = container.children.length;
+
+    const div = document.createElement('div');
+    div.className = 'period-item';
+    div.innerHTML = `
+        <div>
+            <span class="period-label">عدد الأيام</span>
+            <input type="number" class="period-days" placeholder="مثال: 3" value="${days}" min="1" required>
+        </div>
+        <div>
+            <span class="period-label">السعر (DH)</span>
+            <input type="number" class="period-price" placeholder="مثال: 700" value="${price}" min="0" required>
+        </div>
+        <button type="button" class="btn-remove-period" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(div);
+}
+
+function loadPeriods(periods) {
+    const container = document.getElementById('periods-container');
+    container.innerHTML = '';
+    if (periods && periods.length > 0) {
+        periods.forEach(p => addPeriod(p.days, p.price));
+    } else {
+        // Add default periods
+        addPeriod(1, '');
+        addPeriod(3, '');
+        addPeriod(7, '');
+        addPeriod(30, '');
+    }
+}
+
+function getPeriodsFromForm() {
+    const items = document.querySelectorAll('.period-item');
+    const periods = [];
+    items.forEach(item => {
+        const days = parseInt(item.querySelector('.period-days').value);
+        const price = parseInt(item.querySelector('.period-price').value);
+        if (days > 0 && price > 0) {
+            periods.push({ days, price });
+        }
+    });
+    // Sort by days ascending
+    periods.sort((a, b) => a.days - b.days);
+    return periods;
+}
+
+// ===== IMAGE UPLOAD =====
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showToast('❌ يرجى اختيار ملف صورة فقط', true);
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        showToast('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت', true);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        uploadedImageData = e.target.result;
+        const preview = document.getElementById('file-preview');
+        preview.src = uploadedImageData;
+        preview.classList.add('show');
+        document.getElementById('file-name').textContent = file.name;
+        document.getElementById('car-img-url').value = '';
+    };
+    reader.readAsDataURL(file);
+}
+
+// ===== CAR MODAL =====
 function openCarModal() {
     editingCarId = null;
     uploadedImageData = null;
@@ -120,6 +214,8 @@ function openCarModal() {
     document.getElementById('file-preview').src = '';
     document.getElementById('file-name').textContent = 'لم يتم اختيار صورة';
     document.getElementById('car-img-url').value = '';
+    document.getElementById('car-status').value = 'available';
+    loadPeriods([]);
     document.getElementById('car-modal').classList.add('active');
 }
 
@@ -137,10 +233,9 @@ function editCar(id) {
     document.getElementById('car-id').value = car.id;
     document.getElementById('car-name').value = car.name;
     document.getElementById('car-type').value = car.type;
-    document.getElementById('car-price').value = car.price;
+    document.getElementById('car-status').value = car.status || 'available';
     document.getElementById('car-img-url').value = car.img;
 
-    // Show preview if image exists
     if (car.img && car.img.startsWith('data:image')) {
         const preview = document.getElementById('file-preview');
         preview.src = car.img;
@@ -151,41 +246,8 @@ function editCar(id) {
         document.getElementById('file-name').textContent = 'صورة من رابط';
     }
 
+    loadPeriods(car.periods || []);
     document.getElementById('car-modal').classList.add('active');
-}
-
-// ===== IMAGE UPLOAD HANDLER =====
-function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // Check if it's an image
-    if (!file.type.startsWith('image/')) {
-        showToast('❌ يرجى اختيار ملف صورة فقط', true);
-        return;
-    }
-
-    // Check size (max 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-        showToast('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت', true);
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const imageData = e.target.result;
-        uploadedImageData = imageData;
-
-        // Show preview
-        const preview = document.getElementById('file-preview');
-        preview.src = imageData;
-        preview.classList.add('show');
-        document.getElementById('file-name').textContent = file.name;
-
-        // Clear URL field since we're using uploaded image
-        document.getElementById('car-img-url').value = '';
-    };
-    reader.readAsDataURL(file);
 }
 
 function saveCar(e) {
@@ -194,10 +256,17 @@ function saveCar(e) {
     const cars = getCars();
     const name = document.getElementById('car-name').value;
     const type = document.getElementById('car-type').value;
-    const price = document.getElementById('car-price').value;
+    const status = document.getElementById('car-status').value;
     const imageUrl = document.getElementById('car-img-url').value.trim();
+    const periods = getPeriodsFromForm();
 
-    // Determine image source: uploaded file or URL
+    // Validate periods
+    if (periods.length === 0) {
+        showToast('❌ يرجى إضافة على الأقل فترة حجز واحدة', true);
+        return;
+    }
+
+    // Determine image source
     let finalImage;
     if (uploadedImageData) {
         finalImage = uploadedImageData;
@@ -212,8 +281,9 @@ function saveCar(e) {
         id: editingCarId || Date.now(),
         name: name,
         type: type,
-        price: price,
-        img: finalImage
+        status: status,
+        img: finalImage,
+        periods: periods
     };
 
     if (editingCarId) {

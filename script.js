@@ -1,273 +1,574 @@
-:root {
-    --red: #dc2626;
-    --red-dark: #b91c1c;
-    --red-light: #fca5a5;
-    --dark: #0a0a0a;
-    --gray-900: #111827;
-    --gray-800: #1f2937;
-    --gray-700: #374151;
-    --gray-600: #4b5563;
-    --gray-400: #9ca3af;
-    --white: #ffffff;
+// ============================================================
+// LANGUAGE SUPPORT
+// ============================================================
+const translations = {
+    ar: {
+        'nav.home': 'الرئيسية',
+        'nav.vehicles': 'المركبات',
+        'nav.pricing': 'الأسعار',
+        'nav.contact': 'اتصل بنا',
+        'nav.admin': 'لوحة الإدارة',
+        'nav.book': 'احجز الآن',
+        'hero.badge': '🚗 تأجير السيارات - القنيطرة',
+        'hero.title': 'أحمد تور<br><span class="gradient-text">لتأجير السيارات</span>',
+        'hero.desc': 'أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.',
+        'hero.explore': 'استكشف المركبات',
+        'hero.contact': 'تواصل معنا',
+        'features.bestPrice.title': 'أفضل الأسعار',
+        'features.bestPrice.desc': 'أسعار تنافسية وشفافة بدون رسوم خفية',
+        'features.modernFleet.title': 'أسطول حديث',
+        'features.modernFleet.desc': 'سيارات جديدة ومجهزة بأحدث التقنيات',
+        'features.support247.title': 'خدمة 24/7',
+        'features.support247.desc': 'متاحون على مدار الساعة لخدمتكم',
+        'vehicles.title': 'أسطول المركبات',
+        'vehicles.subtitle': 'اختر السيارة المناسبة لاحتياجاتك',
+        'pricing.title': 'أسعار التأجير',
+        'pricing.subtitle': 'أسعار تبدأ من 250 درهم/يوم',
+        'contact.title': 'اتصل بنا',
+        'contact.subtitle': 'نحن هنا لمساعدتك في أي وقت',
+        'contact.info': 'معلومات التواصل',
+        'contact.phone': 'الهاتف',
+        'contact.landline': 'الهاتف الثابت',
+        'contact.email': 'البريد الإلكتروني',
+        'contact.address': 'العنوان',
+        'contact.sendMsg': 'أرسل رسالة',
+        'contact.fullName': 'الاسم الكامل',
+        'contact.phoneNumber': 'رقم الهاتف',
+        'contact.message': 'رسالتك...',
+        'contact.send': 'إرسال',
+        'modal.title': 'حجز سيارة',
+        'modal.priceLabel': 'السعر الإجمالي:',
+        'modal.confirm': 'تأكيد الحجز',
+        'footer.rights': 'جميع الحقوق محفوظة',
+        'status.available': 'متاحة حاليا',
+        'status.reserved': 'محجوزة حاليا',
+        'period.daily': 'يومي',
+        'period.weekly': 'أسبوعي',
+        'period.monthly': 'شهري',
+        'period.3days': '3 أيام',
+        'period.7days': '7 أيام',
+        'period.14days': '14 يوماً',
+        'period.30days': '30 يوماً',
+        'reserve.chooseDates': 'اختر التواريخ',
+        'reserve.from': 'من',
+        'reserve.to': 'إلى',
+    },
+    fr: {
+        'nav.home': 'Accueil',
+        'nav.vehicles': 'Véhicules',
+        'nav.pricing': 'Tarifs',
+        'nav.contact': 'Contact',
+        'nav.admin': 'Tableau de bord',
+        'nav.book': 'Réserver',
+        'hero.badge': '🚗 Location de Voitures - Kénitra',
+        'hero.title': 'Ahmed TOUR<br><span class="gradient-text">Location de Voitures</span>',
+        'hero.desc': 'Meilleurs prix de location de voitures à Kénitra. Flotte moderne, service professionnel et livraison gratuite.',
+        'hero.explore': 'Explorer les véhicules',
+        'hero.contact': 'Nous contacter',
+        'features.bestPrice.title': 'Meilleurs prix',
+        'features.bestPrice.desc': 'Prix compétitifs et transparents sans frais cachés',
+        'features.modernFleet.title': 'Flotte moderne',
+        'features.modernFleet.desc': 'Voitures neuves équipées des dernières technologies',
+        'features.support247.title': 'Service 24/7',
+        'features.support247.desc': 'Disponibles 24h/24 pour vous servir',
+        'vehicles.title': 'Flotte de véhicules',
+        'vehicles.subtitle': 'Choisissez la voiture adaptée à vos besoins',
+        'pricing.title': 'Tarifs de location',
+        'pricing.subtitle': 'Tarifs à partir de 250 DH/jour',
+        'contact.title': 'Contactez-nous',
+        'contact.subtitle': 'Nous sommes là pour vous aider à tout moment',
+        'contact.info': 'Informations de contact',
+        'contact.phone': 'Téléphone',
+        'contact.landline': 'Téléphone fixe',
+        'contact.email': 'Email',
+        'contact.address': 'Adresse',
+        'contact.sendMsg': 'Envoyer un message',
+        'contact.fullName': 'Nom complet',
+        'contact.phoneNumber': 'Numéro de téléphone',
+        'contact.message': 'Votre message...',
+        'contact.send': 'Envoyer',
+        'modal.title': 'Réserver une voiture',
+        'modal.priceLabel': 'Prix total:',
+        'modal.confirm': 'Confirmer la réservation',
+        'footer.rights': 'Tous droits réservés',
+        'status.available': 'Disponible',
+        'status.reserved': 'Réservée',
+        'period.daily': 'Journalier',
+        'period.weekly': 'Hebdomadaire',
+        'period.monthly': 'Mensuel',
+        'period.3days': '3 jours',
+        'period.7days': '7 jours',
+        'period.14days': '14 jours',
+        'period.30days': '30 jours',
+        'reserve.chooseDates': 'Choisir les dates',
+        'reserve.from': 'Du',
+        'reserve.to': 'Au',
+    }
+};
+
+let currentLang = 'ar';
+
+function switchLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+
+    // Update text content for elements with data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            el.innerHTML = translations[lang][key];
+        }
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key]) {
+            el.placeholder = translations[lang][key];
+        }
+    });
+
+    // Update hero description
+    if (lang === 'ar') {
+        document.getElementById('hero-desc').textContent = translations.ar['hero.desc'];
+    } else {
+        document.getElementById('hero-desc').textContent = translations.fr['hero.desc'];
+    }
+
+    // Update car status labels
+    document.querySelectorAll('.car-badge').forEach(el => {
+        if (el.classList.contains('available')) {
+            el.textContent = translations[lang]['status.available'];
+        } else if (el.classList.contains('reserved')) {
+            el.textContent = translations[lang]['status.reserved'];
+        }
+    });
+
+    // Update period tags
+    document.querySelectorAll('.period-tag .period-label').forEach(el => {
+        const key = el.getAttribute('data-period-key');
+        if (translations[lang][key]) {
+            el.textContent = translations[lang][key];
+        }
+    });
+
+    // Update modal
+    document.querySelector('#reserve-modal .modal-header h3').innerHTML = translations[lang]['modal.title'];
+    document.querySelector('#reserve-modal .modal-header h3').setAttribute('data-i18n', 'modal.title');
+    document.querySelector('#price-display span').innerHTML = translations[lang]['modal.priceLabel'];
+    document.querySelector('#price-display span').setAttribute('data-i18n', 'modal.priceLabel');
+    document.querySelector('#reserve-modal button[type="submit"] span').innerHTML = translations[lang]['modal.confirm'];
+    document.querySelector('#reserve-modal button[type="submit"] span').setAttribute('data-i18n', 'modal.confirm');
+
+    // Update contact form labels
+    document.querySelector('.contact-info h3').innerHTML = translations[lang]['contact.info'];
+    document.querySelector('.contact-info h3').setAttribute('data-i18n', 'contact.info');
+    document.querySelector('.contact-form h3').innerHTML = translations[lang]['contact.sendMsg'];
+    document.querySelector('.contact-form h3').setAttribute('data-i18n', 'contact.sendMsg');
+    document.querySelector('.contact-form button span').innerHTML = translations[lang]['contact.send'];
+    document.querySelector('.contact-form button span').setAttribute('data-i18n', 'contact.send');
+
+    // Update footer
+    document.querySelector('.copyright span').innerHTML = translations[lang]['footer.rights'];
+    document.querySelector('.copyright span').setAttribute('data-i18n', 'footer.rights');
+
+    // Update nav admin
+    document.querySelector('.nav-actions .btn-admin span').innerHTML = translations[lang]['nav.admin'];
+    document.querySelector('.nav-actions .btn-admin span').setAttribute('data-i18n', 'nav.admin');
+
+    // Update footer admin link
+    document.querySelector('.footer-links .admin-link span').innerHTML = translations[lang]['nav.admin'];
+    document.querySelector('.footer-links .admin-link span').setAttribute('data-i18n', 'nav.admin');
+
+    // Update booking button
+    document.querySelector('.nav-actions .btn-primary span').innerHTML = translations[lang]['nav.book'];
+    document.querySelector('.nav-actions .btn-primary span').setAttribute('data-i18n', 'nav.book');
+
+    // Update hero button
+    document.querySelector('.hero-buttons .btn-primary span').innerHTML = translations[lang]['hero.explore'];
+    document.querySelector('.hero-buttons .btn-primary span').setAttribute('data-i18n', 'hero.explore');
+    document.querySelector('.hero-buttons .btn-outline span').innerHTML = translations[lang]['hero.contact'];
+    document.querySelector('.hero-buttons .btn-outline span').setAttribute('data-i18n', 'hero.contact');
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+// ============================================================
+// DEFAULT DATA
+// ============================================================
+const defaultCars = [
+    {
+        id: 1,
+        name: 'Renault Clio',
+        type: 'اقتصادية',
+        img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 250 },
+            { days: 3, price: 700 },
+            { days: 7, price: 1500 },
+            { days: 30, price: 5500 }
+        ]
+    },
+    {
+        id: 2,
+        name: 'Dacia Logan',
+        type: 'اقتصادية',
+        img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 300 },
+            { days: 3, price: 850 },
+            { days: 7, price: 1800 },
+            { days: 30, price: 6500 }
+        ]
+    },
+    {
+        id: 3,
+        name: 'Audi A4',
+        type: 'فاخرة',
+        img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 800 },
+            { days: 3, price: 2200 },
+            { days: 7, price: 5000 },
+            { days: 30, price: 18000 }
+        ]
+    },
+    {
+        id: 4,
+        name: 'Mercedes C-Class',
+        type: 'فاخرة',
+        img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80',
+        status: 'reserved',
+        periods: [
+            { days: 1, price: 900 },
+            { days: 3, price: 2500 },
+            { days: 7, price: 5500 },
+            { days: 30, price: 20000 }
+        ]
+    },
+    {
+        id: 5,
+        name: 'Hyundai Tucson',
+        type: 'عائلية',
+        img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 500 },
+            { days: 3, price: 1400 },
+            { days: 7, price: 3200 },
+            { days: 30, price: 11000 }
+        ]
+    },
+    {
+        id: 6,
+        name: 'Peugeot 3008',
+        type: 'عائلية',
+        img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 550 },
+            { days: 3, price: 1500 },
+            { days: 7, price: 3500 },
+            { days: 30, price: 12000 }
+        ]
+    }
+];
 
-body {
-    font-family: 'Cairo', sans-serif;
-    background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 50%, #000 100%);
-    color: var(--white);
-    min-height: 100vh;
-    line-height: 1.6;
-}
+const defaultSiteData = {
+    phone: '06 61 17 01 82',
+    phone2: '05 37 37 88 89',
+    email: 'ahmadi2011@live.fr',
+    address: 'زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة',
+    description: 'أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.'
+};
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-
-/* Navbar */
-.navbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 2rem;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(220,38,38,0.2);
-    position: sticky; top: 0; z-index: 50;
-}
-.nav-brand { display: flex; align-items: center; gap: 0.75rem; }
-.logo-img {
-    height: 3.5rem; width: auto; border-radius: 0.5rem;
-    box-shadow: 0 4px 15px rgba(220,38,38,0.3);
-    border: 1px solid rgba(220,38,38,0.2);
-}
-.nav-brand h1 { font-size: 1.5rem; font-weight: 900; letter-spacing: 0.05em; }
-.text-red { color: var(--red); }
-.subtitle { font-size: 0.7rem; color: var(--gray-400); letter-spacing: 0.15em; }
-.nav-links { display: flex; gap: 2rem; }
-.nav-links a { color: #d1d5db; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: color 0.3s; }
-.nav-links a:hover { color: var(--red); }
-.nav-actions { display: flex; align-items: center; gap: 0.75rem; }
-
-/* Buttons */
-.btn-primary {
-    background: var(--red); color: white; padding: 0.6rem 1.5rem;
-    border-radius: 0.75rem; text-decoration: none; font-weight: 700;
-    border: none; cursor: pointer; transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(220,38,38,0.3); display: inline-block;
-}
-.btn-primary:hover { background: var(--red-dark); transform: scale(1.05); }
-.btn-secondary {
-    width: 100%; background: var(--gray-700); color: white;
-    padding: 0.75rem; border-radius: 0.75rem; font-weight: 700;
-    border: none; cursor: pointer; transition: all 0.3s;
-}
-.btn-secondary:hover { background: var(--red); }
-.btn-outline {
-    background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2); color: white;
-    padding: 0.6rem 1.5rem; border-radius: 0.75rem; font-weight: 700;
-    cursor: pointer; transition: all 0.3s;
-}
-.btn-outline:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
-.btn-large { padding: 1rem 2rem; font-size: 1.1rem; }
-.btn-admin {
-    display: flex; align-items: center; gap: 0.4rem;
-    background: rgba(255,255,255,0.05); color: #d1d5db;
-    padding: 0.5rem 1rem; border-radius: 0.5rem;
-    text-decoration: none; font-size: 0.85rem; font-weight: 600;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s;
-}
-.btn-admin:hover { background: rgba(220,38,38,0.2); color: var(--red-light); border-color: rgba(220,38,38,0.3); }
-
-/* Hero */
-.hero {
-    position: relative; min-height: 85vh; display: flex;
-    align-items: center; justify-content: center; overflow: hidden;
-    background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920&q=80') center/cover;
-}
-.hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, var(--gray-900), rgba(17,24,39,0.8), rgba(17,24,39,0.4));
-}
-.hero-content { position: relative; z-index: 10; text-align: center; max-width: 800px; padding: 0 1rem; }
-.hero-logo-wrap { display: flex; justify-content: center; margin-bottom: 1.5rem; }
-.hero-logo {
-    height: 7rem; width: auto; border-radius: 1rem;
-    box-shadow: 0 10px 40px rgba(220,38,38,0.4);
-    border: 2px solid rgba(220,38,38,0.3);
-}
-.badge {
-    display: inline-block; padding: 0.35rem 1rem;
-    background: rgba(220,38,38,0.2); border: 1px solid rgba(220,38,38,0.3);
-    border-radius: 9999px; color: var(--red-light); font-size: 0.875rem;
-    margin-bottom: 1.5rem; font-weight: 600;
-}
-.hero h2 { font-size: 3.5rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.2; }
-.gradient-text {
-    background: linear-gradient(to right, var(--red), var(--red-light));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.hero p { font-size: 1.25rem; color: #d1d5db; margin-bottom: 2.5rem; }
-.hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
-/* Grid */
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-
-/* Features */
-.features { padding: 5rem 0; }
-.feature-card {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 1rem; padding: 2rem; text-align: center;
-    transition: all 0.3s; backdrop-filter: blur(4px);
-}
-.feature-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-8px); }
-.feature-icon {
-    width: 4rem; height: 4rem;
-    background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(153,27,27,0.3));
-    border-radius: 1rem; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1rem; font-size: 1.5rem;
-    box-shadow: 0 4px 15px rgba(220,38,38,0.2);
-}
-.feature-card h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-.feature-card p { color: var(--gray-400); }
-
-/* Section Header */
-.section-header { text-align: center; margin-bottom: 4rem; }
-.section-header h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
-.section-header p { color: var(--gray-400); }
-
-/* Vehicles */
-.vehicles { padding: 5rem 0; background: rgba(0,0,0,0.2); }
-.car-card {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 1rem; overflow: hidden; transition: all 0.3s;
-}
-.car-card:hover { border-color: rgba(220,38,38,0.5); transform: translateY(-8px); }
-.car-image { height: 12rem; overflow: hidden; }
-.car-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-.car-card:hover .car-image img { transform: scale(1.1); }
-.car-info { padding: 1.5rem; }
-.car-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-.car-tag {
-    background: rgba(220,38,38,0.2); color: var(--red-light);
-    font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600;
-}
-.car-price { font-size: 1.5rem; font-weight: 900; color: var(--red); margin-bottom: 1rem; }
-
-/* Pricing */
-.pricing { padding: 5rem 0; }
-.pricing-card {
-    background: linear-gradient(to bottom, var(--gray-800), var(--gray-900));
-    border: 1px solid var(--gray-700); border-radius: 1rem;
-    padding: 2rem; text-align: center; position: relative; transition: all 0.3s;
-}
-.pricing-card:hover { border-color: rgba(220,38,38,0.5); }
-.pricing-card.featured { border: 2px solid var(--red); transform: scale(1.05); }
-.badge-popular {
-    position: absolute; top: -1rem; left: 50%; transform: translateX(-50%);
-    background: var(--red); color: white; padding: 0.25rem 1rem;
-    border-radius: 9999px; font-size: 0.75rem; font-weight: 700;
-    box-shadow: 0 4px 15px rgba(220,38,38,0.4);
-}
-.pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-.price { font-size: 2.5rem; font-weight: 900; color: var(--red); margin: 1rem 0; }
-.price span { font-size: 1rem; color: var(--gray-400); }
-.pricing-card ul { list-style: none; color: var(--gray-400); margin-bottom: 2rem; text-align: right; }
-.pricing-card ul li { padding: 0.5rem 0; }
-
-/* Contact */
-.contact { padding: 5rem 0; background: rgba(0,0,0,0.2); }
-.contact-info, .contact-form {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 1rem; padding: 2rem; backdrop-filter: blur(4px);
-}
-.contact-info h3, .contact-form h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-.info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-.info-item .icon {
-    width: 3rem; height: 3rem;
-    background: linear-gradient(135deg, rgba(220,38,38,0.3), rgba(153,27,27,0.3));
-    border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;
-    font-size: 1.25rem; flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(220,38,38,0.15);
-}
-.info-item small { display: block; color: var(--gray-400); font-size: 0.8rem; }
-.info-item strong { font-size: 1.1rem; }
-.contact-form form { display: flex; flex-direction: column; gap: 1rem; }
-.contact-form input, .contact-form textarea {
-    width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--gray-700);
-    border-radius: 0.75rem; padding: 0.75rem 1rem; color: white;
-    font-family: inherit; transition: border-color 0.3s;
-}
-.contact-form input:focus, .contact-form textarea:focus { border-color: var(--red); outline: none; }
-.contact-form textarea { resize: none; }
-
-/* Footer */
-footer {
-    background: rgba(0,0,0,0.6); border-top: 1px solid rgba(255,255,255,0.1); padding: 2.5rem 0;
-}
-.footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
-.footer-brand { display: flex; align-items: center; gap: 0.75rem; }
-.footer-logo { height: 2.5rem; width: auto; border-radius: 0.5rem; }
-.footer-links { display: flex; align-items: center; gap: 1.5rem; }
-.admin-link {
-    display: flex; align-items: center; gap: 0.3rem;
-    color: var(--gray-500); text-decoration: none; font-size: 0.875rem;
-    transition: color 0.3s;
-}
-.admin-link:hover { color: var(--red); }
-.copyright { color: var(--gray-600); font-size: 0.875rem; }
-
-/* Modal */
-.modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(4px); z-index: 50;
-    display: none; align-items: center; justify-content: center; padding: 1rem;
-}
-.modal.active { display: flex; }
-.modal-content {
-    background: var(--gray-900); border: 1px solid var(--gray-700);
-    border-radius: 1rem; padding: 2rem; max-width: 400px; width: 100%;
-    transform: scale(0.95); opacity: 0; transition: all 0.3s;
-}
-.modal.active .modal-content { transform: scale(1); opacity: 1; }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.modal-header h3 { font-size: 1.5rem; }
-.close-btn {
-    background: none; border: none; color: var(--gray-400);
-    font-size: 1.5rem; cursor: pointer; transition: color 0.3s;
-}
-.close-btn:hover { color: white; }
-.modal form { display: flex; flex-direction: column; gap: 1rem; }
-.modal input {
-    width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--gray-700);
-    border-radius: 0.75rem; padding: 0.75rem 1rem; color: white;
-    font-family: inherit; transition: border-color 0.3s;
-}
-.modal input:focus { border-color: var(--red); outline: none; }
-.modal input[readonly] {
-    background: rgba(220,38,38,0.2); border-color: rgba(220,38,38,0.3);
-    text-align: center; font-weight: 700;
+// ============================================================
+// STORAGE FUNCTIONS
+// ============================================================
+function initStorage() {
+    if (!localStorage.getItem('carsData')) {
+        localStorage.setItem('carsData', JSON.stringify(defaultCars));
+    }
+    if (!localStorage.getItem('siteData')) {
+        localStorage.setItem('siteData', JSON.stringify(defaultSiteData));
+    }
 }
 
-/* Toast */
-.toast {
-    position: fixed; bottom: 2rem; left: 50%;
-    transform: translateX(-50%) translateY(5rem);
-    background: #16a34a; color: white; padding: 0.75rem 1.5rem;
-    border-radius: 9999px; font-weight: 700;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    opacity: 0; transition: all 0.3s; z-index: 100;
+function getCars() {
+    return JSON.parse(localStorage.getItem('carsData')) || defaultCars;
 }
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .navbar { flex-wrap: wrap; gap: 1rem; padding: 1rem; }
-    .nav-links { display: none; }
-    .hero h2 { font-size: 2.5rem; }
-    .hero-logo { height: 5rem; }
-    .pricing-card.featured { transform: scale(1); }
-    .grid-3, .grid-2 { grid-template-columns: 1fr; }
-    .footer-content { flex-direction: column; text-align: center; }
-    .nav-actions { width: 100%; justify-content: center; }
+function getSiteData() {
+    return JSON.parse(localStorage.getItem('siteData')) || defaultSiteData;
 }
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function renderCars() {
+    const grid = document.getElementById('cars-grid');
+    const cars = getCars();
+
+    if (cars.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">لا توجد سيارات متاحة حالياً</p>';
+        return;
+    }
+
+    grid.innerHTML = cars.map(car => {
+        const statusText = car.status === 'available' ?
+            translations[currentLang]['status.available'] :
+            translations[currentLang]['status.reserved'];
+        const statusClass = car.status === 'available' ? 'available' : 'reserved';
+
+        // Build period tags
+        let periodHtml = '';
+        if (car.periods && car.periods.length > 0) {
+            periodHtml = '<div class="car-periods">';
+            car.periods.forEach(p => {
+                let periodKey = '';
+                if (p.days === 1) periodKey = 'period.daily';
+                else if (p.days === 3) periodKey = 'period.3days';
+                else if (p.days === 7) periodKey = 'period.7days';
+                else if (p.days === 14) periodKey = 'period.14days';
+                else if (p.days === 30) periodKey = 'period.monthly';
+                else if (p.days === 7) periodKey = 'period.weekly';
+                else periodKey = 'period.daily';
+
+                const label = translations[currentLang][periodKey] || p.days + ' يوم';
+                periodHtml += `
+                    <span class="period-tag">
+                        <span class="period-label" data-period-key="${periodKey}">${label}</span>
+                        : <span class="period-price">${p.price} DH</span>
+                    </span>
+                `;
+            });
+            periodHtml += '</div>';
+        }
+
+        // Find daily price for display
+        const dailyPrice = car.periods && car.periods.length > 0 ?
+            car.periods.find(p => p.days === 1)?.price || car.periods[0].price :
+            0;
+
+        return `
+            <div class="car-card">
+                <div class="car-image">
+                    <img src="${car.img}" alt="${car.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%23111827%22 width=%22600%22 height=%22400%22/%3E%3Ctext x=%22300%22 y=%22200%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2224%22 font-family=%22sans-serif%22%3E🚗 ${car.name}%3C/text%3E%3C/svg%3E'">
+                    <span class="car-badge ${statusClass}">${statusText}</span>
+                </div>
+                <div class="car-info">
+                    <div class="car-header">
+                        <h3>${car.name}</h3>
+                        <span class="car-tag">${car.type}</span>
+                    </div>
+                    <div class="car-price">${dailyPrice} <small>DH / يوم</small></div>
+                    ${periodHtml}
+                    <button onclick="openReserve('${car.name} - ${car.type}', ${car.id})" class="btn-secondary" ${car.status === 'reserved' ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                        ${car.status === 'reserved' ? '🔒 محجوزة' : 'احجز الآن'}
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderPricing() {
+    const grid = document.getElementById('pricing-grid');
+    const cars = getCars();
+
+    // Group by type
+    const types = ['اقتصادية', 'عائلية', 'فاخرة'];
+    const typeLabels = {
+        'اقتصادية': 'اقتصادية',
+        'عائلية': 'عائلية',
+        'فاخرة': 'فاخرة'
+    };
+
+    const typeData = types.map(type => {
+        const carsOfType = cars.filter(c => c.type === type);
+        const avgPrice = carsOfType.length > 0 ?
+            carsOfType.reduce((sum, c) => {
+                const daily = c.periods?.find(p => p.days === 1)?.price || 0;
+                return sum + daily;
+            }, 0) / carsOfType.length :
+            0;
+        return { type, count: carsOfType.length, avgPrice: Math.round(avgPrice) };
+    });
+
+    grid.innerHTML = typeData.map((data, index) => {
+        const isFeatured = index === 1;
+        const priceDisplay = data.avgPrice > 0 ? data.avgPrice : '---';
+
+        return `
+            <div class="pricing-card ${isFeatured ? 'featured' : ''}">
+                ${isFeatured ? '<div class="badge-popular">🌟 الأكثر طلباً</div>' : ''}
+                <h3>${typeLabels[data.type]}</h3>
+                <div class="price">${priceDisplay} <span>DH/يوم</span></div>
+                <ul>
+                    <li>✓ تأمين شامل</li>
+                    <li>✓ مسافة غير محدودة</li>
+                    <li>✓ خدمة التوصيل</li>
+                    ${isFeatured ? '<li>✓ مقعد أطفال مجاني</li>' : ''}
+                    <li>✓ دعم على مدار الساعة</li>
+                </ul>
+                <button onclick="openReserve('${typeLabels[data.type]}')" class="${isFeatured ? 'btn-primary' : 'btn-secondary'}">
+                    احجز الآن
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+function loadSiteInfo() {
+    const data = getSiteData();
+    document.getElementById('info-phone').textContent = data.phone;
+    document.getElementById('info-phone2').textContent = data.phone2;
+    document.getElementById('info-email').textContent = data.email;
+    document.getElementById('info-address').textContent = data.address;
+
+    // Update hero description based on language
+    const descEl = document.getElementById('hero-desc');
+    if (currentLang === 'ar') {
+        descEl.textContent = data.description || translations.ar['hero.desc'];
+    } else {
+        descEl.textContent = data.description ? data.description.replace(/القنيطرة/g, 'Kénitra') : translations.fr['hero.desc'];
+    }
+}
+
+// ============================================================
+// RESERVATION FUNCTIONS
+// ============================================================
+let currentCarId = null;
+
+function openReserve(carName, carId) {
+    currentCarId = carId;
+    document.getElementById('car-type').value = carName;
+    document.getElementById('reserve-modal').classList.add('active');
+
+    // Set default dates
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    document.getElementById('start-date').value = today.toISOString().split('T')[0];
+    document.getElementById('end-date').value = tomorrow.toISOString().split('T')[0];
+
+    // Update price on date change
+    updatePrice();
+
+    // Add event listeners for date changes
+    document.getElementById('start-date').onchange = updatePrice;
+    document.getElementById('end-date').onchange = updatePrice;
+}
+
+function updatePrice() {
+    const start = document.getElementById('start-date').value;
+    const end = document.getElementById('end-date').value;
+    const priceEl = document.getElementById('total-price');
+
+    if (!start || !end) {
+        priceEl.textContent = '0 DH';
+        return;
+    }
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = Math.abs(endDate - startDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0 || diffDays < 0) {
+        priceEl.textContent = '0 DH';
+        return;
+    }
+
+    // Find car and calculate price
+    const cars = getCars();
+    const car = cars.find(c => c.id === currentCarId);
+
+    if (!car || !car.periods || car.periods.length === 0) {
+        priceEl.textContent = '0 DH';
+        return;
+    }
+
+    // Find best price for the duration
+    let bestPrice = 0;
+    // Sort periods by days descending to find best match
+    const sortedPeriods = [...car.periods].sort((a, b) => b.days - a.days);
+
+    for (const period of sortedPeriods) {
+        if (diffDays >= period.days) {
+            // Calculate price based on period
+            const fullPeriods = Math.floor(diffDays / period.days);
+            const remainingDays = diffDays % period.days;
+            let total = fullPeriods * period.price;
+
+            // Handle remaining days with best rate
+            if (remainingDays > 0) {
+                const remainingPeriod = car.periods.find(p => p.days === 1);
+                if (remainingPeriod) {
+                    total += remainingDays * remainingPeriod.price;
+                } else {
+                    total += remainingDays * (period.price / period.days);
+                }
+            }
+            bestPrice = Math.round(total);
+            break;
+        }
+    }
+
+    if (bestPrice === 0 && car.periods.length > 0) {
+        // Fallback: use daily rate
+        const daily = car.periods.find(p => p.days === 1) || car.periods[0];
+        bestPrice = daily.price * diffDays;
+    }
+
+    priceEl.textContent = bestPrice + ' DH';
+}
+
+function closeModal() {
+    document.getElementById('reserve-modal').classList.remove('active');
+}
+
+function handleSubmit(e) {
+    e.preventDefault();
+    showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً');
+    e.target.reset();
+}
+
+function handleReserve(e) {
+    e.preventDefault();
+    closeModal();
+    showToast('✅ تم تأكيد حجزك بنجاح! سنتواصل معك لتأكيد التفاصيل');
+    e.target.reset();
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
+// MODAL CLOSE ON OUTSIDE CLICK
+// ============================================================
+document.getElementById('reserve-modal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('reserve-modal')) closeModal();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    initStorage();
+    renderCars();
+    renderPricing();
+    loadSiteInfo();
+    switchLanguage('ar');
+});

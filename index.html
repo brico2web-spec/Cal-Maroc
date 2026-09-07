@@ -3,570 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed TOUR | تأجير السيارات - Groupe Bahia</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #dc2626;
-            --primary-glow: rgba(220, 38, 38, 0.4);
-            --dark-bg: #09090b;
-            --card-bg: rgba(24, 24, 27, 0.85);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--dark-bg);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(220, 38, 38, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
-            color: var(--text-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Header / Navbar */
-        header {
-            background: rgba(9, 9, 11, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.25rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            color: var(--text-main);
-        }
-
-        .brand img {
-            height: 3.5rem;
-            width: auto;
-            border-radius: 0.75rem;
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-            object-fit: cover;
-        }
-
-        .brand h1 {
-            font-size: 1.4rem;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand small {
-            display: block;
-            color: var(--primary);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .admin-link {
-            background: rgba(220, 38, 38, 0.15);
-            color: #fca5a5;
-            padding: 0.6rem 1.25rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .admin-link:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 0 20px var(--primary-glow);
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 1.5rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero h2 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-            background: linear-gradient(to bottom, #fff 30%, #a1a1aa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* --- Slider / Carousel Section (أحدث الإعلانات) --- */
-        .slider-section {
-            max-width: 1000px;
-            margin: 2rem auto 4rem;
-            padding: 0 1.5rem;
-        }
-
-        .slider-container {
-            position: relative;
-            background: var(--card-bg);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-        }
-
-        .slide {
-            display: none;
-            grid-template-columns: 1.2fr 1fr;
-            align-items: center;
-            padding: 2.5rem;
-            gap: 2rem;
-            animation: fadeIn 0.6s ease-in-out;
-        }
-
-        .slide.active {
-            display: grid;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .slide-img-box {
-            width: 100%;
-            height: 280px;
-            border-radius: 1rem;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            background: #000;
-        }
-
-        .slide-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .slide-content h3 {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 0.75rem;
-        }
-
-        .slide-badge {
-            display: inline-block;
-            background: rgba(220, 38, 38, 0.2);
-            color: #fca5a5;
-            padding: 0.3rem 0.9rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border: 1px solid rgba(220, 38, 38, 0.4);
-            margin-bottom: 1rem;
-        }
-
-        .slide-price {
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: #f87171;
-            margin-bottom: 1.5rem;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            padding-bottom: 1.5rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .dot.active {
-            background: var(--primary);
-            width: 25px;
-            border-radius: 5px;
-        }
-
-        /* Main Container & Grid */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 5% 5rem;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: #fff;
-            position: relative;
-            padding-right: 1rem;
-        }
-
-        .section-title::before {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 15%;
-            height: 70%;
-            width: 4px;
-            background: var(--primary);
-            border-radius: 4px;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .cars-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        /* Car Card Style (Clean, Fixed Alignment) */
-        .car-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 1.25rem;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 1.25rem;
-            backdrop-filter: blur(12px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .car-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(220, 38, 38, 0.5);
-            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.15);
-        }
-
-        .car-img-wrapper {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            border-radius: 1rem;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 1rem;
-        }
-
-        .car-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .car-card:hover img {
-            transform: scale(1.06);
-        }
-
-        .car-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(9, 9, 11, 0.85);
-            backdrop-filter: blur(8px);
-            color: #fca5a5;
-            padding: 0.3rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            border: 1px solid rgba(220, 38, 38, 0.4);
-        }
-
-        .car-info-box {
-            margin-bottom: 1.25rem;
-        }
-
-        .car-title {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 0.4rem;
-        }
-
-        .car-price {
-            font-size: 1.15rem;
-            font-weight: 900;
-            color: #f87171;
-        }
-
-        .btn-book {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            color: white;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-            width: 100%;
-        }
-
-        .btn-book:hover {
-            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
-            transform: translateY(-2px);
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(9, 9, 11, 0.95);
-            border-top: 1px solid var(--border-color);
-            padding: 3.5rem 5% 2rem;
-            margin-top: 5rem;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .footer-info {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-
-        .footer-info div {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.6rem 1.25rem;
-            border-radius: 0.75rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .footer-info span {
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .copyright {
-            font-size: 0.85rem;
-            color: #71717a;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding-top: 1.5rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h2 { font-size: 2rem; }
-            .hero { padding: 3rem 1rem 1rem; }
-            .slide { grid-template-columns: 1fr; padding: 1.5rem; text-align: center; }
-            .slide-img-box { height: 200px; }
-            .footer-info { gap: 1rem; flex-direction: column; align-items: center; }
-            .footer-info div { width: 100%; justify-content: center; }
-        }
-    </style>
+    <title>Ahmed TOUR - Groupe Bahia | Location de Voitures</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Header / Navbar -->
-    <header>
-        <a href="index.html" class="brand">
-            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" onerror="this.style.display='none'">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Groupe Bahia Logo" class="logo-img">
             <div>
-                <h1>Ahmed TOUR</h1>
-                <small>Groupe Bahia</small>
+                <h1><span class="text-red">Groupe</span> Bahia</h1>
+                <p class="subtitle">AHMED TOUR - Location de Voitures</p>
             </div>
-        </a>
-        <a href="admin.html" class="admin-link">
-            <span>⚙️</span> لوحة الإدارة
-        </a>
-    </header>
+        </div>
+        <div class="nav-links">
+            <a href="#accueil" data-i18n="nav.home">الرئيسية</a>
+            <a href="#vehicules" data-i18n="nav.vehicles">المركبات</a>
+            <a href="#tarifs" data-i18n="nav.pricing">الأسعار</a>
+            <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
+        </div>
+        <div class="nav-actions">
+            <!-- Language Switcher -->
+            <div class="lang-switcher">
+                <button onclick="switchLanguage('ar')" class="lang-btn active" id="lang-ar">AR</button>
+                <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
+            </div>
+            <a href="admin.html" class="btn-admin">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+                <span data-i18n="nav.admin">لوحة الإدارة</span>
+            </a>
+            <a href="tel:0661170182" class="btn-primary"><span data-i18n="nav.book">احجز الآن</span></a>
+        </div>
+    </nav>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-        <h2>اكتشف أسطولنا الفاخر لتجربة قيادة استثنائية</h2>
-        <p id="display-desc">نقدم لك أفضل السيارات المتاحة بأعلى معايير الراحة والأمان وبأفضل الأسعار التنافسية لتلبية جميع احتياجات تنقلك بكل أناقة.</p>
+    <!-- Hero -->
+    <section id="accueil" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-logo-wrap">
+                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" class="hero-logo">
+            </div>
+            <span class="badge">🚗 <span data-i18n="hero.badge">Location de Voitures - Kénitra</span></span>
+            <h2 data-i18n="hero.title">أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
+            <p id="hero-desc" data-i18n="hero.desc">أفضل أسعار تأجير السيارات في كénitra. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
+            <div class="hero-buttons">
+                <button onclick="scrollToSection('vehicules')" class="btn-primary btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
+                <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">تواصل معنا</span></button>
+            </div>
+        </div>
     </section>
 
-    <!-- Slider Section (أحدث الإعلانات والسيارات) -->
-    <section class="slider-section" id="slider-section-wrapper" style="display: none;">
-        <div class="section-header" style="margin-bottom: 1.25rem;">
-            <h3 class="section-title">🔥 أحدث الإعلانات والسيارات المميزة</h3>
+    <!-- Features -->
+    <section class="features">
+        <div class="container grid-3">
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 data-i18n="features.bestPrice.title">أفضل الأسعار</h3>
+                <p data-i18n="features.bestPrice.desc">أسعار تنافسية وشفافة بدون رسوم خفية</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3 data-i18n="features.modernFleet.title">أسطول حديث</h3>
+                <p data-i18n="features.modernFleet.desc">سيارات جديدة ومجهزة بأحدث التقنيات</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3 data-i18n="features.support247.title">خدمة 24/7</h3>
+                <p data-i18n="features.support247.desc">متاحون على مدار الساعة لخدمتكم</p>
+            </div>
         </div>
-        <div class="slider-container" id="ads-slider">
-            <!-- سيتم حقن شرائح السلايدر هنا برمجياً -->
-        </div>
-        <div class="slider-dots" id="slider-dots"></div>
     </section>
 
-    <!-- Main Fleet Container -->
-    <main class="container">
-        <div class="section-header">
-            <h3 class="section-title">🚗 كافة السيارات المتاحة</h3>
+    <!-- Vehicles -->
+    <section id="vehicules" class="vehicles">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="vehicles.title">أسطول المركبات</h2>
+                <p data-i18n="vehicles.subtitle">اختر السيارة المناسبة لاحتياجاتك</p>
+            </div>
+            <div class="grid-3" id="cars-grid"></div>
         </div>
-        <div id="cars-container" class="cars-grid">
-            <!-- سيتم تحميل السيارات المضافة من لوحة الإدارة تلقائياً هنا وبشكل مرتب -->
+    </section>
+
+    <!-- Pricing -->
+    <section id="tarifs" class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="pricing.title">أسعار التأجير</h2>
+                <p data-i18n="pricing.subtitle">أسعار تبدأ من 250 درهم/يوم</p>
+            </div>
+            <div class="grid-3" id="pricing-grid">
+                <!-- Generated by JavaScript -->
+            </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="contact.title">اتصل بنا</h2>
+                <p data-i18n="contact.subtitle">نحن هنا لمساعدتك في أي وقت</p>
+            </div>
+            <div class="grid-2">
+                <div class="contact-info">
+                    <h3 data-i18n="contact.info">معلومات التواصل</h3>
+                    <div class="info-item">
+                        <span class="icon">📱</span>
+                        <div><small data-i18n="contact.phone">الهاتف</small><strong id="info-phone">06 61 17 01 82</strong></div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon">☎️</span>
+                        <div><small data-i18n="contact.landline">الهاتف الثابت</small><strong id="info-phone2">05 37 37 88 89</strong></div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon">✉️</span>
+                        <div><small data-i18n="contact.email">البريد الإلكتروني</small><strong id="info-email">ahmadi2011@live.fr</strong></div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon">📍</span>
+                        <div><small data-i18n="contact.address">العنوان</small><strong id="info-address">زاوية شارع الإمام علي وشارع ياريك زياد - كénitra</strong></div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3 data-i18n="contact.sendMsg">أرسل رسالة</h3>
+                    <form onsubmit="handleSubmit(event)">
+                        <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
+                        <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
+                        <textarea placeholder="رسالتك..." rows="4" data-i18n-placeholder="contact.message" required></textarea>
+                        <button type="submit" class="btn-primary"><span data-i18n="contact.send">إرسال</span></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-info">
-            <div>📞 الهاتف: <span id="display-phone">---</span></div>
-            <div>☎️ الثابت: <span id="display-phone2">---</span></div>
-            <div>📧 البريد: <span id="display-email">---</span></div>
-            <div>📍 العنوان: <span id="display-address">---</span></div>
-        </div>
-        <div class="copyright">
-            <p>&copy; 2026 Ahmed TOUR - Groupe Bahia. جميع الحقوق محفوظة.</p>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" class="footer-logo">
+                <div>
+                    <p><span class="text-red">Groupe</span> Bahia - Ahmed TOUR</p>
+                    <small>Location de Voitures - Kénitra</small>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="admin.html" class="admin-link">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
+                    <span data-i18n="nav.admin">لوحة الإدارة</span>
+                </a>
+                <p class="copyright">© 2026 <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
+            </div>
         </div>
     </footer>
 
-    <!-- Scripting for Dynamic Data, Slider & Cards -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. تحميل معلومات الشركة وتحديثها في الصفحة
-            const siteData = JSON.parse(localStorage.getItem('siteData'));
-            if (siteData) {
-                if(document.getElementById('display-phone')) document.getElementById('display-phone').textContent = siteData.phone || '---';
-                if(document.getElementById('display-phone2')) document.getElementById('display-phone2').textContent = siteData.phone2 || '---';
-                if(document.getElementById('display-email')) document.getElementById('display-email').textContent = siteData.email || '---';
-                if(document.getElementById('display-address')) document.getElementById('display-address').textContent = siteData.address || '---';
-                if(document.getElementById('display-desc')) document.getElementById('display-desc').textContent = siteData.description || '';
-            }
+    <!-- Reservation Modal -->
+    <div id="reserve-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="modal.title">حجز سيارة</h3>
+                <button onclick="closeModal()" class="close-btn">&times;</button>
+            </div>
+            <form onsubmit="handleReserve(event)">
+                <input type="text" id="car-type" readonly>
+                <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
+                <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
+                <div class="grid-2">
+                    <input type="date" id="start-date" required>
+                    <input type="date" id="end-date" required>
+                </div>
+                <div id="price-display" style="text-align:center;padding:0.5rem;background:rgba(225,29,72,0.1);border-radius:0.75rem;border:1px solid rgba(225,29,72,0.2);">
+                    <span data-i18n="modal.priceLabel">السعر الإجمالي:</span>
+                    <strong id="total-price" style="color:var(--gold);font-size:1.25rem;">0 DH</strong>
+                </div>
+                <button type="submit" class="btn-primary"><span data-i18n="modal.confirm">تأكيد الحجز</span></button>
+            </form>
+        </div>
+    </div>
 
-            // 2. جلب السيارات المخزنة من لوحة الإدارة
-            const cars = JSON.parse(localStorage.getItem('carsData')) || [];
-            
-            // --- إعداد السلايدر (أحدث الإعلانات) ---
-            const sliderWrapper = document.getElementById('slider-section-wrapper');
-            const adsSlider = document.getElementById('ads-slider');
-            const sliderDots = document.getElementById('slider-dots');
+    <!-- Toast -->
+    <div id="toast" class="toast">تم إرسال طلبك بنجاح!</div>
 
-            if (cars.length > 0) {
-                sliderWrapper.style.display = 'block';
-                // نأخذ آخر 4 سيارات مضافة كأحدث الإعلانات
-                const latestCars = [...cars].reverse().slice(0, 4);
-
-                adsSlider.innerHTML = latestCars.map((car, index) => `
-                    <div class="slide ${index === 0 ? 'active' : ''}">
-                        <div class="slide-img-box">
-                            <img src="${car.img}" alt="${car.name}" onerror="this.src='https://via.placeholder.com/400x280?text=Car'">
-                        </div>
-                        <div class="slide-content">
-                            <span class="slide-badge">جديد الإعلانات • ${car.type}</span>
-                            <h3>${car.name}</h3>
-                            <p class="slide-price">${car.price}</p>
-                            <a href="https://wa.me/212600000000?text=${encodeURIComponent('السلام عليكم، مهتم بحجز الإعلان الخاص بسيارة ' + car.name)}" target="_blank" class="btn-book">
-                                <span>💬</span> حجز السيارة عبر واتساب
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
-
-                sliderDots.innerHTML = latestCars.map((_, index) => `
-                    <div class="dot ${index === 0 ? 'active' : ''}" onclick="currentSlide(${index})"></div>
-                `).join('');
-
-                // تفعيل الحركة التلقائية للسلايدر كل 4 ثوانٍ
-                let slideIndex = 0;
-                window.currentSlide = function(n) {
-                    showSlides(slideIndex = n);
-                }
-
-                function showSlides(n) {
-                    const slides = document.querySelectorAll('.slide');
-                    const dots = document.querySelectorAll('.dot');
-                    if (slides.length === 0) return;
-                    
-                    if (n >= slides.length) slideIndex = 0;
-                    if (n < 0) slideIndex = slides.length - 1;
-
-                    slides.forEach(s => s.classList.remove('active'));
-                    dots.forEach(d => d.classList.remove('active'));
-
-                    slides[slideIndex].classList.add('active');
-                    dots[slideIndex].classList.add('active');
-                }
-
-                setInterval(() => {
-                    slideIndex++;
-                    showSlides(slideIndex);
-                }, 4000);
-            }
-
-            // --- عرض كافة السيارات في الشبكة (Grid) بدون أخطاء تداخل ---
-            const carsContainer = document.getElementById('cars-container');
-            if (carsContainer) {
-                if (cars.length === 0) {
-                    carsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; background: var(--card-bg); border-radius: 1rem; border: 1px dashed var(--border-color);">لا توجد سيارات متاحة حالياً، يرجى إضافتها من لوحة الإدارة.</p>';
-                } else {
-                    carsContainer.innerHTML = cars.map(car => `
-                        <div class="car-card">
-                            <div>
-                                <div class="car-img-wrapper">
-                                    <img src="${car.img}" alt="${car.name}" onerror="this.src='https://via.placeholder.com/300x200?text=Car'">
-                                    <span class="car-badge">${car.type}</span>
-                                </div>
-                                <div class="car-info-box">
-                                    <h3 class="car-title">${car.name}</h3>
-                                    <p class="car-price">${car.price}</p>
-                                </div>
-                            </div>
-                            <a href="https://wa.me/212600000000?text=${encodeURIComponent('السلام عليكم، مهتم بحجز سيارة ' + car.name)}" target="_blank" class="btn-book">
-                                <span>💬</span> احجز عبر واتساب
-                            </a>
-                        </div>
-                    `).join('');
-                }
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

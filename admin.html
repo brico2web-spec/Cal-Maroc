@@ -116,7 +116,8 @@
                                     <th>الصورة</th>
                                     <th>الاسم</th>
                                     <th>النوع</th>
-                                    <th>السعر</th>
+                                    <th>الحالة</th>
+                                    <th>فترات الحجز</th>
                                     <th>الإجراءات</th>
                                 </tr>
                             </thead>
@@ -146,10 +147,12 @@
             </div>
             <form id="car-form" onsubmit="saveCar(event)">
                 <input type="hidden" id="car-id">
+
                 <div class="form-group">
                     <label>اسم السيارة</label>
                     <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
                 </div>
+
                 <div class="form-group">
                     <label>النوع</label>
                     <select id="car-type" required>
@@ -158,14 +161,18 @@
                         <option value="فاخرة">فاخرة</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>السعر (مثال: 250 درهم/يوم)</label>
-                    <input type="text" id="car-price" placeholder="250 درهم/يوم" required>
+                    <label>📌 حالة السيارة</label>
+                    <select id="car-status" required>
+                        <option value="available">✅ متاحة حاليا</option>
+                        <option value="reserved">🔴 محجوزة حاليا</option>
+                    </select>
                 </div>
 
-                <!-- Image Upload Section -->
+                <!-- Image Upload -->
                 <div class="form-group">
-                    <label>📸 رفع صورة السيارة (JPG, PNG)</label>
+                    <label>📸 صورة السيارة (JPG, PNG)</label>
                     <div class="file-upload-wrapper">
                         <label for="car-image-input" class="file-upload-label">
                             📤 اضغط لاختيار صورة
@@ -183,6 +190,20 @@
                     <label>أو رابط صورة (URL)</label>
                     <input type="url" id="car-img-url" placeholder="https://example.com/image.jpg">
                     <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
+                </div>
+
+                <!-- Periods Management -->
+                <div class="form-group">
+                    <label>📅 فترات الحجز والأسعار</label>
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;background:rgba(0,0,0,0.2);padding:1rem;border-radius:0.75rem;">
+                        <div id="periods-container">
+                            <!-- Periods will be added here dynamically -->
+                        </div>
+                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;">
+                            + إضافة فترة جديدة
+                        </button>
+                    </div>
+                    <small class="hint">حدد عدد الأيام والسعر المقابل لتلك المدة</small>
                 </div>
 
                 <div class="form-actions">
