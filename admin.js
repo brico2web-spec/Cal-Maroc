@@ -29,7 +29,6 @@ async function fetchCarsFromCloud() {
         if (data.record && data.record.cars && data.record.cars.length > 0) {
             carsData = data.record.cars;
         } else {
-            // إذا كانت البيانات فارغة، نستخدم البيانات من script.js
             if (window.opener && window.opener.DEFAULT_CARS) {
                 carsData = window.opener.DEFAULT_CARS;
             } else {
@@ -89,35 +88,35 @@ async function saveCars(cars) {
     carsData = cars;
     const saved = await saveToCloud(carsData, siteData);
     
-    // 🔥 تحديث الجدول في لوحة الإدارة
+    // تحديث الجدول في لوحة الإدارة
     renderCarsTable();
     
-    // 🔥 تحديث الصفحة الرئيسية إذا كانت مفتوحة
+    // ⭐⭐⭐ تحديث الصفحة الرئيسية إذا كانت مفتوحة ⭐⭐⭐
     try {
         if (window.opener && !window.opener.closed) {
             // تحديث البيانات في الصفحة الرئيسية
             if (typeof window.opener.updateCarsData === 'function') {
                 window.opener.updateCarsData(carsData);
             }
+            // إعادة رسم السيارات
             if (typeof window.opener.renderCars === 'function') {
                 window.opener.renderCars();
             }
             if (typeof window.opener.renderPricing === 'function') {
                 window.opener.renderPricing();
             }
-            // إظهار إشعار في الصفحة الرئيسية
+            // إظهار إشعار
             if (typeof window.opener.showToast === 'function') {
-                window.opener.showToast('🔄 تم تحديث البيانات بنجاح!');
+                window.opener.showToast('🔄 تم تحديث قائمة السيارات!');
             }
         }
     } catch (e) {
         console.warn('⚠️ تعذر تحديث الصفحة الرئيسية:', e);
     }
     
-    // 🔥 حفظ في localStorage كنسخة احتياطية
+    // حفظ نسخة احتياطية
     try {
         localStorage.setItem('admin_cars_backup', JSON.stringify(carsData));
-        localStorage.setItem('admin_cars_timestamp', Date.now().toString());
     } catch (e) {}
     
     if (saved) {
@@ -384,6 +383,7 @@ function editCar(id) {
     document.getElementById('car-modal').classList.add('active');
 }
 
+// ⭐⭐⭐ دالة حفظ السيارة (المعدلة) ⭐⭐⭐
 async function saveCar(e) {
     e.preventDefault();
 
@@ -435,38 +435,58 @@ async function saveCar(e) {
         showToast('✅ تم إضافة السيارة بنجاح!');
     }
 
-    // 🔥 حفظ البيانات وتحديث كل شيء
+    // حفظ البيانات
     await saveCars(cars);
     
-    // 🔥 تحديث الجدول فوراً
+    // تحديث الجدول
     renderCarsTable();
     
-    // 🔥 إغلاق المودال
+    // إغلاق المودال
     closeCarModal();
     uploadedImageData = null;
     document.getElementById('car-form').reset();
     
-    // 🔥 تحديث الصفحة الرئيسية إذا كانت مفتوحة
+    // ⭐⭐⭐ تحديث الصفحة الرئيسية فوراً ⭐⭐⭐
     try {
         if (window.opener && !window.opener.closed) {
             // ننتظر قليلاً للتأكد من حفظ البيانات
             setTimeout(() => {
-                if (typeof window.opener.renderCars === 'function') {
-                    window.opener.renderCars();
+                // جلب البيانات من السحابة مرة أخرى للتأكد
+                if (typeof window.opener.fetchCarsFromCloud === 'function') {
+                    window.opener.fetchCarsFromCloud().then(() => {
+                        if (typeof window.opener.renderCars === 'function') {
+                            window.opener.renderCars();
+                        }
+                        if (typeof window.opener.renderPricing === 'function') {
+                            window.opener.renderPricing();
+                        }
+                        if (typeof window.opener.showToast === 'function') {
+                            window.opener.showToast('✅ تم إضافة سيارة جديدة!');
+                        }
+                    });
+                } else {
+                    // تحديث مباشر
+                    if (typeof window.opener.updateCarsData === 'function') {
+                        window.opener.updateCarsData(cars);
+                    }
+                    if (typeof window.opener.renderCars === 'function') {
+                        window.opener.renderCars();
+                    }
+                    if (typeof window.opener.renderPricing === 'function') {
+                        window.opener.renderPricing();
+                    }
+                    if (typeof window.opener.showToast === 'function') {
+                        window.opener.showToast('✅ تم إضافة سيارة جديدة!');
+                    }
                 }
-                if (typeof window.opener.renderPricing === 'function') {
-                    window.opener.renderPricing();
-                }
-                if (typeof window.opener.showToast === 'function') {
-                    window.opener.showToast('🔄 تم تحديث قائمة السيارات!');
-                }
-            }, 500);
+            }, 1000);
         }
     } catch (e) {
         console.warn('⚠️ تعذر تحديث الصفحة الرئيسية:', e);
     }
 }
 
+// ⭐⭐⭐ دالة حذف السيارة (المعدلة) ⭐⭐⭐
 async function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;
     const cars = getCars().filter(c => c.id !== id);
@@ -476,16 +496,33 @@ async function deleteCar(id) {
     try {
         if (window.opener && !window.opener.closed) {
             setTimeout(() => {
-                if (typeof window.opener.renderCars === 'function') {
-                    window.opener.renderCars();
+                if (typeof window.opener.fetchCarsFromCloud === 'function') {
+                    window.opener.fetchCarsFromCloud().then(() => {
+                        if (typeof window.opener.renderCars === 'function') {
+                            window.opener.renderCars();
+                        }
+                        if (typeof window.opener.renderPricing === 'function') {
+                            window.opener.renderPricing();
+                        }
+                        if (typeof window.opener.showToast === 'function') {
+                            window.opener.showToast('🗑️ تم حذف السيارة!');
+                        }
+                    });
+                } else {
+                    if (typeof window.opener.updateCarsData === 'function') {
+                        window.opener.updateCarsData(cars);
+                    }
+                    if (typeof window.opener.renderCars === 'function') {
+                        window.opener.renderCars();
+                    }
+                    if (typeof window.opener.renderPricing === 'function') {
+                        window.opener.renderPricing();
+                    }
+                    if (typeof window.opener.showToast === 'function') {
+                        window.opener.showToast('🗑️ تم حذف السيارة!');
+                    }
                 }
-                if (typeof window.opener.renderPricing === 'function') {
-                    window.opener.renderPricing();
-                }
-                if (typeof window.opener.showToast === 'function') {
-                    window.opener.showToast('🗑️ تم حذف السيارة!');
-                }
-            }, 500);
+            }, 1000);
         }
     } catch (e) {}
 

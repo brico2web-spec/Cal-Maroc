@@ -262,6 +262,7 @@ let siteData = {
 let carsData = [];
 let isCloudDataLoaded = false;
 
+// ⭐⭐⭐ دالة جلب البيانات من السحابة (معدلة) ⭐⭐⭐
 async function fetchCarsFromCloud() {
     try {
         console.log('🔄 جاري جلب البيانات من السحابة...');
@@ -322,9 +323,7 @@ async function sendDefaultDataToCloud() {
     return false;
 }
 
-// ============================================================
-// 🔥 دالة تحديث البيانات من الإدارة
-// ============================================================
+// ⭐⭐⭐ دالة تحديث البيانات من الإدارة ⭐⭐⭐
 function updateCarsData(newData) {
     if (newData && Array.isArray(newData) && newData.length > 0) {
         carsData = newData;
@@ -616,7 +615,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (success && isCloudDataLoaded) {
         renderCars();
         renderPricing();
-        showToast('✅ تم تحديث البيانات بنجاح!');
+        // showToast('✅ تم تحديث البيانات بنجاح!');
     }
 });
 
@@ -630,3 +629,4 @@ window.siteData = siteData;
 window.DEFAULT_CARS = DEFAULT_CARS;
 window.updateCarsData = updateCarsData;
 window.showToast = showToast;
+window.fetchCarsFromCloud = fetchCarsFromCloud;
