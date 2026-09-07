@@ -1,4 +1,10 @@
 // ============================================================
+// 🔴🔴🔴 رابط JSONBin ومفتاح API الخاص بك 🔴🔴🔴
+// ============================================================
+const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/6a9f3169ac6210605ab13d85';
+const JSONBIN_KEY = '$2a$10$GDFKVACg4Ot83OdLGFYztuGjFQXhXmJa8uGrNaSSDj4XWtP6N3wb.';
+
+// ============================================================
 // LANGUAGE SUPPORT
 // ============================================================
 const translations = {
@@ -159,20 +165,20 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// البيانات الأساسية (مشاركة مع admin)
+// 📦 السيارات الافتراضية (في حال تعذر الاتصال بالسحابة)
 // ============================================================
-let carsData = [
+const DEFAULT_CARS = [
     {
         id: 1,
-        name: 'Renault Clio',
-        type: 'اقتصادية',
-        img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
+        name: 'Audi A4',
+        type: 'فاخرة',
+        img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80',
         status: 'available',
         periods: [
-            { days: 1, price: 250 },
-            { days: 3, price: 700 },
-            { days: 7, price: 1500 },
-            { days: 30, price: 5500 }
+            { days: 1, price: 800 },
+            { days: 3, price: 2200 },
+            { days: 7, price: 5000 },
+            { days: 30, price: 18000 }
         ]
     },
     {
@@ -190,15 +196,15 @@ let carsData = [
     },
     {
         id: 3,
-        name: 'Audi A4',
-        type: 'فاخرة',
-        img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80',
+        name: 'Renault Clio',
+        type: 'اقتصادية',
+        img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
         status: 'available',
         periods: [
-            { days: 1, price: 800 },
-            { days: 3, price: 2200 },
-            { days: 7, price: 5000 },
-            { days: 30, price: 18000 }
+            { days: 1, price: 250 },
+            { days: 3, price: 700 },
+            { days: 7, price: 1500 },
+            { days: 30, price: 5500 }
         ]
     },
     {
@@ -251,19 +257,43 @@ let siteData = {
 };
 
 // ============================================================
-// دالة للحصول على البيانات (يمكن تحديثها من admin)
+// 🌐 جلب البيانات من السحابة
 // ============================================================
-function getCars() {
-    // إذا كانت هناك بيانات محدثة من admin
-    if (window.opener && !window.opener.closed) {
-        try {
-            const adminCars = window.opener.getCars();
-            if (adminCars && adminCars.length > 0) {
-                carsData = adminCars;
+let carsData = [];
+
+async function fetchCarsFromCloud() {
+    try {
+        const response = await fetch(JSONBIN_URL, {
+            headers: {
+                'X-Master-Key': JSONBIN_KEY
             }
-        } catch (e) {}
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+        const record = data.record;
+        
+        if (record && record.cars && Array.isArray(record.cars)) {
+            carsData = record.cars;
+            console.log('✅ تم جلب البيانات من السحابة:', carsData.length, 'سيارة');
+            return true;
+        } else {
+            throw new Error('Invalid data format');
+        }
+    } catch (error) {
+        console.warn('⚠️ تعذر جلب البيانات من السحابة، استخدام البيانات المحلية');
+        return false;
     }
-    return carsData;
+}
+
+function getCars() {
+    if (carsData && carsData.length > 0) {
+        return carsData;
+    }
+    return DEFAULT_CARS;
 }
 
 function getSiteData() {
@@ -304,7 +334,6 @@ function renderCars() {
                 else if (p.days === 7) periodKey = 'period.7days';
                 else if (p.days === 14) periodKey = 'period.14days';
                 else if (p.days === 30) periodKey = 'period.monthly';
-                else if (p.days === 7) periodKey = 'period.weekly';
                 else periodKey = 'period.daily';
 
                 const label = translations[currentLang][periodKey] || p.days + ' يوم';
@@ -524,16 +553,27 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 });
 
 // ============================================================
-// INIT
+// 🚀 INIT - جلب البيانات من السحابة أولاً
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // نعرض البيانات الافتراضية أولاً
+    carsData = DEFAULT_CARS;
     renderCars();
     renderPricing();
     loadSiteInfo();
     switchLanguage('ar');
+    
+    // نحاول جلب البيانات من السحابة
+    const success = await fetchCarsFromCloud();
+    if (success) {
+        // تحديث الصفحة بالبيانات الجديدة
+        renderCars();
+        renderPricing();
+        showToast('✅ تم تحديث البيانات بنجاح!');
+    }
 });
 
-// جعل الدوال عامة للوصول من admin
+// جعل الدوال عامة
 window.renderCars = renderCars;
 window.renderPricing = renderPricing;
 window.getCars = getCars;

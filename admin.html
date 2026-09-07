@@ -50,6 +50,9 @@
                 <button onclick="showTab('cars')" class="nav-item" data-tab="cars">
                     <span>🚗</span> إدارة السيارات
                 </button>
+                <button onclick="showTab('sync')" class="nav-item" data-tab="sync">
+                    <span>🔄</span> مزامنة البيانات
+                </button>
                 <button onclick="showTab('preview')" class="nav-item" data-tab="preview">
                     <span>👁️</span> معاينة الموقع
                 </button>
@@ -123,6 +126,54 @@
                             </thead>
                             <tbody id="cars-table-body"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Tab -->
+            <div id="tab-sync" class="tab-content">
+                <div class="card">
+                    <h3>🔄 مزامنة البيانات بين الأجهزة</h3>
+                    <p style="color:var(--gray-400);margin-bottom:1.5rem;">
+                        استخدم هذه الأدوات لنقل البيانات بين الأجهزة المختلفة
+                    </p>
+                    
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                        <!-- Export -->
+                        <div style="background:rgba(0,0,0,0.2);padding:1.5rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                            <h4 style="color:var(--gold);margin-bottom:0.75rem;">📤 تصدير البيانات</h4>
+                            <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1rem;">
+                                انسخ النص أدناه وأرسله إلى جهاز آخر
+                            </p>
+                            <button onclick="exportData()" class="btn-primary" style="width:100%;margin-bottom:0.75rem;">
+                                📋 نسخ البيانات
+                            </button>
+                            <textarea id="export-area" rows="4" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:0.75rem;padding:0.75rem;color:var(--gray-400);font-family:monospace;font-size:0.8rem;resize:vertical;" readonly placeholder="انقر على نسخ البيانات"></textarea>
+                        </div>
+
+                        <!-- Import -->
+                        <div style="background:rgba(0,0,0,0.2);padding:1.5rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                            <h4 style="color:var(--gold);margin-bottom:0.75rem;">📥 استيراد البيانات</h4>
+                            <p style="color:var(--gray-400);font-size:0.9rem;margin-bottom:1rem;">
+                                الصق النص المنسوخ من جهاز آخر ثم اضغط استيراد
+                            </p>
+                            <textarea id="import-area" rows="4" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:0.75rem;padding:0.75rem;color:white;font-family:monospace;font-size:0.8rem;resize:vertical;" placeholder="الصق البيانات هنا..."></textarea>
+                            <button onclick="importData()" class="btn-primary" style="width:100%;margin-top:0.75rem;background:linear-gradient(135deg,#22c55e,#16a34a);">
+                                📥 استيراد البيانات
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1.5rem;padding:1rem;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:0.75rem;">
+                        <p style="color:var(--gold);font-size:0.9rem;">
+                            💡 <strong>طريقة الاستخدام:</strong>
+                        </p>
+                        <ol style="color:var(--gray-300);font-size:0.85rem;margin-top:0.5rem;padding-right:1.5rem;">
+                            <li>في الجهاز الأول: اضغط <strong>"نسخ البيانات"</strong></li>
+                            <li>أرسل النص المنسوخ إلى الجهاز الثاني (واتساب، إيميل، ...)</li>
+                            <li>في الجهاز الثاني: الصق النص في حقل <strong>"استيراد البيانات"</strong></li>
+                            <li>اضغط <strong>"استيراد البيانات"</strong></li>
+                        </ol>
                     </div>
                 </div>
             </div>
