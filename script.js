@@ -1,8 +1,8 @@
 // ============================================================
-// 🔴🔴🔴 رابط JSONBin ومفتاح API الخاص بك 🔴🔴🔴
+// 🔴🔴🔴 معلومات Supabase الخاصة بك 🔴🔴🔴
 // ============================================================
-const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/6a9f3169ac6210605ab13d85';
-const JSONBIN_KEY = '$2a$10$GDFKVACg4Ot83OdLGFYztuGjFQXhXmJa8uGrNaSSDj4XWtP6N3wb.';
+const SUPABASE_URL = 'https://ykjtxziksebpypruvulp.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlranR4emlrc2VicHlwcnV2dWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTQ2NzAsImV4cCI6MjEwNDM5MDY3MH0.Z8Z8CUusEkhrlHGHHsrlQGs8z0GRqzOPQaTjIPXVEME';
 
 // ============================================================
 // LANGUAGE SUPPORT
@@ -165,186 +165,73 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// 📦 السيارات الافتراضية
-// ============================================================
-const DEFAULT_CARS = [
-    {
-        id: 1,
-        name: 'Audi A4',
-        type: 'فاخرة',
-        img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80',
-        status: 'available',
-        periods: [
-            { days: 1, price: 800 },
-            { days: 3, price: 2200 },
-            { days: 7, price: 5000 },
-            { days: 30, price: 18000 }
-        ]
-    },
-    {
-        id: 2,
-        name: 'Dacia Logan',
-        type: 'اقتصادية',
-        img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
-        status: 'available',
-        periods: [
-            { days: 1, price: 300 },
-            { days: 3, price: 850 },
-            { days: 7, price: 1800 },
-            { days: 30, price: 6500 }
-        ]
-    },
-    {
-        id: 3,
-        name: 'Renault Clio',
-        type: 'اقتصادية',
-        img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
-        status: 'available',
-        periods: [
-            { days: 1, price: 250 },
-            { days: 3, price: 700 },
-            { days: 7, price: 1500 },
-            { days: 30, price: 5500 }
-        ]
-    },
-    {
-        id: 4,
-        name: 'Mercedes C-Class',
-        type: 'فاخرة',
-        img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80',
-        status: 'reserved',
-        periods: [
-            { days: 1, price: 900 },
-            { days: 3, price: 2500 },
-            { days: 7, price: 5500 },
-            { days: 30, price: 20000 }
-        ]
-    },
-    {
-        id: 5,
-        name: 'Hyundai Tucson',
-        type: 'عائلية',
-        img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80',
-        status: 'available',
-        periods: [
-            { days: 1, price: 500 },
-            { days: 3, price: 1400 },
-            { days: 7, price: 3200 },
-            { days: 30, price: 11000 }
-        ]
-    },
-    {
-        id: 6,
-        name: 'Peugeot 3008',
-        type: 'عائلية',
-        img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
-        status: 'available',
-        periods: [
-            { days: 1, price: 550 },
-            { days: 3, price: 1500 },
-            { days: 7, price: 3500 },
-            { days: 30, price: 12000 }
-        ]
-    }
-];
-
-let siteData = {
-    phone: '06 61 17 01 82',
-    phone2: '05 37 37 88 89',
-    email: 'ahmadi2011@live.fr',
-    address: 'زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة',
-    description: 'أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.'
-};
-
-// ============================================================
-// 🌐 جلب البيانات من السحابة
+// 🌐 جلب البيانات من Supabase
 // ============================================================
 let carsData = [];
-let isCloudDataLoaded = false;
+let siteData = {};
 
-// ⭐⭐⭐ دالة جلب البيانات من السحابة (معدلة) ⭐⭐⭐
-async function fetchCarsFromCloud() {
+async function fetchCarsFromSupabase() {
     try {
-        console.log('🔄 جاري جلب البيانات من السحابة...');
-        const response = await fetch(JSONBIN_URL, {
+        console.log('🔄 جاري جلب البيانات من Supabase...');
+        
+        // جلب السيارات
+        const carsResponse = await fetch(`${SUPABASE_URL}cars?select=*&order=id.asc`, {
             headers: {
-                'X-Master-Key': JSONBIN_KEY
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             }
         });
         
-        if (!response.ok) {
-            throw new Error('فشل الاتصال بالسحابة');
-        }
+        if (!carsResponse.ok) throw new Error('فشل جلب السيارات');
+        const cars = await carsResponse.json();
         
-        const data = await response.json();
-        const record = data.record;
-        
-        if (record && record.cars && Array.isArray(record.cars) && record.cars.length > 0) {
-            carsData = record.cars;
-            isCloudDataLoaded = true;
-            console.log('✅ تم جلب البيانات من السحابة:', carsData.length, 'سيارة');
-            return true;
+        if (cars && cars.length > 0) {
+            carsData = cars;
+            console.log('✅ تم جلب السيارات:', carsData.length, 'سيارة');
         } else {
-            console.log('📦 البيانات في السحابة فارغة، استخدام البيانات الافتراضية');
-            carsData = DEFAULT_CARS;
-            isCloudDataLoaded = true;
-            // محاولة إرسال البيانات الافتراضية إلى السحابة
-            try {
-                await sendDefaultDataToCloud();
-            } catch (e) {}
-            return true;
+            console.log('📦 لا توجد سيارات في قاعدة البيانات');
+            carsData = [];
         }
+        
+        // جلب معلومات الموقع
+        const siteResponse = await fetch(`${SUPABASE_URL}site_info?id=eq.1&select=*`, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+        });
+        
+        if (siteResponse.ok) {
+            const site = await siteResponse.json();
+            if (site && site.length > 0) {
+                siteData = site[0];
+                console.log('✅ تم جلب معلومات الموقع');
+            }
+        }
+        
+        return true;
     } catch (error) {
-        console.warn('⚠️ تعذر جلب البيانات من السحابة:', error.message);
-        carsData = DEFAULT_CARS;
+        console.warn('⚠️ تعذر جلب البيانات من Supabase:', error.message);
         return false;
     }
 }
 
-async function sendDefaultDataToCloud() {
-    try {
-        const payload = {
-            cars: DEFAULT_CARS,
-            site: siteData
-        };
-        const response = await fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY
-            },
-            body: JSON.stringify(payload)
-        });
-        if (response.ok) {
-            console.log('✅ تم إرسال البيانات الافتراضية إلى السحابة');
-            return true;
-        }
-    } catch (e) {}
-    return false;
+function getCars() {
+    return carsData;
 }
 
-// ⭐⭐⭐ دالة تحديث البيانات من الإدارة ⭐⭐⭐
+function getSiteData() {
+    return siteData;
+}
+
 function updateCarsData(newData) {
-    if (newData && Array.isArray(newData) && newData.length > 0) {
+    if (newData && Array.isArray(newData)) {
         carsData = newData;
-        isCloudDataLoaded = true;
-        console.log('🔄 تم تحديث البيانات من الإدارة:', carsData.length, 'سيارة');
         renderCars();
         renderPricing();
         return true;
     }
     return false;
-}
-
-function getCars() {
-    if (isCloudDataLoaded && carsData && carsData.length > 0) {
-        return carsData;
-    }
-    return DEFAULT_CARS;
-}
-
-function getSiteData() {
-    return siteData;
 }
 
 // ============================================================
@@ -372,30 +259,34 @@ function renderCars() {
         const typeText = translations[currentLang][typeKey] || car.type;
 
         let periodHtml = '';
-        if (car.periods && car.periods.length > 0) {
-            periodHtml = '<div class="car-periods">';
-            car.periods.forEach(p => {
-                let periodKey = '';
-                if (p.days === 1) periodKey = 'period.daily';
-                else if (p.days === 3) periodKey = 'period.3days';
-                else if (p.days === 7) periodKey = 'period.7days';
-                else if (p.days === 14) periodKey = 'period.14days';
-                else if (p.days === 30) periodKey = 'period.monthly';
-                else periodKey = 'period.daily';
+        if (car.periods) {
+            const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : car.periods;
+            if (periods && periods.length > 0) {
+                periodHtml = '<div class="car-periods">';
+                periods.forEach(p => {
+                    let periodKey = '';
+                    if (p.days === 1) periodKey = 'period.daily';
+                    else if (p.days === 3) periodKey = 'period.3days';
+                    else if (p.days === 7) periodKey = 'period.7days';
+                    else if (p.days === 14) periodKey = 'period.14days';
+                    else if (p.days === 30) periodKey = 'period.monthly';
+                    else periodKey = 'period.daily';
 
-                const label = translations[currentLang][periodKey] || p.days + ' يوم';
-                periodHtml += `
-                    <span class="period-tag">
-                        <span class="period-label" data-period-key="${periodKey}">${label}</span>
-                        : <span class="period-price">${p.price} DH</span>
-                    </span>
-                `;
-            });
-            periodHtml += '</div>';
+                    const label = translations[currentLang][periodKey] || p.days + ' يوم';
+                    periodHtml += `
+                        <span class="period-tag">
+                            <span class="period-label" data-period-key="${periodKey}">${label}</span>
+                            : <span class="period-price">${p.price} DH</span>
+                        </span>
+                    `;
+                });
+                periodHtml += '</div>';
+            }
         }
 
-        const dailyPrice = car.periods && car.periods.length > 0 ?
-            car.periods.find(p => p.days === 1)?.price || car.periods[0].price :
+        const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : (car.periods || []);
+        const dailyPrice = periods.length > 0 ?
+            periods.find(p => p.days === 1)?.price || periods[0].price :
             0;
 
         const isReserved = car.status === 'reserved';
@@ -438,7 +329,8 @@ function renderPricing() {
         const carsOfType = cars.filter(c => c.type === type);
         const avgPrice = carsOfType.length > 0 ?
             carsOfType.reduce((sum, c) => {
-                const daily = c.periods?.find(p => p.days === 1)?.price || 0;
+                const periods = typeof c.periods === 'string' ? JSON.parse(c.periods) : (c.periods || []);
+                const daily = periods.find(p => p.days === 1)?.price || 0;
                 return sum + daily;
             }, 0) / carsOfType.length :
             0;
@@ -471,10 +363,10 @@ function renderPricing() {
 
 function loadSiteInfo() {
     const data = getSiteData();
-    document.getElementById('info-phone').textContent = data.phone;
-    document.getElementById('info-phone2').textContent = data.phone2;
-    document.getElementById('info-email').textContent = data.email;
-    document.getElementById('info-address').textContent = data.address;
+    document.getElementById('info-phone').textContent = data.phone || '06 61 17 01 82';
+    document.getElementById('info-phone2').textContent = data.phone2 || '05 37 37 88 89';
+    document.getElementById('info-email').textContent = data.email || 'ahmadi2011@live.fr';
+    document.getElementById('info-address').textContent = data.address || 'زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة';
 
     const descEl = document.getElementById('hero-desc');
     if (currentLang === 'ar') {
@@ -529,13 +421,19 @@ function updatePrice() {
     const cars = getCars();
     const car = cars.find(c => c.id === currentCarId);
 
-    if (!car || !car.periods || car.periods.length === 0) {
+    if (!car || !car.periods) {
+        priceEl.textContent = '0 DH';
+        return;
+    }
+
+    const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : (car.periods || []);
+    if (periods.length === 0) {
         priceEl.textContent = '0 DH';
         return;
     }
 
     let bestPrice = 0;
-    const sortedPeriods = [...car.periods].sort((a, b) => b.days - a.days);
+    const sortedPeriods = [...periods].sort((a, b) => b.days - a.days);
 
     for (const period of sortedPeriods) {
         if (diffDays >= period.days) {
@@ -544,7 +442,7 @@ function updatePrice() {
             let total = fullPeriods * period.price;
 
             if (remainingDays > 0) {
-                const remainingPeriod = car.periods.find(p => p.days === 1);
+                const remainingPeriod = periods.find(p => p.days === 1);
                 if (remainingPeriod) {
                     total += remainingDays * remainingPeriod.price;
                 } else {
@@ -556,8 +454,8 @@ function updatePrice() {
         }
     }
 
-    if (bestPrice === 0 && car.periods.length > 0) {
-        const daily = car.periods.find(p => p.days === 1) || car.periods[0];
+    if (bestPrice === 0 && periods.length > 0) {
+        const daily = periods.find(p => p.days === 1) || periods[0];
         bestPrice = daily.price * diffDays;
     }
 
@@ -603,30 +501,31 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 // 🚀 INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
-    // عرض البيانات الافتراضية فوراً
-    carsData = DEFAULT_CARS;
-    renderCars();
-    renderPricing();
-    loadSiteInfo();
-    switchLanguage('ar');
+    const grid = document.getElementById('cars-grid');
+    grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">⏳ جاري تحميل البيانات...</p>';
     
-    // محاولة جلب البيانات من السحابة
-    const success = await fetchCarsFromCloud();
-    if (success && isCloudDataLoaded) {
+    const success = await fetchCarsFromSupabase();
+    
+    if (success && carsData.length > 0) {
         renderCars();
         renderPricing();
-        // showToast('✅ تم تحديث البيانات بنجاح!');
+        loadSiteInfo();
+        switchLanguage('ar');
+        showToast('✅ تم تحميل البيانات بنجاح!');
+    } else {
+        grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">⚠️ لا توجد سيارات، يرجى إضافة سيارات من لوحة الإدارة</p>';
+        renderPricing();
+        switchLanguage('ar');
     }
 });
 
-// جعل الدوال عامة للوصول من admin
+// جعل الدوال عامة
 window.renderCars = renderCars;
 window.renderPricing = renderPricing;
 window.getCars = getCars;
 window.loadSiteInfo = loadSiteInfo;
-window.carsData = carsData;
-window.siteData = siteData;
-window.DEFAULT_CARS = DEFAULT_CARS;
 window.updateCarsData = updateCarsData;
 window.showToast = showToast;
-window.fetchCarsFromCloud = fetchCarsFromCloud;
+window.carsData = carsData;
+window.siteData = siteData;
+window.fetchCarsFromSupabase = fetchCarsFromSupabase;
