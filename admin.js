@@ -78,7 +78,9 @@ function saveInfo(e) {
 // ===== CARS MANAGEMENT =====
 function getCars() {
     try {
-        return JSON.parse(localStorage.getItem('carsData')) || [];
+        const data = localStorage.getItem('carsData');
+        if (!data) return [];
+        return JSON.parse(data);
     } catch (e) {
         return [];
     }
@@ -86,12 +88,23 @@ function getCars() {
 
 function saveCars(cars) {
     localStorage.setItem('carsData', JSON.stringify(cars));
-    // Force render on main page
-    if (window.opener) {
+    // Update main page if open
+    if (window.opener && !window.opener.closed) {
         try {
-            window.opener.renderCars();
-            window.opener.renderPricing();
+            if (typeof window.opener.renderCars === 'function') {
+                window.opener.renderCars();
+            }
+            if (typeof window.opener.renderPricing === 'function') {
+                window.opener.renderPricing();
+            }
         } catch (e) {}
+    }
+    // Also update if in same window (when admin opens in same tab)
+    if (typeof window.renderCars === 'function') {
+        window.renderCars();
+    }
+    if (typeof window.renderPricing === 'function') {
+        window.renderPricing();
     }
 }
 
@@ -119,7 +132,7 @@ function renderCarsTable() {
 
         return `
             <tr>
-                <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2250%22%3E%3Crect fill=%22%23111827%22 width=%2280%22 height=%2250%22/%3E%3Ctext x=%2240%22 y=%2225%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2212%22 font-family=%22sans-serif%22%3E🚗%3C/text%3E%3C/svg%3E'"></td>
+                <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'"></td>
                 <td><strong>${car.name}</strong></td>
                 <td><span style="background:rgba(225,29,72,0.15);color:var(--primary-light);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
@@ -135,6 +148,7 @@ function renderCarsTable() {
 
 let editingCarId = null;
 let uploadedImageData = null;
+let uploadedImageName = '';
 
 // ===== PERIOD MANAGEMENT =====
 function addPeriod(days = '', price = '') {
@@ -184,7 +198,7 @@ function getPeriodsFromForm() {
     return periods;
 }
 
-// ===== IMAGE UPLOAD =====
+// ===== IMAGE UPLOAD - Convert to URL using free image hosting =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -199,22 +213,94 @@ function handleImageUpload(event) {
         return;
     }
 
+    // قراءة الصورة وتحويلها إلى Base64 مؤقتاً
     const reader = new FileReader();
     reader.onload = function(e) {
         uploadedImageData = e.target.result;
+        uploadedImageName = file.name;
+        
+        // عرض المعاينة
         const preview = document.getElementById('file-preview');
         preview.src = uploadedImageData;
         preview.classList.add('show');
         document.getElementById('file-name').textContent = file.name;
         document.getElementById('car-img-url').value = '';
+        
+        // تخزين الصورة مؤقتاً في sessionStorage للاستخدام في الجلسة الحالية
+        try {
+            // نضغط الصورة لتقليل حجمها
+            compressImage(uploadedImageData, function(compressedData) {
+                sessionStorage.setItem('tempCarImage', compressedData);
+            });
+        } catch (e) {
+            console.warn('Could not store image in sessionStorage:', e);
+        }
     };
     reader.readAsDataURL(file);
+}
+
+// دالة لضغط الصورة
+function compressImage(base64Data, callback) {
+    const img = new Image();
+    img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 400;
+        const MAX_HEIGHT = 300;
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > height) {
+            if (width > MAX_WIDTH) {
+                height *= MAX_WIDTH / width;
+                width = MAX_WIDTH;
+            }
+        } else {
+            if (height > MAX_HEIGHT) {
+                width *= MAX_HEIGHT / height;
+                height = MAX_HEIGHT;
+            }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        callback(canvas.toDataURL('image/jpeg', 0.7));
+    };
+    img.src = base64Data;
+}
+
+// دالة للحصول على رابط صورة (تستخدم رابط Unsplash إذا لم توجد صورة)
+function getImageUrl(imageData, carName) {
+    if (!imageData) {
+        // استخدام صورة افتراضية من Unsplash
+        return `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80`;
+    }
+    
+    // إذا كانت الصورة تبدأ بـ data:image فهي Base64
+    if (imageData.startsWith('data:image')) {
+        // نحاول تخزينها في localStorage إذا كان حجمها صغيراً
+        try {
+            // إذا كان حجم الصورة أقل من 500KB نخزنها مباشرة
+            const sizeInBytes = imageData.length * 3 / 4;
+            if (sizeInBytes < 500 * 1024) {
+                return imageData;
+            }
+        } catch (e) {}
+        
+        // وإلا نستخدم صورة افتراضية
+        return `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80`;
+    }
+    
+    // إذا كان رابط عادي
+    return imageData;
 }
 
 // ===== CAR MODAL =====
 function openCarModal() {
     editingCarId = null;
     uploadedImageData = null;
+    uploadedImageName = '';
     document.getElementById('car-modal-title').textContent = 'إضافة سيارة جديدة';
     document.getElementById('car-form').reset();
     document.getElementById('car-id').value = '';
@@ -279,16 +365,69 @@ function saveCar(e) {
         return;
     }
 
+    // معالجة الصورة
     let finalImage;
+    
+    // 1. إذا تم رفع صورة جديدة
     if (uploadedImageData) {
-        finalImage = uploadedImageData;
-    } else if (imageUrl) {
+        // نضغط الصورة قبل تخزينها
+        try {
+            // نستخدم الصورة المضغوطة إذا كانت موجودة في sessionStorage
+            const compressed = sessionStorage.getItem('tempCarImage');
+            if (compressed && compressed.startsWith('data:image')) {
+                finalImage = compressed;
+            } else {
+                // نضغط الصورة مباشرة
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const MAX_HEIGHT = 300;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedData = canvas.toDataURL('image/jpeg', 0.6);
+                    
+                    // تخزين الصورة في carsData
+                    finalImage = compressedData;
+                    saveCarData(cars, name, type, status, finalImage, periods);
+                };
+                img.src = uploadedImageData;
+                return; // ننتظر تحميل الصورة
+            }
+        } catch (e) {
+            finalImage = uploadedImageData;
+        }
+    } 
+    // 2. إذا تم إدخال رابط
+    else if (imageUrl) {
         finalImage = imageUrl;
-    } else {
-        // Use default image if none provided
+    } 
+    // 3. صورة افتراضية
+    else {
         finalImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
     }
 
+    saveCarData(cars, name, type, status, finalImage, periods);
+}
+
+function saveCarData(cars, name, type, status, finalImage, periods) {
     const carData = {
         id: editingCarId || Date.now(),
         name: name,
@@ -311,41 +450,78 @@ function saveCar(e) {
         showToast('✅ تم إضافة السيارة بنجاح!');
     }
 
-    // Save to localStorage
-    saveCars(cars);
+    // حفظ في localStorage
+    try {
+        localStorage.setItem('carsData', JSON.stringify(cars));
+    } catch (e) {
+        // إذا كان الحجم كبيراً، نضغط الصور أكثر
+        showToast('⚠️ حجم الصورة كبير جداً، يتم ضغطها...', false);
+        // نحاول ضغط الصورة مرة أخرى
+        if (finalImage.startsWith('data:image')) {
+            compressImage(finalImage, function(compressed) {
+                carData.img = compressed;
+                try {
+                    localStorage.setItem('carsData', JSON.stringify(cars));
+                } catch (e2) {
+                    // إذا فشل، نستخدم صورة افتراضية
+                    carData.img = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
+                    localStorage.setItem('carsData', JSON.stringify(cars));
+                    showToast('✅ تم حفظ البيانات مع صورة افتراضية', false);
+                }
+            });
+            return;
+        }
+    }
 
-    // Update table
+    // تحديث الجداول
     renderCarsTable();
+    
+    // تحديث الصفحة الرئيسية إذا كانت مفتوحة
+    try {
+        if (window.opener && !window.opener.closed) {
+            if (typeof window.opener.renderCars === 'function') {
+                window.opener.renderCars();
+            }
+            if (typeof window.opener.renderPricing === 'function') {
+                window.opener.renderPricing();
+            }
+        }
+        // تحديث في نفس النافذة
+        if (typeof window.renderCars === 'function') {
+            window.renderCars();
+        }
+        if (typeof window.renderPricing === 'function') {
+            window.renderPricing();
+        }
+    } catch (e) {}
 
-    // Close modal
+    // إغلاق المودال وتنظيف
     closeCarModal();
     uploadedImageData = null;
-
-    // Clear form
+    uploadedImageName = '';
+    sessionStorage.removeItem('tempCarImage');
     document.getElementById('car-form').reset();
-
-    // Update main page if open
-    if (window.opener && !window.opener.closed) {
-        try {
-            window.opener.renderCars();
-            window.opener.renderPricing();
-        } catch (e) {}
-    }
 }
 
 function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;
     const cars = getCars().filter(c => c.id !== id);
-    saveCars(cars);
+    try {
+        localStorage.setItem('carsData', JSON.stringify(cars));
+    } catch (e) {}
     renderCarsTable();
 
-    // Update main page if open
-    if (window.opener && !window.opener.closed) {
-        try {
-            window.opener.renderCars();
-            window.opener.renderPricing();
-        } catch (e) {}
-    }
+    // تحديث الصفحة الرئيسية
+    try {
+        if (window.opener && !window.opener.closed) {
+            if (typeof window.opener.renderCars === 'function') {
+                window.opener.renderCars();
+            }
+            if (typeof window.opener.renderPricing === 'function') {
+                window.opener.renderPricing();
+            }
+        }
+    } catch (e) {}
 
     showToast('🗑️ تم حذف السيارة');
 }
@@ -369,9 +545,6 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         if (document.getElementById('car-modal').classList.contains('active')) {
             closeCarModal();
-        }
-        if (document.getElementById('reserve-modal')?.classList.contains('active')) {
-            document.getElementById('reserve-modal').classList.remove('active');
         }
     }
 });

@@ -117,7 +117,6 @@ function switchLanguage(lang) {
     document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById('lang-' + lang).classList.add('active');
 
-    // Update text content for elements with data-i18n
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang][key]) {
@@ -125,7 +124,6 @@ function switchLanguage(lang) {
         }
     });
 
-    // Update placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
         if (translations[lang][key]) {
@@ -133,7 +131,6 @@ function switchLanguage(lang) {
         }
     });
 
-    // Update hero description
     const descEl = document.getElementById('hero-desc');
     if (lang === 'ar') {
         descEl.textContent = translations.ar['hero.desc'];
@@ -141,43 +138,24 @@ function switchLanguage(lang) {
         descEl.textContent = translations.fr['hero.desc'];
     }
 
-    // Re-render cars and pricing with new language
     renderCars();
     renderPricing();
 
-    // Update modal
     document.querySelector('#reserve-modal .modal-header h3').innerHTML = translations[lang]['modal.title'];
-    document.querySelector('#reserve-modal .modal-header h3').setAttribute('data-i18n', 'modal.title');
     document.querySelector('#price-display span').innerHTML = translations[lang]['modal.priceLabel'];
-    document.querySelector('#price-display span').setAttribute('data-i18n', 'modal.priceLabel');
     document.querySelector('#reserve-modal button[type="submit"] span').innerHTML = translations[lang]['modal.confirm'];
-    document.querySelector('#reserve-modal button[type="submit"] span').setAttribute('data-i18n', 'modal.confirm');
 
-    // Update contact form labels
     document.querySelector('.contact-info h3').innerHTML = translations[lang]['contact.info'];
-    document.querySelector('.contact-info h3').setAttribute('data-i18n', 'contact.info');
     document.querySelector('.contact-form h3').innerHTML = translations[lang]['contact.sendMsg'];
-    document.querySelector('.contact-form h3').setAttribute('data-i18n', 'contact.sendMsg');
     document.querySelector('.contact-form button span').innerHTML = translations[lang]['contact.send'];
-    document.querySelector('.contact-form button span').setAttribute('data-i18n', 'contact.send');
 
-    // Update footer
     document.querySelector('.copyright span').innerHTML = translations[lang]['footer.rights'];
-    document.querySelector('.copyright span').setAttribute('data-i18n', 'footer.rights');
-
-    // Update nav admin
     document.querySelector('.nav-actions .btn-admin span').innerHTML = translations[lang]['nav.admin'];
-    document.querySelector('.nav-actions .btn-admin span').setAttribute('data-i18n', 'nav.admin');
     document.querySelector('.footer-links .admin-link span').innerHTML = translations[lang]['nav.admin'];
-    document.querySelector('.footer-links .admin-link span').setAttribute('data-i18n', 'nav.admin');
     document.querySelector('.nav-actions .btn-primary span').innerHTML = translations[lang]['nav.book'];
-    document.querySelector('.nav-actions .btn-primary span').setAttribute('data-i18n', 'nav.book');
 
-    // Update hero buttons
     document.querySelector('.hero-buttons .btn-primary span').innerHTML = translations[lang]['hero.explore'];
-    document.querySelector('.hero-buttons .btn-primary span').setAttribute('data-i18n', 'hero.explore');
     document.querySelector('.hero-buttons .btn-outline span').innerHTML = translations[lang]['hero.contact'];
-    document.querySelector('.hero-buttons .btn-outline span').setAttribute('data-i18n', 'hero.contact');
 }
 
 // ============================================================
@@ -286,7 +264,9 @@ function initStorage() {
 
 function getCars() {
     try {
-        return JSON.parse(localStorage.getItem('carsData')) || defaultCars;
+        const data = localStorage.getItem('carsData');
+        if (!data) return defaultCars;
+        return JSON.parse(data);
     } catch (e) {
         return defaultCars;
     }
@@ -294,7 +274,9 @@ function getCars() {
 
 function getSiteData() {
     try {
-        return JSON.parse(localStorage.getItem('siteData')) || defaultSiteData;
+        const data = localStorage.getItem('siteData');
+        if (!data) return defaultSiteData;
+        return JSON.parse(data);
     } catch (e) {
         return defaultSiteData;
     }
@@ -307,7 +289,7 @@ function renderCars() {
     const grid = document.getElementById('cars-grid');
     const cars = getCars();
 
-    if (cars.length === 0) {
+    if (!cars || cars.length === 0) {
         grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">لا توجد سيارات متاحة حالياً</p>';
         return;
     }
@@ -318,14 +300,12 @@ function renderCars() {
             translations[currentLang]['status.reserved'];
         const statusClass = car.status === 'available' ? 'available' : 'reserved';
 
-        // Get type translation
         let typeKey = 'type.economy';
         if (car.type === 'اقتصادية') typeKey = 'type.economy';
         else if (car.type === 'عائلية') typeKey = 'type.family';
         else if (car.type === 'فاخرة') typeKey = 'type.luxury';
         const typeText = translations[currentLang][typeKey] || car.type;
 
-        // Build period tags with translation
         let periodHtml = '';
         if (car.periods && car.periods.length > 0) {
             periodHtml = '<div class="car-periods">';
@@ -350,7 +330,6 @@ function renderCars() {
             periodHtml += '</div>';
         }
 
-        // Find daily price for display
         const dailyPrice = car.periods && car.periods.length > 0 ?
             car.periods.find(p => p.days === 1)?.price || car.periods[0].price :
             0;
@@ -358,10 +337,21 @@ function renderCars() {
         const isReserved = car.status === 'reserved';
         const bookText = isReserved ? translations[currentLang]['reserve.reserved'] : translations[currentLang]['reserve.book'];
 
+        // معالجة الصورة - إذا كانت Base64 كبيرة جداً، نستخدم صورة افتراضية
+        let imageSrc = car.img;
+        if (imageSrc && imageSrc.startsWith('data:image')) {
+            // نتحقق من حجم الصورة
+            const sizeInBytes = imageSrc.length * 3 / 4;
+            if (sizeInBytes > 400 * 1024) {
+                // إذا كانت الصورة كبيرة، نستخدم صورة افتراضية
+                imageSrc = `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80&text=${encodeURIComponent(car.name)}`;
+            }
+        }
+
         return `
             <div class="car-card">
                 <div class="car-image">
-                    <img src="${car.img}" alt="${car.name}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22400%22%3E%3Crect fill=%22%23111827%22 width=%22600%22 height=%22400%22/%3E%3Ctext x=%22300%22 y=%22200%22 text-anchor=%22middle%22 fill=%22%239ca3af%22 font-size=%2224%22 font-family=%22sans-serif%22%3E🚗 ${car.name}%3C/text%3E%3C/svg%3E'">
+                    <img src="${imageSrc}" alt="${car.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'">
                     <span class="car-badge ${statusClass}">${statusText}</span>
                 </div>
                 <div class="car-info">
@@ -384,7 +374,6 @@ function renderPricing() {
     const grid = document.getElementById('pricing-grid');
     const cars = getCars();
 
-    // Group by type
     const types = ['اقتصادية', 'عائلية', 'فاخرة'];
     const typeLabels = {
         'اقتصادية': translations[currentLang]['type.economy'],
@@ -567,3 +556,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSiteInfo();
     switchLanguage('ar');
 });
+
+// جعل الدوال عامة للوصول من admin
+window.renderCars = renderCars;
+window.renderPricing = renderPricing;
+window.getCars = getCars;
