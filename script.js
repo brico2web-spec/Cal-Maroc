@@ -49,9 +49,11 @@ const translations = {
         'period.7days': '7 أيام',
         'period.14days': '14 يوماً',
         'period.30days': '30 يوماً',
-        'reserve.chooseDates': 'اختر التواريخ',
-        'reserve.from': 'من',
-        'reserve.to': 'إلى',
+        'type.economy': 'اقتصادية',
+        'type.family': 'عائلية',
+        'type.luxury': 'فاخرة',
+        'reserve.book': 'احجز الآن',
+        'reserve.reserved': '🔒 محجوزة',
     },
     fr: {
         'nav.home': 'Accueil',
@@ -100,9 +102,11 @@ const translations = {
         'period.7days': '7 jours',
         'period.14days': '14 jours',
         'period.30days': '30 jours',
-        'reserve.chooseDates': 'Choisir les dates',
-        'reserve.from': 'Du',
-        'reserve.to': 'Au',
+        'type.economy': 'Économique',
+        'type.family': 'Familiale',
+        'type.luxury': 'Luxe',
+        'reserve.book': 'Réserver',
+        'reserve.reserved': '🔒 Réservée',
     }
 };
 
@@ -130,28 +134,16 @@ function switchLanguage(lang) {
     });
 
     // Update hero description
+    const descEl = document.getElementById('hero-desc');
     if (lang === 'ar') {
-        document.getElementById('hero-desc').textContent = translations.ar['hero.desc'];
+        descEl.textContent = translations.ar['hero.desc'];
     } else {
-        document.getElementById('hero-desc').textContent = translations.fr['hero.desc'];
+        descEl.textContent = translations.fr['hero.desc'];
     }
 
-    // Update car status labels
-    document.querySelectorAll('.car-badge').forEach(el => {
-        if (el.classList.contains('available')) {
-            el.textContent = translations[lang]['status.available'];
-        } else if (el.classList.contains('reserved')) {
-            el.textContent = translations[lang]['status.reserved'];
-        }
-    });
-
-    // Update period tags
-    document.querySelectorAll('.period-tag .period-label').forEach(el => {
-        const key = el.getAttribute('data-period-key');
-        if (translations[lang][key]) {
-            el.textContent = translations[lang][key];
-        }
-    });
+    // Re-render cars and pricing with new language
+    renderCars();
+    renderPricing();
 
     // Update modal
     document.querySelector('#reserve-modal .modal-header h3').innerHTML = translations[lang]['modal.title'];
@@ -176,16 +168,12 @@ function switchLanguage(lang) {
     // Update nav admin
     document.querySelector('.nav-actions .btn-admin span').innerHTML = translations[lang]['nav.admin'];
     document.querySelector('.nav-actions .btn-admin span').setAttribute('data-i18n', 'nav.admin');
-
-    // Update footer admin link
     document.querySelector('.footer-links .admin-link span').innerHTML = translations[lang]['nav.admin'];
     document.querySelector('.footer-links .admin-link span').setAttribute('data-i18n', 'nav.admin');
-
-    // Update booking button
     document.querySelector('.nav-actions .btn-primary span').innerHTML = translations[lang]['nav.book'];
     document.querySelector('.nav-actions .btn-primary span').setAttribute('data-i18n', 'nav.book');
 
-    // Update hero button
+    // Update hero buttons
     document.querySelector('.hero-buttons .btn-primary span').innerHTML = translations[lang]['hero.explore'];
     document.querySelector('.hero-buttons .btn-primary span').setAttribute('data-i18n', 'hero.explore');
     document.querySelector('.hero-buttons .btn-outline span').innerHTML = translations[lang]['hero.contact'];
@@ -297,11 +285,19 @@ function initStorage() {
 }
 
 function getCars() {
-    return JSON.parse(localStorage.getItem('carsData')) || defaultCars;
+    try {
+        return JSON.parse(localStorage.getItem('carsData')) || defaultCars;
+    } catch (e) {
+        return defaultCars;
+    }
 }
 
 function getSiteData() {
-    return JSON.parse(localStorage.getItem('siteData')) || defaultSiteData;
+    try {
+        return JSON.parse(localStorage.getItem('siteData')) || defaultSiteData;
+    } catch (e) {
+        return defaultSiteData;
+    }
 }
 
 // ============================================================
@@ -322,7 +318,14 @@ function renderCars() {
             translations[currentLang]['status.reserved'];
         const statusClass = car.status === 'available' ? 'available' : 'reserved';
 
-        // Build period tags
+        // Get type translation
+        let typeKey = 'type.economy';
+        if (car.type === 'اقتصادية') typeKey = 'type.economy';
+        else if (car.type === 'عائلية') typeKey = 'type.family';
+        else if (car.type === 'فاخرة') typeKey = 'type.luxury';
+        const typeText = translations[currentLang][typeKey] || car.type;
+
+        // Build period tags with translation
         let periodHtml = '';
         if (car.periods && car.periods.length > 0) {
             periodHtml = '<div class="car-periods">';
@@ -352,6 +355,9 @@ function renderCars() {
             car.periods.find(p => p.days === 1)?.price || car.periods[0].price :
             0;
 
+        const isReserved = car.status === 'reserved';
+        const bookText = isReserved ? translations[currentLang]['reserve.reserved'] : translations[currentLang]['reserve.book'];
+
         return `
             <div class="car-card">
                 <div class="car-image">
@@ -361,12 +367,12 @@ function renderCars() {
                 <div class="car-info">
                     <div class="car-header">
                         <h3>${car.name}</h3>
-                        <span class="car-tag">${car.type}</span>
+                        <span class="car-tag">${typeText}</span>
                     </div>
-                    <div class="car-price">${dailyPrice} <small>DH / يوم</small></div>
+                    <div class="car-price">${dailyPrice} <small>DH / ${translations[currentLang]['period.daily']}</small></div>
                     ${periodHtml}
-                    <button onclick="openReserve('${car.name} - ${car.type}', ${car.id})" class="btn-secondary" ${car.status === 'reserved' ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
-                        ${car.status === 'reserved' ? '🔒 محجوزة' : 'احجز الآن'}
+                    <button onclick="openReserve('${car.name} - ${typeText}', ${car.id})" class="btn-secondary" ${isReserved ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                        ${bookText}
                     </button>
                 </div>
             </div>
@@ -381,9 +387,9 @@ function renderPricing() {
     // Group by type
     const types = ['اقتصادية', 'عائلية', 'فاخرة'];
     const typeLabels = {
-        'اقتصادية': 'اقتصادية',
-        'عائلية': 'عائلية',
-        'فاخرة': 'فاخرة'
+        'اقتصادية': translations[currentLang]['type.economy'],
+        'عائلية': translations[currentLang]['type.family'],
+        'فاخرة': translations[currentLang]['type.luxury']
     };
 
     const typeData = types.map(type => {
@@ -403,18 +409,18 @@ function renderPricing() {
 
         return `
             <div class="pricing-card ${isFeatured ? 'featured' : ''}">
-                ${isFeatured ? '<div class="badge-popular">🌟 الأكثر طلباً</div>' : ''}
+                ${isFeatured ? '<div class="badge-popular">🌟 ' + (currentLang === 'ar' ? 'الأكثر طلباً' : 'Le plus demandé') + '</div>' : ''}
                 <h3>${typeLabels[data.type]}</h3>
-                <div class="price">${priceDisplay} <span>DH/يوم</span></div>
+                <div class="price">${priceDisplay} <span>DH/${translations[currentLang]['period.daily']}</span></div>
                 <ul>
-                    <li>✓ تأمين شامل</li>
-                    <li>✓ مسافة غير محدودة</li>
-                    <li>✓ خدمة التوصيل</li>
-                    ${isFeatured ? '<li>✓ مقعد أطفال مجاني</li>' : ''}
-                    <li>✓ دعم على مدار الساعة</li>
+                    <li>✓ ${currentLang === 'ar' ? 'تأمين شامل' : 'Assurance complète'}</li>
+                    <li>✓ ${currentLang === 'ar' ? 'مسافة غير محدودة' : 'Kilométrage illimité'}</li>
+                    <li>✓ ${currentLang === 'ar' ? 'خدمة التوصيل' : 'Service de livraison'}</li>
+                    ${isFeatured ? '<li>✓ ' + (currentLang === 'ar' ? 'مقعد أطفال مجاني' : 'Siège enfant gratuit') + '</li>' : ''}
+                    <li>✓ ${currentLang === 'ar' ? 'دعم على مدار الساعة' : 'Support 24/7'}</li>
                 </ul>
                 <button onclick="openReserve('${typeLabels[data.type]}')" class="${isFeatured ? 'btn-primary' : 'btn-secondary'}">
-                    احجز الآن
+                    ${currentLang === 'ar' ? 'احجز الآن' : 'Réserver'}
                 </button>
             </div>
         `;
@@ -428,7 +434,6 @@ function loadSiteInfo() {
     document.getElementById('info-email').textContent = data.email;
     document.getElementById('info-address').textContent = data.address;
 
-    // Update hero description based on language
     const descEl = document.getElementById('hero-desc');
     if (currentLang === 'ar') {
         descEl.textContent = data.description || translations.ar['hero.desc'];
@@ -447,7 +452,6 @@ function openReserve(carName, carId) {
     document.getElementById('car-type').value = carName;
     document.getElementById('reserve-modal').classList.add('active');
 
-    // Set default dates
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -455,10 +459,7 @@ function openReserve(carName, carId) {
     document.getElementById('start-date').value = today.toISOString().split('T')[0];
     document.getElementById('end-date').value = tomorrow.toISOString().split('T')[0];
 
-    // Update price on date change
     updatePrice();
-
-    // Add event listeners for date changes
     document.getElementById('start-date').onchange = updatePrice;
     document.getElementById('end-date').onchange = updatePrice;
 }
@@ -483,7 +484,6 @@ function updatePrice() {
         return;
     }
 
-    // Find car and calculate price
     const cars = getCars();
     const car = cars.find(c => c.id === currentCarId);
 
@@ -492,19 +492,15 @@ function updatePrice() {
         return;
     }
 
-    // Find best price for the duration
     let bestPrice = 0;
-    // Sort periods by days descending to find best match
     const sortedPeriods = [...car.periods].sort((a, b) => b.days - a.days);
 
     for (const period of sortedPeriods) {
         if (diffDays >= period.days) {
-            // Calculate price based on period
             const fullPeriods = Math.floor(diffDays / period.days);
             const remainingDays = diffDays % period.days;
             let total = fullPeriods * period.price;
 
-            // Handle remaining days with best rate
             if (remainingDays > 0) {
                 const remainingPeriod = car.periods.find(p => p.days === 1);
                 if (remainingPeriod) {
@@ -519,7 +515,6 @@ function updatePrice() {
     }
 
     if (bestPrice === 0 && car.periods.length > 0) {
-        // Fallback: use daily rate
         const daily = car.periods.find(p => p.days === 1) || car.periods[0];
         bestPrice = daily.price * diffDays;
     }
@@ -533,14 +528,14 @@ function closeModal() {
 
 function handleSubmit(e) {
     e.preventDefault();
-    showToast('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً');
+    showToast(currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً' : 'Votre message a été envoyé avec succès! Nous vous contacterons bientôt');
     e.target.reset();
 }
 
 function handleReserve(e) {
     e.preventDefault();
     closeModal();
-    showToast('✅ تم تأكيد حجزك بنجاح! سنتواصل معك لتأكيد التفاصيل');
+    showToast(currentLang === 'ar' ? '✅ تم تأكيد حجزك بنجاح! سنتواصل معك لتأكيد التفاصيل' : '✅ Votre réservation a été confirmée! Nous vous contacterons pour confirmer les détails');
     e.target.reset();
 }
 

@@ -77,11 +77,22 @@ function saveInfo(e) {
 
 // ===== CARS MANAGEMENT =====
 function getCars() {
-    return JSON.parse(localStorage.getItem('carsData')) || [];
+    try {
+        return JSON.parse(localStorage.getItem('carsData')) || [];
+    } catch (e) {
+        return [];
+    }
 }
 
 function saveCars(cars) {
     localStorage.setItem('carsData', JSON.stringify(cars));
+    // Force render on main page
+    if (window.opener) {
+        try {
+            window.opener.renderCars();
+            window.opener.renderPricing();
+        } catch (e) {}
+    }
 }
 
 function renderCarsTable() {
@@ -124,7 +135,6 @@ function renderCarsTable() {
 
 let editingCarId = null;
 let uploadedImageData = null;
-let periodsData = [];
 
 // ===== PERIOD MANAGEMENT =====
 function addPeriod(days = '', price = '') {
@@ -153,7 +163,6 @@ function loadPeriods(periods) {
     if (periods && periods.length > 0) {
         periods.forEach(p => addPeriod(p.days, p.price));
     } else {
-        // Add default periods
         addPeriod(1, '');
         addPeriod(3, '');
         addPeriod(7, '');
@@ -171,7 +180,6 @@ function getPeriodsFromForm() {
             periods.push({ days, price });
         }
     });
-    // Sort by days ascending
     periods.sort((a, b) => a.days - b.days);
     return periods;
 }
@@ -254,27 +262,31 @@ function saveCar(e) {
     e.preventDefault();
 
     const cars = getCars();
-    const name = document.getElementById('car-name').value;
+    const name = document.getElementById('car-name').value.trim();
     const type = document.getElementById('car-type').value;
     const status = document.getElementById('car-status').value;
     const imageUrl = document.getElementById('car-img-url').value.trim();
     const periods = getPeriodsFromForm();
 
-    // Validate periods
+    // Validate
+    if (!name) {
+        showToast('❌ يرجى إدخال اسم السيارة', true);
+        return;
+    }
+
     if (periods.length === 0) {
         showToast('❌ يرجى إضافة على الأقل فترة حجز واحدة', true);
         return;
     }
 
-    // Determine image source
     let finalImage;
     if (uploadedImageData) {
         finalImage = uploadedImageData;
     } else if (imageUrl) {
         finalImage = imageUrl;
     } else {
-        showToast('❌ يرجى رفع صورة أو إدخال رابط صورة', true);
-        return;
+        // Use default image if none provided
+        finalImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
     }
 
     const carData = {
@@ -288,17 +300,37 @@ function saveCar(e) {
 
     if (editingCarId) {
         const index = cars.findIndex(c => c.id === editingCarId);
-        if (index !== -1) cars[index] = carData;
+        if (index !== -1) {
+            cars[index] = carData;
+        } else {
+            cars.push(carData);
+        }
         showToast('✅ تم تعديل السيارة بنجاح!');
     } else {
         cars.push(carData);
         showToast('✅ تم إضافة السيارة بنجاح!');
     }
 
+    // Save to localStorage
     saveCars(cars);
+
+    // Update table
     renderCarsTable();
+
+    // Close modal
     closeCarModal();
     uploadedImageData = null;
+
+    // Clear form
+    document.getElementById('car-form').reset();
+
+    // Update main page if open
+    if (window.opener && !window.opener.closed) {
+        try {
+            window.opener.renderCars();
+            window.opener.renderPricing();
+        } catch (e) {}
+    }
 }
 
 function deleteCar(id) {
@@ -306,6 +338,15 @@ function deleteCar(id) {
     const cars = getCars().filter(c => c.id !== id);
     saveCars(cars);
     renderCarsTable();
+
+    // Update main page if open
+    if (window.opener && !window.opener.closed) {
+        try {
+            window.opener.renderCars();
+            window.opener.renderPricing();
+        } catch (e) {}
+    }
+
     showToast('🗑️ تم حذف السيارة');
 }
 
@@ -321,4 +362,16 @@ function showToast(msg, isError = false) {
 // ===== CLOSE MODAL ON OUTSIDE CLICK =====
 document.getElementById('car-modal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('car-modal')) closeCarModal();
+});
+
+// ===== KEYBOARD SHORTCUT =====
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (document.getElementById('car-modal').classList.contains('active')) {
+            closeCarModal();
+        }
+        if (document.getElementById('reserve-modal')?.classList.contains('active')) {
+            document.getElementById('reserve-modal').classList.remove('active');
+        }
+    }
 });
