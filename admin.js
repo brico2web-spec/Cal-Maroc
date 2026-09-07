@@ -1,8 +1,7 @@
-// Admin Credentials
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
+let uploadedImageBase64 = '';
 
-// Check session on load
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('adminSession') === 'active') {
         showDashboard();
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Login
 function handleLogin(e) {
     e.preventDefault();
     const user = document.getElementById('username').value.trim();
@@ -40,7 +38,6 @@ function logout() {
     location.reload();
 }
 
-// Tabs
 function showTab(tabName) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -52,7 +49,6 @@ function showTab(tabName) {
     document.getElementById('page-title').textContent = titles[tabName];
 }
 
-// Info Management
 function loadInfoForm() {
     const data = JSON.parse(localStorage.getItem('siteData')) || {};
     document.getElementById('edit-phone').value = data.phone || '';
@@ -75,7 +71,6 @@ function saveInfo(e) {
     showToast('✅ تم حفظ المعلومات بنجاح!');
 }
 
-// Cars Management
 function getCars() {
     return JSON.parse(localStorage.getItem('carsData')) || [];
 }
@@ -111,14 +106,33 @@ let editingCarId = null;
 
 function openCarModal() {
     editingCarId = null;
+    uploadedImageBase64 = '';
     document.getElementById('car-modal-title').textContent = 'إضافة سيارة جديدة';
     document.getElementById('car-form').reset();
     document.getElementById('car-id').value = '';
+    document.getElementById('car-img-base64').value = '';
+    document.getElementById('img-preview-wrap').innerHTML = '';
     document.getElementById('car-modal').classList.add('active');
 }
 
 function closeCarModal() {
     document.getElementById('car-modal').classList.remove('active');
+}
+
+// Handle Image File Upload (JPG / PNG)
+function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            uploadedImageBase64 = event.target.result;
+            document.getElementById('car-img-base64').value = uploadedImageBase64;
+            document.getElementById('img-preview-wrap').innerHTML = `
+                <img src="${uploadedImageBase64}" style="width: 120px; height: 75px; object-fit: cover; border-radius: 0.5rem; border: 1px solid rgba(220,38,38,0.5);">
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 function editCar(id) {
@@ -127,24 +141,35 @@ function editCar(id) {
     if (!car) return;
     
     editingCarId = id;
+    uploadedImageBase64 = car.img;
     document.getElementById('car-modal-title').textContent = 'تعديل سيارة';
     document.getElementById('car-id').value = car.id;
     document.getElementById('car-name').value = car.name;
     document.getElementById('car-type').value = car.type;
     document.getElementById('car-price').value = car.price;
-    document.getElementById('car-img').value = car.img;
+    document.getElementById('car-img-base64').value = car.img;
+    document.getElementById('img-preview-wrap').innerHTML = `
+        <img src="${car.img}" style="width: 120px; height: 75px; object-fit: cover; border-radius: 0.5rem; border: 1px solid rgba(220,38,38,0.5);">
+    `;
     document.getElementById('car-modal').classList.add('active');
 }
 
 function saveCar(e) {
     e.preventDefault();
     const cars = getCars();
+    const imgVal = document.getElementById('car-img-base64').value;
+    
+    if (!imgVal) {
+        showToast('❌ الرجاء اختيار صورة للسيارة', true);
+        return;
+    }
+
     const carData = {
         id: editingCarId || Date.now(),
         name: document.getElementById('car-name').value,
         type: document.getElementById('car-type').value,
         price: document.getElementById('car-price').value,
-        img: document.getElementById('car-img').value
+        img: imgVal
     };
     
     if (editingCarId) {
@@ -169,7 +194,6 @@ function deleteCar(id) {
     showToast('🗑️ تم حذف السيارة');
 }
 
-// Toast
 function showToast(msg, isError = false) {
     const toast = document.getElementById('admin-toast');
     toast.textContent = msg;
@@ -178,7 +202,6 @@ function showToast(msg, isError = false) {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// Close modal on outside click
 document.getElementById('car-modal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('car-modal')) closeCarModal();
 });
