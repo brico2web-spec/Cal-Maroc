@@ -165,7 +165,7 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// 📦 السيارات الافتراضية (في حال تعذر الاتصال بالسحابة)
+// 📦 السيارات الافتراضية (تظهر دائماً)
 // ============================================================
 const DEFAULT_CARS = [
     {
@@ -257,12 +257,14 @@ let siteData = {
 };
 
 // ============================================================
-// 🌐 جلب البيانات من السحابة
+// 🌐 جلب البيانات من السحابة مع إنشاء البيانات إذا كانت فارغة
 // ============================================================
 let carsData = [];
+let isCloudDataLoaded = false;
 
 async function fetchCarsFromCloud() {
     try {
+        console.log('🔄 جاري جلب البيانات من السحابة...');
         const response = await fetch(JSONBIN_URL, {
             headers: {
                 'X-Master-Key': JSONBIN_KEY
@@ -270,29 +272,67 @@ async function fetchCarsFromCloud() {
         });
         
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('فشل الاتصال بالسحابة');
         }
         
         const data = await response.json();
         const record = data.record;
         
-        if (record && record.cars && Array.isArray(record.cars)) {
+        // التحقق من وجود بيانات
+        if (record && record.cars && Array.isArray(record.cars) && record.cars.length > 0) {
             carsData = record.cars;
+            isCloudDataLoaded = true;
             console.log('✅ تم جلب البيانات من السحابة:', carsData.length, 'سيارة');
             return true;
         } else {
-            throw new Error('Invalid data format');
+            // إذا كانت البيانات فارغة، نرسل البيانات الافتراضية إلى السحابة
+            console.log('📦 البيانات في السحابة فارغة، جاري إرسال البيانات الافتراضية...');
+            await sendDefaultDataToCloud();
+            return true;
         }
     } catch (error) {
-        console.warn('⚠️ تعذر جلب البيانات من السحابة، استخدام البيانات المحلية');
+        console.warn('⚠️ تعذر جلب البيانات من السحابة:', error.message);
+        return false;
+    }
+}
+
+// دالة لإرسال البيانات الافتراضية إلى السحابة
+async function sendDefaultDataToCloud() {
+    try {
+        const payload = {
+            cars: DEFAULT_CARS,
+            site: siteData
+        };
+        
+        const response = await fetch(JSONBIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (response.ok) {
+            carsData = DEFAULT_CARS;
+            isCloudDataLoaded = true;
+            console.log('✅ تم إرسال البيانات الافتراضية إلى السحابة بنجاح!');
+            return true;
+        } else {
+            throw new Error('فشل في حفظ البيانات');
+        }
+    } catch (error) {
+        console.warn('⚠️ تعذر حفظ البيانات في السحابة:', error.message);
         return false;
     }
 }
 
 function getCars() {
-    if (carsData && carsData.length > 0) {
+    // إذا كانت البيانات من السحابة محملة، نستخدمها
+    if (isCloudDataLoaded && carsData && carsData.length > 0) {
         return carsData;
     }
+    // وإلا نستخدم البيانات الافتراضية
     return DEFAULT_CARS;
 }
 
@@ -308,7 +348,7 @@ function renderCars() {
     const cars = getCars();
 
     if (!cars || cars.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">لا توجد سيارات متاحة حالياً</p>';
+        grid.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:2rem;">🚗 لا توجد سيارات متاحة حالياً</p>';
         return;
     }
 
@@ -553,30 +593,33 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 });
 
 // ============================================================
-// 🚀 INIT - جلب البيانات من السحابة أولاً
+// 🚀 INIT - جلب البيانات من السحابة
 // ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
-    // نعرض البيانات الافتراضية أولاً
+    // عرض البيانات الافتراضية فوراً
     carsData = DEFAULT_CARS;
     renderCars();
     renderPricing();
     loadSiteInfo();
     switchLanguage('ar');
     
-    // نحاول جلب البيانات من السحابة
+    // محاولة جلب البيانات من السحابة في الخلفية
     const success = await fetchCarsFromCloud();
-    if (success) {
+    if (success && isCloudDataLoaded) {
         // تحديث الصفحة بالبيانات الجديدة
         renderCars();
         renderPricing();
         showToast('✅ تم تحديث البيانات بنجاح!');
+    } else {
+        console.log('✅ يتم عرض البيانات الافتراضية');
     }
 });
 
-// جعل الدوال عامة
+// جعل الدوال عامة للوصول من admin
 window.renderCars = renderCars;
 window.renderPricing = renderPricing;
 window.getCars = getCars;
 window.loadSiteInfo = loadSiteInfo;
 window.carsData = carsData;
 window.siteData = siteData;
+window.DEFAULT_CARS = DEFAULT_CARS;

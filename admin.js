@@ -26,8 +26,15 @@ async function fetchCarsFromCloud() {
         });
         if (!response.ok) throw new Error('Network error');
         const data = await response.json();
-        if (data.record && data.record.cars) {
+        if (data.record && data.record.cars && data.record.cars.length > 0) {
             carsData = data.record.cars;
+        } else {
+            // إذا كانت البيانات فارغة، نستخدم البيانات من script.js
+            if (window.opener && window.opener.DEFAULT_CARS) {
+                carsData = window.opener.DEFAULT_CARS;
+            } else {
+                carsData = [];
+            }
         }
         if (data.record && data.record.site) {
             siteData = data.record.site;
@@ -62,7 +69,26 @@ async function saveToCloud(cars, site) {
         console.log('✅ تم حفظ البيانات في السحابة');
         return true;
     } catch (e) {
-        console.warn('⚠️ تعذر حفظ البيانات في السحابة');
+        console.warn('⚠️ تعذر حفظ البيانات في السحابة:', e.message);
+        // نحاول مرة أخرى مع إعادة المحاولة
+        try {
+            // ننتظر ثانية ثم نحاول مرة أخرى
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await fetch(JSONBIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_KEY
+                },
+                body: JSON.stringify(payload)
+            });
+            if (response.ok) {
+                console.log('✅ تم حفظ البيانات في السحابة بعد المحاولة الثانية');
+                return true;
+            }
+        } catch (e2) {
+            console.warn('⚠️ فشلت المحاولة الثانية للحفظ');
+        }
         return false;
     }
 }
@@ -80,7 +106,7 @@ function getSiteData() {
 
 async function saveCars(cars) {
     carsData = cars;
-    await saveToCloud(carsData, siteData);
+    const saved = await saveToCloud(carsData, siteData);
     renderCarsTable();
     try {
         if (window.opener && !window.opener.closed) {
@@ -92,13 +118,21 @@ async function saveCars(cars) {
             }
         }
     } catch (e) {}
-    showToast('✅ تم حفظ التغييرات ونشرها في جميع الأجهزة!');
+    if (saved) {
+        showToast('✅ تم حفظ التغييرات ونشرها في جميع الأجهزة!');
+    } else {
+        showToast('⚠️ تم حفظ البيانات محلياً، لكن فشل النشر للسحابة');
+    }
 }
 
 async function saveSiteData(data) {
     siteData = data;
-    await saveToCloud(carsData, siteData);
-    showToast('✅ تم حفظ المعلومات ونشرها في جميع الأجهزة!');
+    const saved = await saveToCloud(carsData, siteData);
+    if (saved) {
+        showToast('✅ تم حفظ المعلومات ونشرها في جميع الأجهزة!');
+    } else {
+        showToast('⚠️ تم حفظ البيانات محلياً، لكن فشل النشر للسحابة');
+    }
 }
 
 // ============================================================
@@ -189,7 +223,7 @@ function renderCarsTable() {
     const cars = getCars();
 
     if (!cars || cars.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:2rem;">لا توجد سيارات مضافة بعد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:2rem;">🚗 لا توجد سيارات مضافة بعد</td></tr>';
         return;
     }
 
