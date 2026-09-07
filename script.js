@@ -159,9 +159,9 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// DEFAULT DATA
+// البيانات الأساسية (مشاركة مع admin)
 // ============================================================
-const defaultCars = [
+let carsData = [
     {
         id: 1,
         name: 'Renault Clio',
@@ -242,7 +242,7 @@ const defaultCars = [
     }
 ];
 
-const defaultSiteData = {
+let siteData = {
     phone: '06 61 17 01 82',
     phone2: '05 37 37 88 89',
     email: 'ahmadi2011@live.fr',
@@ -251,35 +251,23 @@ const defaultSiteData = {
 };
 
 // ============================================================
-// STORAGE FUNCTIONS
+// دالة للحصول على البيانات (يمكن تحديثها من admin)
 // ============================================================
-function initStorage() {
-    if (!localStorage.getItem('carsData')) {
-        localStorage.setItem('carsData', JSON.stringify(defaultCars));
-    }
-    if (!localStorage.getItem('siteData')) {
-        localStorage.setItem('siteData', JSON.stringify(defaultSiteData));
-    }
-}
-
 function getCars() {
-    try {
-        const data = localStorage.getItem('carsData');
-        if (!data) return defaultCars;
-        return JSON.parse(data);
-    } catch (e) {
-        return defaultCars;
+    // إذا كانت هناك بيانات محدثة من admin
+    if (window.opener && !window.opener.closed) {
+        try {
+            const adminCars = window.opener.getCars();
+            if (adminCars && adminCars.length > 0) {
+                carsData = adminCars;
+            }
+        } catch (e) {}
     }
+    return carsData;
 }
 
 function getSiteData() {
-    try {
-        const data = localStorage.getItem('siteData');
-        if (!data) return defaultSiteData;
-        return JSON.parse(data);
-    } catch (e) {
-        return defaultSiteData;
-    }
+    return siteData;
 }
 
 // ============================================================
@@ -337,21 +325,10 @@ function renderCars() {
         const isReserved = car.status === 'reserved';
         const bookText = isReserved ? translations[currentLang]['reserve.reserved'] : translations[currentLang]['reserve.book'];
 
-        // معالجة الصورة - إذا كانت Base64 كبيرة جداً، نستخدم صورة افتراضية
-        let imageSrc = car.img;
-        if (imageSrc && imageSrc.startsWith('data:image')) {
-            // نتحقق من حجم الصورة
-            const sizeInBytes = imageSrc.length * 3 / 4;
-            if (sizeInBytes > 400 * 1024) {
-                // إذا كانت الصورة كبيرة، نستخدم صورة افتراضية
-                imageSrc = `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80&text=${encodeURIComponent(car.name)}`;
-            }
-        }
-
         return `
             <div class="car-card">
                 <div class="car-image">
-                    <img src="${imageSrc}" alt="${car.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'">
+                    <img src="${car.img}" alt="${car.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'">
                     <span class="car-badge ${statusClass}">${statusText}</span>
                 </div>
                 <div class="car-info">
@@ -550,7 +527,6 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-    initStorage();
     renderCars();
     renderPricing();
     loadSiteInfo();
@@ -561,3 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.renderCars = renderCars;
 window.renderPricing = renderPricing;
 window.getCars = getCars;
+window.loadSiteInfo = loadSiteInfo;
+window.carsData = carsData;
+window.siteData = siteData;

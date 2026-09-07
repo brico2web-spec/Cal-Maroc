@@ -2,7 +2,136 @@
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
 
-// Check session on load
+// ============================================================
+// البيانات الأساسية للسيارات (تظهر في جميع الأجهزة)
+// ============================================================
+let carsData = [
+    {
+        id: 1,
+        name: 'Renault Clio',
+        type: 'اقتصادية',
+        img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 250 },
+            { days: 3, price: 700 },
+            { days: 7, price: 1500 },
+            { days: 30, price: 5500 }
+        ]
+    },
+    {
+        id: 2,
+        name: 'Dacia Logan',
+        type: 'اقتصادية',
+        img: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 300 },
+            { days: 3, price: 850 },
+            { days: 7, price: 1800 },
+            { days: 30, price: 6500 }
+        ]
+    },
+    {
+        id: 3,
+        name: 'Audi A4',
+        type: 'فاخرة',
+        img: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 800 },
+            { days: 3, price: 2200 },
+            { days: 7, price: 5000 },
+            { days: 30, price: 18000 }
+        ]
+    },
+    {
+        id: 4,
+        name: 'Mercedes C-Class',
+        type: 'فاخرة',
+        img: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=600&q=80',
+        status: 'reserved',
+        periods: [
+            { days: 1, price: 900 },
+            { days: 3, price: 2500 },
+            { days: 7, price: 5500 },
+            { days: 30, price: 20000 }
+        ]
+    },
+    {
+        id: 5,
+        name: 'Hyundai Tucson',
+        type: 'عائلية',
+        img: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 500 },
+            { days: 3, price: 1400 },
+            { days: 7, price: 3200 },
+            { days: 30, price: 11000 }
+        ]
+    },
+    {
+        id: 6,
+        name: 'Peugeot 3008',
+        type: 'عائلية',
+        img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
+        status: 'available',
+        periods: [
+            { days: 1, price: 550 },
+            { days: 3, price: 1500 },
+            { days: 7, price: 3500 },
+            { days: 30, price: 12000 }
+        ]
+    }
+];
+
+// بيانات الموقع
+let siteData = {
+    phone: '06 61 17 01 82',
+    phone2: '05 37 37 88 89',
+    email: 'ahmadi2011@live.fr',
+    address: 'زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة',
+    description: 'أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.'
+};
+
+// ============================================================
+// دوال حفظ واسترجاع البيانات
+// ============================================================
+function getCars() {
+    return carsData;
+}
+
+function saveCars(cars) {
+    carsData = cars;
+    // تحديث الصفحة الرئيسية إذا كانت مفتوحة
+    try {
+        if (window.opener && !window.opener.closed) {
+            if (typeof window.opener.renderCars === 'function') {
+                window.opener.renderCars();
+            }
+            if (typeof window.opener.renderPricing === 'function') {
+                window.opener.renderPricing();
+            }
+        }
+    } catch (e) {}
+    // تحديث في نفس النافذة
+    renderCarsTable();
+    showToast('✅ تم حفظ التغييرات بنجاح!');
+}
+
+function getSiteData() {
+    return siteData;
+}
+
+function saveSiteData(data) {
+    siteData = data;
+    showToast('✅ تم حفظ المعلومات بنجاح!');
+}
+
+// ============================================================
+// CHECK SESSION
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('adminSession') === 'active') {
         showDashboard();
@@ -54,7 +183,7 @@ function showTab(tabName) {
 
 // ===== INFO MANAGEMENT =====
 function loadInfoForm() {
-    const data = JSON.parse(localStorage.getItem('siteData')) || {};
+    const data = getSiteData();
     document.getElementById('edit-phone').value = data.phone || '';
     document.getElementById('edit-phone2').value = data.phone2 || '';
     document.getElementById('edit-email').value = data.email || '';
@@ -71,43 +200,18 @@ function saveInfo(e) {
         address: document.getElementById('edit-address').value,
         description: document.getElementById('edit-description').value
     };
-    localStorage.setItem('siteData', JSON.stringify(data));
-    showToast('✅ تم حفظ المعلومات بنجاح!');
-}
-
-// ===== CARS MANAGEMENT =====
-function getCars() {
+    saveSiteData(data);
+    // تحديث الصفحة الرئيسية
     try {
-        const data = localStorage.getItem('carsData');
-        if (!data) return [];
-        return JSON.parse(data);
-    } catch (e) {
-        return [];
-    }
+        if (window.opener && !window.opener.closed) {
+            if (typeof window.opener.loadSiteInfo === 'function') {
+                window.opener.loadSiteInfo();
+            }
+        }
+    } catch (e) {}
 }
 
-function saveCars(cars) {
-    localStorage.setItem('carsData', JSON.stringify(cars));
-    // Update main page if open
-    if (window.opener && !window.opener.closed) {
-        try {
-            if (typeof window.opener.renderCars === 'function') {
-                window.opener.renderCars();
-            }
-            if (typeof window.opener.renderPricing === 'function') {
-                window.opener.renderPricing();
-            }
-        } catch (e) {}
-    }
-    // Also update if in same window (when admin opens in same tab)
-    if (typeof window.renderCars === 'function') {
-        window.renderCars();
-    }
-    if (typeof window.renderPricing === 'function') {
-        window.renderPricing();
-    }
-}
-
+// ===== CARS TABLE =====
 function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
@@ -148,13 +252,10 @@ function renderCarsTable() {
 
 let editingCarId = null;
 let uploadedImageData = null;
-let uploadedImageName = '';
 
 // ===== PERIOD MANAGEMENT =====
 function addPeriod(days = '', price = '') {
     const container = document.getElementById('periods-container');
-    const index = container.children.length;
-
     const div = document.createElement('div');
     div.className = 'period-item';
     div.innerHTML = `
@@ -198,7 +299,7 @@ function getPeriodsFromForm() {
     return periods;
 }
 
-// ===== IMAGE UPLOAD - Convert to URL using free image hosting =====
+// ===== IMAGE UPLOAD =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -213,94 +314,22 @@ function handleImageUpload(event) {
         return;
     }
 
-    // قراءة الصورة وتحويلها إلى Base64 مؤقتاً
     const reader = new FileReader();
     reader.onload = function(e) {
         uploadedImageData = e.target.result;
-        uploadedImageName = file.name;
-        
-        // عرض المعاينة
         const preview = document.getElementById('file-preview');
         preview.src = uploadedImageData;
         preview.classList.add('show');
         document.getElementById('file-name').textContent = file.name;
         document.getElementById('car-img-url').value = '';
-        
-        // تخزين الصورة مؤقتاً في sessionStorage للاستخدام في الجلسة الحالية
-        try {
-            // نضغط الصورة لتقليل حجمها
-            compressImage(uploadedImageData, function(compressedData) {
-                sessionStorage.setItem('tempCarImage', compressedData);
-            });
-        } catch (e) {
-            console.warn('Could not store image in sessionStorage:', e);
-        }
     };
     reader.readAsDataURL(file);
-}
-
-// دالة لضغط الصورة
-function compressImage(base64Data, callback) {
-    const img = new Image();
-    img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 400;
-        const MAX_HEIGHT = 300;
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > height) {
-            if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-            }
-        } else {
-            if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-            }
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        callback(canvas.toDataURL('image/jpeg', 0.7));
-    };
-    img.src = base64Data;
-}
-
-// دالة للحصول على رابط صورة (تستخدم رابط Unsplash إذا لم توجد صورة)
-function getImageUrl(imageData, carName) {
-    if (!imageData) {
-        // استخدام صورة افتراضية من Unsplash
-        return `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80`;
-    }
-    
-    // إذا كانت الصورة تبدأ بـ data:image فهي Base64
-    if (imageData.startsWith('data:image')) {
-        // نحاول تخزينها في localStorage إذا كان حجمها صغيراً
-        try {
-            // إذا كان حجم الصورة أقل من 500KB نخزنها مباشرة
-            const sizeInBytes = imageData.length * 3 / 4;
-            if (sizeInBytes < 500 * 1024) {
-                return imageData;
-            }
-        } catch (e) {}
-        
-        // وإلا نستخدم صورة افتراضية
-        return `https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80`;
-    }
-    
-    // إذا كان رابط عادي
-    return imageData;
 }
 
 // ===== CAR MODAL =====
 function openCarModal() {
     editingCarId = null;
     uploadedImageData = null;
-    uploadedImageName = '';
     document.getElementById('car-modal-title').textContent = 'إضافة سيارة جديدة';
     document.getElementById('car-form').reset();
     document.getElementById('car-id').value = '';
@@ -354,7 +383,6 @@ function saveCar(e) {
     const imageUrl = document.getElementById('car-img-url').value.trim();
     const periods = getPeriodsFromForm();
 
-    // Validate
     if (!name) {
         showToast('❌ يرجى إدخال اسم السيارة', true);
         return;
@@ -365,69 +393,52 @@ function saveCar(e) {
         return;
     }
 
-    // معالجة الصورة
     let finalImage;
-    
-    // 1. إذا تم رفع صورة جديدة
     if (uploadedImageData) {
-        // نضغط الصورة قبل تخزينها
+        // ضغط الصورة قبل التخزين
         try {
-            // نستخدم الصورة المضغوطة إذا كانت موجودة في sessionStorage
-            const compressed = sessionStorage.getItem('tempCarImage');
-            if (compressed && compressed.startsWith('data:image')) {
-                finalImage = compressed;
-            } else {
-                // نضغط الصورة مباشرة
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
-                    const MAX_HEIGHT = 300;
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                    } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 400;
+                const MAX_HEIGHT = 300;
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
                     }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const compressedData = canvas.toDataURL('image/jpeg', 0.6);
-                    
-                    // تخزين الصورة في carsData
-                    finalImage = compressedData;
-                    saveCarData(cars, name, type, status, finalImage, periods);
-                };
-                img.src = uploadedImageData;
-                return; // ننتظر تحميل الصورة
-            }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedData = canvas.toDataURL('image/jpeg', 0.6);
+                finalizeSave(cars, name, type, status, compressedData, periods);
+            };
+            img.src = uploadedImageData;
+            return;
         } catch (e) {
             finalImage = uploadedImageData;
         }
-    } 
-    // 2. إذا تم إدخال رابط
-    else if (imageUrl) {
+    } else if (imageUrl) {
         finalImage = imageUrl;
-    } 
-    // 3. صورة افتراضية
-    else {
+    } else {
         finalImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
     }
 
-    saveCarData(cars, name, type, status, finalImage, periods);
+    finalizeSave(cars, name, type, status, finalImage, periods);
 }
 
-function saveCarData(cars, name, type, status, finalImage, periods) {
+function finalizeSave(cars, name, type, status, finalImage, periods) {
     const carData = {
         id: editingCarId || Date.now(),
         name: name,
@@ -450,33 +461,13 @@ function saveCarData(cars, name, type, status, finalImage, periods) {
         showToast('✅ تم إضافة السيارة بنجاح!');
     }
 
-    // حفظ في localStorage
-    try {
-        localStorage.setItem('carsData', JSON.stringify(cars));
-    } catch (e) {
-        // إذا كان الحجم كبيراً، نضغط الصور أكثر
-        showToast('⚠️ حجم الصورة كبير جداً، يتم ضغطها...', false);
-        // نحاول ضغط الصورة مرة أخرى
-        if (finalImage.startsWith('data:image')) {
-            compressImage(finalImage, function(compressed) {
-                carData.img = compressed;
-                try {
-                    localStorage.setItem('carsData', JSON.stringify(cars));
-                } catch (e2) {
-                    // إذا فشل، نستخدم صورة افتراضية
-                    carData.img = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
-                    localStorage.setItem('carsData', JSON.stringify(cars));
-                    showToast('✅ تم حفظ البيانات مع صورة افتراضية', false);
-                }
-            });
-            return;
-        }
-    }
-
-    // تحديث الجداول
-    renderCarsTable();
+    // حفظ في المتغير العام
+    saveCars(cars);
     
-    // تحديث الصفحة الرئيسية إذا كانت مفتوحة
+    // تحديث الجدول
+    renderCarsTable();
+
+    // تحديث الصفحة الرئيسية
     try {
         if (window.opener && !window.opener.closed) {
             if (typeof window.opener.renderCars === 'function') {
@@ -486,29 +477,18 @@ function saveCarData(cars, name, type, status, finalImage, periods) {
                 window.opener.renderPricing();
             }
         }
-        // تحديث في نفس النافذة
-        if (typeof window.renderCars === 'function') {
-            window.renderCars();
-        }
-        if (typeof window.renderPricing === 'function') {
-            window.renderPricing();
-        }
     } catch (e) {}
 
-    // إغلاق المودال وتنظيف
+    // إغلاق المودال
     closeCarModal();
     uploadedImageData = null;
-    uploadedImageName = '';
-    sessionStorage.removeItem('tempCarImage');
     document.getElementById('car-form').reset();
 }
 
 function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;
     const cars = getCars().filter(c => c.id !== id);
-    try {
-        localStorage.setItem('carsData', JSON.stringify(cars));
-    } catch (e) {}
+    saveCars(cars);
     renderCarsTable();
 
     // تحديث الصفحة الرئيسية
@@ -548,3 +528,19 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// جعل الدوال عامة للوصول من script.js
+window.carsData = carsData;
+window.getCars = getCars;
+window.saveCars = saveCars;
+window.renderCarsTable = renderCarsTable;
+window.renderCars = function() {
+    if (typeof window.opener?.renderCars === 'function') {
+        window.opener.renderCars();
+    }
+};
+window.renderPricing = function() {
+    if (typeof window.opener?.renderPricing === 'function') {
+        window.opener.renderPricing();
+    }
+};
