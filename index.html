@@ -25,7 +25,7 @@
             min-height: 100vh;
         }
         header {
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding: 1rem 2rem;
             display: flex;
@@ -47,67 +47,73 @@
         .admin-link:hover { background: var(--red); color: white; }
         
         .hero {
-            text-align: center; padding: 4rem 2rem 2rem;
+            text-align: center; padding: 3rem 1.5rem 1.5rem;
             max-width: 800px; margin: 0 auto;
         }
-        .hero h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; color: #fff; }
-        .hero p { color: var(--gray-400); font-size: 1.1rem; line-height: 1.6; }
+        .hero h2 { font-size: 2.25rem; font-weight: 900; margin-bottom: 1rem; color: #fff; }
+        .hero p { color: var(--gray-400); font-size: 1.05rem; line-height: 1.6; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .section-title { font-size: 1.75rem; font-weight: 900; margin-bottom: 2rem; border-right: 4px solid var(--red); padding-right: 0.75rem; }
+        .section-title {
+            font-size: 1.5rem; font-weight: 900; margin-bottom: 1.5rem;
+            border-right: 4px solid var(--red); padding-right: 0.75rem;
+        }
         
         .cars-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
         }
         .car-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 1rem;
             overflow: hidden;
             padding: 1rem;
             backdrop-filter: blur(5px);
             transition: transform 0.3s, border-color 0.3s;
         }
-        .car-card:hover { transform: translateY(-5px); border-color: rgba(220,38,38,0.5); }
+        .car-card:hover { transform: translateY(-4px); border-color: rgba(220,38,38,0.4); }
         .car-card img {
             width: 100%; height: 180px; object-fit: cover;
-            border-radius: 0.75rem;
+            border-radius: 0.75rem; background: #000;
         }
         .car-badge {
             display: inline-block;
             background: rgba(220,38,38,0.2); color: var(--red-light);
-            padding: 0.25rem 0.75rem; border-radius: 9999px;
-            font-size: 0.8rem; font-weight: bold; margin-top: 1rem;
+            padding: 0.2rem 0.6rem; border-radius: 9999px;
+            font-size: 0.75rem; font-weight: bold; margin-top: 0.75rem;
         }
-        .car-title { font-size: 1.25rem; font-weight: bold; margin: 0.5rem 0; color: #fff; }
-        .car-price { font-size: 1.1rem; font-weight: 900; color: var(--red-light); margin-bottom: 1rem; }
+        .car-title { font-size: 1.15rem; font-weight: bold; margin: 0.5rem 0; color: #fff; }
+        .car-price { font-size: 1.05rem; font-weight: 900; color: var(--red-light); margin-bottom: 1rem; }
         .btn-book {
             display: block; text-align: center; background: var(--red);
-            color: white; padding: 0.75rem; border-radius: 0.75rem;
+            color: white; padding: 0.65rem; border-radius: 0.75rem;
             text-decoration: none; font-weight: bold; transition: background 0.3s;
             box-shadow: 0 4px 15px rgba(220,38,38,0.3);
         }
         .btn-book:hover { background: var(--red-dark); }
 
         footer {
-            background: rgba(0,0,0,0.9); border-top: 1px solid rgba(255,255,255,0.1);
-            padding: 3rem 2rem 2rem; margin-top: 4rem; text-align: center;
-            color: var(--gray-400); font-size: 0.9rem;
+            background: rgba(0,0,0,0.95); border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 2.5rem 2rem 1.5rem; margin-top: 4rem; text-align: center;
+            color: var(--gray-400); font-size: 0.85rem;
         }
-        .footer-info { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .footer-info div { display: flex; align-items: center; gap: 0.5rem; }
+        .footer-info {
+            display: flex; justify-content: center; gap: 1.5rem;
+            flex-wrap: wrap; margin-bottom: 1.2rem;
+        }
+        .footer-info div { display: flex; align-items: center; gap: 0.4rem; }
     </style>
 </head>
 <body>
 
     <header>
         <a href="index.html" class="brand">
-            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
+            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" onerror="this.style.display='none'">
             <div>
                 <h1>Ahmed TOUR</h1>
-                <small style="color: var(--gray-400); font-size: 0.75rem;">Groupe Bahia</small>
+                <small style="color: var(--gray-400); font-size: 0.7rem;">Groupe Bahia</small>
             </div>
         </a>
         <a href="admin.html" class="admin-link">⚙️ لوحة الإدارة</a>
@@ -121,7 +127,7 @@
     <main class="container">
         <h3 class="section-title">🚗 أسطول السيارات المتاحة</h3>
         <div id="cars-container" class="cars-grid">
-            <!-- سيتم تحميل السيارات تلقائياً هنا من لوحة الإدارة -->
+            <!-- سيتم تحميل السيارات المضافة من لوحة الإدارة تلقائياً هنا -->
         </div>
     </main>
 
@@ -137,7 +143,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. تحميل معلومات الشركة من لوحة الإدارة وتحديثها في الصفحة
+            // 1. تحميل معلومات الشركة وتحديثها في الصفحة
             const siteData = JSON.parse(localStorage.getItem('siteData'));
             if (siteData) {
                 if(document.getElementById('display-phone')) document.getElementById('display-phone').textContent = siteData.phone || '---';
@@ -153,7 +159,7 @@
             
             if (carsContainer) {
                 if (cars.length === 0) {
-                    carsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 3rem; color: #9ca3af; font-size: 1.1rem;">لا توجد سيارات متاحة حالياً، يرجى إضافتها من لوحة الإدارة.</p>';
+                    carsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 3rem; color: #9ca3af; font-size: 1rem;">لا توجد سيارات متاحة حالياً، يرجى إضافتها من لوحة الإدارة.</p>';
                 } else {
                     carsContainer.innerHTML = cars.map(car => `
                         <div class="car-card">
