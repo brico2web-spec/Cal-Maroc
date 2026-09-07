@@ -130,7 +130,7 @@
             <div id="tab-preview" class="tab-content">
                 <div class="card">
                     <h3>👁️ معاينة الموقع</h3>
-                    <p class="text-gray-400 mb-4">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
+                    <p class="text-gray-400 mb-4" style="color:var(--gray-400);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
                     <a href="index.html" target="_blank" class="btn-primary">🌐 فتح الموقع</a>
                 </div>
             </div>
@@ -146,7 +146,6 @@
             </div>
             <form id="car-form" onsubmit="saveCar(event)">
                 <input type="hidden" id="car-id">
-                <input type="hidden" id="car-img-base64">
                 <div class="form-group">
                     <label>اسم السيارة</label>
                     <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
@@ -163,12 +162,29 @@
                     <label>السعر (مثال: 250 درهم/يوم)</label>
                     <input type="text" id="car-price" placeholder="250 درهم/يوم" required>
                 </div>
+
+                <!-- Image Upload Section -->
                 <div class="form-group">
-                    <label>رفع صورة السيارة (JPG / PNG)</label>
-                    <input type="file" id="car-img-file" accept="image/jpeg, image/png, image/jpg" onchange="handleImageUpload(event)">
-                    <div id="img-preview-wrap" style="margin-top: 0.75rem;"></div>
-                    <small class="hint">اختر صورة واضحة من جهازك</small>
+                    <label>📸 رفع صورة السيارة (JPG, PNG)</label>
+                    <div class="file-upload-wrapper">
+                        <label for="car-image-input" class="file-upload-label">
+                            📤 اضغط لاختيار صورة
+                        </label>
+                        <input type="file" id="car-image-input" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                            <img id="file-preview" class="file-preview" alt="معاينة الصورة">
+                            <span id="file-name" class="file-name">لم يتم اختيار صورة</span>
+                        </div>
+                    </div>
+                    <small class="hint">يمكنك رفع صورة JPG أو إدخال رابط صورة في الحقل أدناه</small>
                 </div>
+
+                <div class="form-group">
+                    <label>أو رابط صورة (URL)</label>
+                    <input type="url" id="car-img-url" placeholder="https://example.com/image.jpg">
+                    <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
+                </div>
+
                 <div class="form-actions">
                     <button type="button" onclick="closeCarModal()" class="btn-cancel">إلغاء</button>
                     <button type="submit" class="btn-save">💾 حفظ</button>
