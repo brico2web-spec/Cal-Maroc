@@ -74,69 +74,66 @@ async function fetchCarsFromSupabase() {
 }
 
 // ============================================================
-// ⭐⭐⭐ حفظ السيارة في Supabase (طريقة مبسطة) ⭐⭐⭐
+// ⭐⭐⭐ حفظ السيارة في Supabase (طريقة صحيحة) ⭐⭐⭐
 // ============================================================
 async function saveCarToSupabase(car) {
     try {
         console.log('💾 جاري حفظ السيارة:', car.name);
+        console.log('📦 البيانات:', JSON.stringify(car, null, 2));
         
-        // التحقق من وجود السيارة
-        const checkResponse = await fetch(`${SUPABASE_URL}cars?id=eq.${car.id}&select=id`, {
+        // تحويل periods إلى JSON صحيح
+        const periodsJson = JSON.stringify(car.periods);
+        console.log('📦 periods كـ JSON:', periodsJson);
+        
+        // البيانات المرسلة
+        const carData = {
+            id: Number(car.id),
+            name: String(car.name),
+            type: String(car.type),
+            img: String(car.img),
+            status: String(car.status || 'available'),
+            periods: periodsJson  // إرسال كـ JSON string
+        };
+        
+        console.log('📤 البيانات المرسلة:', JSON.stringify(carData, null, 2));
+        
+        // محاولة الإدراج
+        const response = await fetch(`${SUPABASE_URL}cars`, {
+            method: 'POST',
             headers: {
                 'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            }
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(carData)
         });
         
-        const existing = await checkResponse.json();
-        
-        let response;
-        if (existing && existing.length > 0) {
-            // تحديث السيارة الموجودة
-            console.log('🔄 تحديث السيارة الموجودة:', car.id);
-            response = await fetch(`${SUPABASE_URL}cars?id=eq.${car.id}`, {
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ فشل الإدراج:', errorText);
+            
+            // إذا فشل الإدراج (ربما لأن id موجود)، نحاول التحديث
+            console.log('🔄 محاولة التحديث...');
+            const updateResponse = await fetch(`${SUPABASE_URL}cars?id=eq.${car.id}`, {
                 method: 'PUT',
                 headers: {
                     'apikey': SUPABASE_ANON_KEY,
                     'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    name: car.name,
-                    type: car.type,
-                    img: car.img,
-                    status: car.status,
-                    periods: JSON.stringify(car.periods)
-                })
+                body: JSON.stringify(carData)
             });
-        } else {
-            // إضافة سيارة جديدة
-            console.log('➕ إضافة سيارة جديدة:', car.id);
-            response = await fetch(`${SUPABASE_URL}cars`, {
-                method: 'POST',
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: car.id,
-                    name: car.name,
-                    type: car.type,
-                    img: car.img,
-                    status: car.status,
-                    periods: JSON.stringify(car.periods)
-                })
-            });
+            
+            if (!updateResponse.ok) {
+                const errorText2 = await updateResponse.text();
+                console.error('❌ فشل التحديث:', errorText2);
+                return false;
+            }
+            console.log('✅ تم تحديث السيارة بنجاح');
+            return true;
         }
         
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ فشل حفظ السيارة:', errorText);
-            return false;
-        }
-        
-        console.log('✅ تم حفظ السيارة بنجاح');
+        console.log('✅ تم إضافة السيارة بنجاح');
         return true;
     } catch (error) {
         console.error('❌ خطأ في حفظ السيارة:', error.message);
@@ -151,10 +148,12 @@ async function saveAllCarsToSupabase(cars) {
     try {
         console.log('💾 جاري حفظ جميع السيارات...');
         
+        // حفظ كل سيارة على حدة
         for (const car of cars) {
             const saved = await saveCarToSupabase(car);
             if (!saved) {
                 console.warn('⚠️ فشل حفظ السيارة:', car.name);
+                return false;
             }
         }
         
@@ -162,41 +161,6 @@ async function saveAllCarsToSupabase(cars) {
         return true;
     } catch (error) {
         console.error('❌ خطأ:', error.message);
-        return false;
-    }
-}
-
-async function saveSiteToSupabase(site) {
-    try {
-        console.log('💾 جاري حفظ معلومات الموقع...');
-        
-        const response = await fetch(`${SUPABASE_URL}site_info?id=eq.1`, {
-            method: 'PUT',
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: 1,
-                phone: site.phone || '',
-                phone2: site.phone2 || '',
-                email: site.email || '',
-                address: site.address || '',
-                description: site.description || ''
-            })
-        });
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ خطأ في حفظ معلومات الموقع:', errorText);
-            return false;
-        }
-        
-        console.log('✅ تم حفظ معلومات الموقع');
-        return true;
-    } catch (error) {
-        console.warn('⚠️ تعذر حفظ معلومات الموقع:', error.message);
         return false;
     }
 }
@@ -245,6 +209,41 @@ async function saveCars(cars) {
         showToast('✅ تم حفظ التغييرات ونشرها في جميع الأجهزة!');
     } else {
         showToast('⚠️ تعذر حفظ البيانات في السحابة، تم الحفظ محلياً');
+    }
+}
+
+async function saveSiteToSupabase(site) {
+    try {
+        console.log('💾 جاري حفظ معلومات الموقع...');
+        
+        const response = await fetch(`${SUPABASE_URL}site_info?id=eq.1`, {
+            method: 'PUT',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: 1,
+                phone: site.phone || '',
+                phone2: site.phone2 || '',
+                email: site.email || '',
+                address: site.address || '',
+                description: site.description || ''
+            })
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ خطأ:', errorText);
+            return false;
+        }
+        
+        console.log('✅ تم حفظ معلومات الموقع');
+        return true;
+    } catch (error) {
+        console.warn('⚠️ تعذر حفظ معلومات الموقع:', error.message);
+        return false;
     }
 }
 
@@ -343,7 +342,7 @@ function saveInfo(e) {
     } catch (e) {}
 }
 
-// ===== ⭐⭐⭐ CARS TABLE (مع تحديث تلقائي) ⭐⭐⭐ =====
+// ===== ⭐⭐⭐ CARS TABLE ⭐⭐⭐ =====
 function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
@@ -361,7 +360,14 @@ function renderCarsTable() {
 
         let periodsHtml = '';
         if (car.periods) {
-            const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : car.periods;
+            let periods = car.periods;
+            if (typeof periods === 'string') {
+                try {
+                    periods = JSON.parse(periods);
+                } catch (e) {
+                    periods = [];
+                }
+            }
             if (periods && periods.length > 0) {
                 periodsHtml = periods.map(p =>
                     `<span class="period-entry">${p.days}j: ${p.price}DH</span>`
@@ -505,7 +511,18 @@ function editCar(id) {
         document.getElementById('file-name').textContent = 'صورة من رابط';
     }
 
-    const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : (car.periods || []);
+    let periods = [];
+    if (car.periods) {
+        if (typeof car.periods === 'string') {
+            try {
+                periods = JSON.parse(car.periods);
+            } catch (e) {
+                periods = [];
+            }
+        } else {
+            periods = car.periods;
+        }
+    }
     loadPeriods(periods);
     document.getElementById('car-modal').classList.add('active');
 }

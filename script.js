@@ -4,8 +4,6 @@
 const SUPABASE_URL = 'https://ykjtxziksebpypruvulp.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlranR4emlrc2VicHlwcnV2dWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTQ2NzAsImV4cCI6MjEwNDM5MDY3MH0.Z8Z8CUusEkhrlHGHHsrlQGs8z0GRqzOPQaTjIPXVEME';
 
-// ... (باقي الكود كما هو، مع إضافة دالة fetchCarsFromSupabase)
-
 // ============================================================
 // 🌐 جلب البيانات من Supabase
 // ============================================================
