@@ -34,7 +34,6 @@
 
     <!-- Dashboard -->
     <div id="dashboard" class="dashboard hidden">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
@@ -44,65 +43,37 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button onclick="showTab('info')" class="nav-item active" data-tab="info">
-                    <span>🏢</span> معلومات الشركة
-                </button>
-                <button onclick="showTab('cars')" class="nav-item" data-tab="cars">
-                    <span>🚗</span> إدارة السيارات
-                </button>
-                <button onclick="showTab('preview')" class="nav-item" data-tab="preview">
-                    <span>👁️</span> معاينة الموقع
-                </button>
+                <button onclick="showTab('info')" class="nav-item active" data-tab="info"><span>🏢</span> معلومات الشركة</button>
+                <button onclick="showTab('cars')" class="nav-item" data-tab="cars"><span>🚗</span> إدارة السيارات</button>
+                <button onclick="showTab('preview')" class="nav-item" data-tab="preview"><span>👁️</span> معاينة الموقع</button>
             </nav>
             <div class="sidebar-footer">
                 <button onclick="logout()" class="btn-logout">🚪 تسجيل الخروج</button>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="dash-header">
                 <h1 id="page-title">معلومات الشركة</h1>
-                <div class="user-badge">
-                    <span>👤 مسؤول</span>
-                </div>
+                <div class="user-badge"><span>👤 مسؤول</span></div>
             </header>
 
-            <!-- Info Tab -->
             <div id="tab-info" class="tab-content active">
                 <div class="card">
                     <h3>✏️ تعديل معلومات التواصل</h3>
                     <form id="info-form" onsubmit="saveInfo(event)">
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label>الهاتف المحمول</label>
-                                <input type="text" id="edit-phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label>الهاتف الثابت</label>
-                                <input type="text" id="edit-phone2" required>
-                            </div>
-                            <div class="form-group">
-                                <label>البريد الإلكتروني</label>
-                                <input type="email" id="edit-email" required>
-                            </div>
-                            <div class="form-group full">
-                                <label>العنوان</label>
-                                <input type="text" id="edit-address" required>
-                            </div>
-                            <div class="form-group full">
-                                <label>وصف الصفحة الرئيسية</label>
-                                <textarea id="edit-description" rows="3" required></textarea>
-                            </div>
+                            <div class="form-group"><label>الهاتف المحمول</label><input type="text" id="edit-phone" required></div>
+                            <div class="form-group"><label>الهاتف الثابت</label><input type="text" id="edit-phone2" required></div>
+                            <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="edit-email" required></div>
+                            <div class="form-group full"><label>العنوان</label><input type="text" id="edit-address" required></div>
+                            <div class="form-group full"><label>وصف الصفحة الرئيسية</label><textarea id="edit-description" rows="3" required></textarea></div>
                         </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-save">💾 حفظ التغييرات</button>
-                        </div>
+                        <div class="form-actions"><button type="submit" class="btn-save">💾 حفظ التغييرات</button></div>
                     </form>
                 </div>
             </div>
 
-            <!-- Cars Tab -->
             <div id="tab-cars" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -127,11 +98,10 @@
                 </div>
             </div>
 
-            <!-- Preview Tab -->
             <div id="tab-preview" class="tab-content">
                 <div class="card">
                     <h3>👁️ معاينة الموقع</h3>
-                    <p class="text-gray-400 mb-4" style="color:var(--text-muted);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
+                    <p style="color:var(--text-muted);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
                     <a href="index.html" target="_blank" class="btn-primary">🌐 فتح الموقع</a>
                 </div>
             </div>
@@ -148,35 +118,39 @@
             <form id="car-form" onsubmit="saveCar(event)">
                 <input type="hidden" id="car-id">
 
-                <div class="form-group">
-                    <label>اسم السيارة</label>
-                    <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>اسم السيارة</label>
+                        <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>النوع</label>
+                        <select id="car-type" required>
+                            <option value="اقتصادية">اقتصادية</option>
+                            <option value="عائلية">عائلية</option>
+                            <option value="فاخرة">فاخرة</option>
+                        </select>
+                    </div>
                 </div>
 
+                <!-- زر التبديل الجديد للحالة -->
                 <div class="form-group">
-                    <label>النوع</label>
-                    <select id="car-type" required>
-                        <option value="اقتصادية">اقتصادية</option>
-                        <option value="عائلية">عائلية</option>
-                        <option value="فاخرة">فاخرة</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>📌 حالة السيارة</label>
-                    <select id="car-status" required>
-                        <option value="available">✅ متاحة حاليا</option>
-                        <option value="reserved">🔴 محجوزة حاليا</option>
-                    </select>
+                    <label>📌 حالة السيارة (اضغط للتبديل)</label>
+                    <div class="toggle-status-wrapper">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="car-status-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span id="status-text" class="status-text">✅ متاحة حالياً</span>
+                    </div>
                 </div>
 
                 <!-- Image Upload -->
                 <div class="form-group">
                     <label>📸 صورة السيارة (JPG, PNG)</label>
                     <div class="file-upload-wrapper">
-                        <label for="car-image-input" class="file-upload-label">
-                            📤 اضغط لاختيار صورة
-                        </label>
+                        <label for="car-image-input" class="file-upload-label">📤 اضغط لاختيار صورة</label>
                         <input type="file" id="car-image-input" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
                         <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
                             <img id="file-preview" class="file-preview" alt="معاينة الصورة">
@@ -192,16 +166,12 @@
                     <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
                 </div>
 
-                <!-- Periods Management -->
+                <!-- Periods Management (مرتبة بشكل أفقي ومنظم) -->
                 <div class="form-group">
                     <label>📅 فترات الحجز والأسعار</label>
-                    <div style="display:flex;flex-direction:column;gap:0.75rem;background:var(--bg);padding:1rem;border-radius:0.75rem;border:1px solid var(--border);">
-                        <div id="periods-container">
-                            <!-- Periods will be added here dynamically -->
-                        </div>
-                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;">
-                            + إضافة فترة جديدة
-                        </button>
+                    <div style="background:var(--bg);padding:1rem;border-radius:0.75rem;border:1px solid var(--border);">
+                        <div id="periods-container" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:100%;margin-top:0.8rem;">+ إضافة فترة جديدة</button>
                     </div>
                     <small class="hint">حدد عدد الأيام والسعر المقابل لتلك المدة</small>
                 </div>
@@ -214,9 +184,7 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="admin-toast" class="toast"></div>
-
     <script src="admin.js"></script>
 </body>
 </html>
