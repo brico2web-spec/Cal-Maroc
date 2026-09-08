@@ -74,6 +74,8 @@ const translations = {
         'booking.bookNow': '📝 حجز الآن',
         'pricing.from': 'من',
         'pricing.perDay': 'درهم/يوم',
+        'map.title': '📍 موقعنا على الخريطة',
+        'map.subtitle': 'زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة',
     },
     fr: {
         'nav.home': 'Accueil',
@@ -141,6 +143,8 @@ const translations = {
         'booking.bookNow': '📝 Réserver maintenant',
         'pricing.from': 'à partir de',
         'pricing.perDay': 'DH/jour',
+        'map.title': '📍 Notre emplacement sur la carte',
+        'map.subtitle': 'Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra',
     }
 };
 
@@ -590,12 +594,11 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب (معدلة)
+// 💬 إرسال رسالة واتساب
 // ============================================================
 function sendWhatsAppBooking(carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
     
-    // الحصول على التاريخ والوقت الحالي
     const now = new Date();
     const dateStr = now.toLocaleDateString('ar-MA', {
         year: 'numeric',
@@ -607,9 +610,7 @@ function sendWhatsAppBooking(carType, customerName, phone, startDate, endDate, t
         minute: '2-digit'
     });
     
-    // تحديد نوع السيارة فقط
     let carTypeDisplay = carType;
-    // استخراج النوع من النص
     const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carTypeDisplay = typeMatch[0];
@@ -732,13 +733,9 @@ function handleSubmit(e) {
     e.target.reset();
 }
 
-// ============================================================
-// 🔄 دالة handleReserve (معدلة)
-// ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
-    // جلب البيانات من النموذج
     const carType = document.getElementById('car-type').value;
     const customerName = document.querySelector('#reserve-modal input[type="text"]').value;
     const phone = document.querySelector('#reserve-modal input[type="tel"]').value;
@@ -747,7 +744,6 @@ function handleReserve(e) {
     const totalPrice = document.getElementById('total-price').textContent;
     const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
     
-    // التحقق من صحة البيانات
     if (!customerName || customerName.trim() === '') {
         showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : '❌ Veuillez entrer votre nom complet');
         return;
@@ -758,20 +754,16 @@ function handleReserve(e) {
         return;
     }
     
-    // استخراج نوع السيارة فقط
     let carTypeDisplay = carType;
     const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carTypeDisplay = typeMatch[0];
     }
     
-    // إغلاق المودال
     closeModal();
     
-    // إظهار رسالة تأكيد
     showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
     
-    // إرسال رسالة واتساب مع البيانات الصحيحة
     sendWhatsAppBooking(
         carTypeDisplay,
         customerName,
@@ -782,7 +774,6 @@ function handleReserve(e) {
         location
     );
     
-    // إعادة تعيين النموذج
     e.target.reset();
 }
 

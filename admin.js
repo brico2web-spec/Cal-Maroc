@@ -99,7 +99,6 @@ async function saveCarsToSupabase(cars) {
             };
         });
         
-        // حذف جميع السيارات الحالية
         await fetch(`${SUPABASE_URL}cars?id=neq.0`, {
             method: 'DELETE',
             headers: {
@@ -108,7 +107,6 @@ async function saveCarsToSupabase(cars) {
             }
         });
         
-        // إدراج السيارات الجديدة
         const response = await fetch(`${SUPABASE_URL}cars`, {
             method: 'POST',
             headers: {
