@@ -74,14 +74,15 @@ async function fetchCarsFromSupabase() {
 }
 
 // ============================================================
-// ⭐⭐⭐ حفظ السيارة في Supabase (طريقة صحيحة) ⭐⭐⭐
+// ⭐⭐⭐ حفظ السيارة في Supabase (طريقة صحيحة 100%) ⭐⭐⭐
 // ============================================================
 async function saveCarToSupabase(car) {
     try {
         console.log('💾 جاري حفظ السيارة:', car.name);
         console.log('📦 البيانات:', JSON.stringify(car, null, 2));
         
-        // تحويل periods إلى JSON صحيح
+        // ⭐⭐⭐ تحويل periods إلى JSON string صحيح ⭐⭐⭐
+        // periods هي مصفوفة من {days, price}
         const periodsJson = JSON.stringify(car.periods);
         console.log('📦 periods كـ JSON:', periodsJson);
         
@@ -112,7 +113,7 @@ async function saveCarToSupabase(car) {
             const errorText = await response.text();
             console.error('❌ فشل الإدراج:', errorText);
             
-            // إذا فشل الإدراج (ربما لأن id موجود)، نحاول التحديث
+            // إذا فشل الإدراج، نحاول التحديث
             console.log('🔄 محاولة التحديث...');
             const updateResponse = await fetch(`${SUPABASE_URL}cars?id=eq.${car.id}`, {
                 method: 'PUT',
@@ -133,7 +134,8 @@ async function saveCarToSupabase(car) {
             return true;
         }
         
-        console.log('✅ تم إضافة السيارة بنجاح');
+        const result = await response.json();
+        console.log('✅ تم إضافة السيارة بنجاح:', result);
         return true;
     } catch (error) {
         console.error('❌ خطأ في حفظ السيارة:', error.message);
