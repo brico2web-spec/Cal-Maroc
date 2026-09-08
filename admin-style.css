@@ -500,7 +500,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== TABLE ===== */
+/* ===== TABLE (تنسيق الحاسوب) ===== */
 .table-wrap {
     overflow-x: auto;
 }
@@ -672,7 +672,9 @@ body {
     background: var(--primary);
 }
 
-/* ===== RESPONSIVE ===== */
+/* ============================================================
+   RESPONSIVE (الهاتف: تحويل الجدول إلى بطاقات بدون فراغات)
+   ============================================================ */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -680,6 +682,7 @@ body {
     }
     .main-content {
         margin-right: 0;
+        padding: 1rem;
     }
     .dashboard {
         flex-direction: column;
@@ -691,15 +694,66 @@ body {
         flex-direction: column;
         align-items: stretch;
     }
-    .data-table {
-        font-size: 0.8rem;
+    
+    /* ===== تحويل الجدول لبطاقات ===== */
+    .data-table thead {
+        display: none;
+    }
+    .data-table, .data-table tbody, .data-table tr, .data-table td {
+        display: block;
+        width: 100%;
+    }
+    .data-table tr {
+        margin-bottom: 1.2rem;
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+        padding: 1rem;
+        background: var(--bg);
+        box-shadow: var(--shadow);
+    }
+    .data-table td {
+        border: none;
+        padding: 0.4rem 0;
+        text-align: right;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    /* إضافة عنوان لكل خانة ليظهر بجانب القيمة */
+    .data-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        flex-shrink: 0;
+    }
+    /* ترتيب الصورة في الأعلى */
+    .data-table td:first-child {
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+    .data-table td:first-child::before {
+        display: none;
     }
     .car-thumb {
-        width: 50px;
-        height: 30px;
+        width: 100%;
+        height: 150px;
+        border-radius: 0.6rem;
     }
-    .period-item {
-        grid-template-columns: 1fr;
+    /* إصلاح فترات الحجز لتظهر كأزرار متراصة */
+    .periods-cell {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .periods-cell .period-entry {
+        margin: 0.2rem;
+    }
+    .btn-edit, .btn-delete {
+        width: 48%;
+        text-align: center;
+        padding: 0.5rem;
+        margin: 0;
     }
     .modal-content {
         padding: 1.2rem;

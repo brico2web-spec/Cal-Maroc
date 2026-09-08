@@ -307,7 +307,9 @@ function saveInfo(e) {
     } catch (e) {}
 }
 
-// ===== CARS TABLE =====
+// ============================================================
+// CARS TABLE (تم إضافة data-label ليعمل على الهاتف)
+// ============================================================
 function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
@@ -343,12 +345,12 @@ function renderCarsTable() {
 
         return `
             <tr>
-                <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'"></td>
-                <td><strong>${car.name}</strong></td>
-                <td><span style="background:rgba(220,38,38,0.15);color:var(--primary);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
-                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                <td class="periods-cell">${periodsHtml}</td>
-                <td>
+                <td data-label="الصورة"><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'"></td>
+                <td data-label="الاسم"><strong>${car.name}</strong></td>
+                <td data-label="النوع"><span style="background:rgba(220,38,38,0.15);color:var(--primary);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
+                <td data-label="الحالة"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td data-label="فترات الحجز" class="periods-cell">${periodsHtml}</td>
+                <td data-label="الإجراءات">
                     <button onclick="editCar(${car.id})" class="btn-edit">✏️ تعديل</button>
                     <button onclick="deleteCar(${car.id})" class="btn-delete">🗑️ حذف</button>
                 </td>

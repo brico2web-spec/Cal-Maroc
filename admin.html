@@ -102,27 +102,17 @@
                 </div>
             </div>
 
-            <!-- Cars Tab -->
+            <!-- Cars Tab (تم التحويل إلى بطاقات) -->
             <div id="tab-cars" class="tab-content">
                 <div class="card">
                     <div class="card-header">
                         <h3>🚗 قائمة السيارات</h3>
                         <button onclick="openCarModal()" class="btn-add">+ إضافة سيارة جديدة</button>
                     </div>
-                    <div class="table-wrap">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>الصورة</th>
-                                    <th>الاسم</th>
-                                    <th>النوع</th>
-                                    <th>الحالة</th>
-                                    <th>فترات الحجز</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cars-table-body"></tbody>
-                        </table>
+                    
+                    <!-- حاوية البطاقات بدلاً من الجدول -->
+                    <div id="cars-container" class="cars-grid-container">
+                        <!-- سيتم تعبئة البطاقات هنا عبر JavaScript -->
                     </div>
                 </div>
             </div>
