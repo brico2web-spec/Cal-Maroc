@@ -1,5 +1,5 @@
 /* ============================================================
-   ROOT & RESET - ثيم مزدوج (أبيض / داكن)
+   ROOT & RESET
    ============================================================ */
 :root {
     --primary: #dc2626;
@@ -62,158 +62,6 @@
                     radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
 }
 
-[data-theme="dark"] .btn-secondary {
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .btn-outline {
-    color: var(--text-primary);
-    border-color: var(--border);
-}
-[data-theme="dark"] .btn-outline:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--primary-light);
-}
-
-[data-theme="dark"] .badge {
-    background: var(--primary-light);
-}
-
-[data-theme="dark"] .lang-switcher {
-    background: var(--bg-card);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .lang-btn {
-    color: var(--text-muted);
-}
-[data-theme="dark"] .lang-btn:hover {
-    color: var(--text-primary);
-}
-[data-theme="dark"] .lang-btn.active {
-    background: var(--primary);
-    color: #fff;
-}
-
-[data-theme="dark"] .contact-form input,
-[data-theme="dark"] .contact-form textarea {
-    background: var(--bg);
-    border-color: var(--border);
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .contact-form input:focus,
-[data-theme="dark"] .contact-form textarea:focus {
-    border-color: var(--primary);
-}
-
-[data-theme="dark"] .modal input {
-    background: var(--bg);
-    border-color: var(--border);
-    color: var(--text-primary);
-}
-[data-theme="dark"] .modal input:focus {
-    border-color: var(--primary);
-}
-
-[data-theme="dark"] .modal-content {
-    background: var(--bg-card);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .modal input[readonly] {
-    background: var(--primary-light);
-    border-color: rgba(220, 38, 38, 0.2);
-    color: #fb7185;
-}
-
-[data-theme="dark"] .period-tag {
-    background: var(--bg);
-    border-color: var(--border);
-    color: var(--text-secondary);
-}
-
-[data-theme="dark"] .car-tag {
-    background: var(--primary-light);
-}
-
-[data-theme="dark"] .info-item .icon {
-    background: var(--primary-light);
-}
-
-[data-theme="dark"] .feature-icon {
-    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
-}
-
-[data-theme="dark"] footer {
-    background: var(--bg-card);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .glow-ring {
-    background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
-}
-
-[data-theme="dark"] .booking-fields {
-    background: var(--bg-card);
-    border-color: var(--border);
-}
-
-[data-theme="dark"] .field-group input,
-[data-theme="dark"] .field-group select {
-    background: var(--bg);
-    border-color: var(--border);
-    color: var(--text-primary);
-}
-
-[data-theme="dark"] .field-group input:focus,
-[data-theme="dark"] .field-group select:focus {
-    border-color: var(--primary);
-}
-
-[data-theme="dark"] .booking-price-row {
-    background: var(--bg-card);
-    border-color: var(--border);
-}
-
-/* ============================================================
-   زر تبديل الثيم
-   ============================================================ */
-.theme-toggle {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 1.2rem;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-}
-.theme-toggle:hover {
-    transform: rotate(30deg) scale(1.1);
-    border-color: var(--primary);
-    box-shadow: var(--shadow-hover);
-}
-.theme-toggle span {
-    transition: var(--transition);
-    display: inline-block;
-}
-.theme-toggle:hover span {
-    transform: rotate(360deg);
-}
-
-/* ============================================================
-   BASE
-   ============================================================ */
 * {
     margin: 0;
     padding: 0;
@@ -345,6 +193,36 @@ body {
 }
 
 /* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    box-shadow: var(--shadow);
+}
+.theme-toggle:hover {
+    transform: rotate(30deg) scale(1.1);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-hover);
+}
+.theme-toggle span {
+    transition: var(--transition);
+    display: inline-block;
+}
+.theme-toggle:hover span {
+    transform: rotate(360deg);
+}
+
+/* ============================================================
    LANGUAGE SWITCHER
    ============================================================ */
 .lang-switcher {
@@ -391,6 +269,8 @@ body {
     top: 0;
     z-index: 1000;
     transition: var(--transition);
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 .navbar.scrolled {
     box-shadow: var(--shadow);
@@ -460,6 +340,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
 .btn-admin {
@@ -543,22 +424,14 @@ body {
 .hero p {
     font-size: 1.25rem;
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.hero-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
-}
-
 /* ============================================================
-   📋 حقول الحجز في الهيرو
+   BOOKING FIELDS
    ============================================================ */
 .booking-fields {
     display: grid;
@@ -627,7 +500,7 @@ body {
 }
 
 /* ============================================================
-   🎯 صف السعر + زر الحجز
+   BOOKING PRICE ROW
    ============================================================ */
 .booking-price-row {
     display: flex;
@@ -667,6 +540,17 @@ body {
     font-size: 1.5rem;
     font-weight: 900;
     min-width: 80px;
+}
+
+/* ============================================================
+   HERO BUTTONS
+   ============================================================ */
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
 }
 
 /* ============================================================
@@ -722,8 +606,6 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     transform: rotate(10deg) scale(1.1);
     box-shadow: var(--shadow-glow);
-}
-.feature-card:hover .feature-icon {
     color: #fff;
 }
 
@@ -1223,6 +1105,104 @@ footer {
 }
 
 /* ============================================================
+   DARK THEME OVERRIDES
+   ============================================================ */
+[data-theme="dark"] .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+[data-theme="dark"] .btn-outline {
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+[data-theme="dark"] .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+[data-theme="dark"] .badge {
+    background: var(--primary-light);
+}
+[data-theme="dark"] .lang-switcher {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+[data-theme="dark"] .lang-btn {
+    color: var(--text-muted);
+}
+[data-theme="dark"] .lang-btn:hover {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .lang-btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+[data-theme="dark"] .contact-form input,
+[data-theme="dark"] .contact-form textarea {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .contact-form input:focus,
+[data-theme="dark"] .contact-form textarea:focus {
+    border-color: var(--primary);
+}
+[data-theme="dark"] .modal input {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .modal input:focus {
+    border-color: var(--primary);
+}
+[data-theme="dark"] .modal-content {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+[data-theme="dark"] .modal input[readonly] {
+    background: var(--primary-light);
+    border-color: rgba(220, 38, 38, 0.2);
+    color: #fb7185;
+}
+[data-theme="dark"] .period-tag {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .car-tag {
+    background: var(--primary-light);
+}
+[data-theme="dark"] .info-item .icon {
+    background: var(--primary-light);
+}
+[data-theme="dark"] .feature-icon {
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+}
+[data-theme="dark"] footer {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+[data-theme="dark"] .booking-fields {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+[data-theme="dark"] .field-group input,
+[data-theme="dark"] .field-group select {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .field-group input:focus,
+[data-theme="dark"] .field-group select:focus {
+    border-color: var(--primary);
+}
+[data-theme="dark"] .booking-price-row {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {
@@ -1241,48 +1221,40 @@ footer {
 
 @media (max-width: 768px) {
     .navbar {
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: stretch;
         gap: 0.75rem;
         padding: 0.75rem 1rem;
+    }
+    .nav-brand {
+        justify-content: center;
     }
     .nav-links {
         display: none;
     }
     .nav-actions {
-        width: 100%;
         justify-content: center;
         flex-wrap: wrap;
     }
-    .lang-switcher {
-        order: -1;
-    }
-    .theme-toggle {
-        order: -2;
-    }
-
     .hero h2 {
         font-size: 2.25rem;
     }
     .hero p {
         font-size: 1rem;
     }
-
     .section-header h2 {
         font-size: 2rem;
     }
-
     .pricing-card.featured {
         transform: scale(1);
     }
     .pricing-card.featured:hover {
         transform: scale(1.02);
     }
-
     .grid-3,
     .grid-2 {
         grid-template-columns: 1fr;
     }
-
     .footer-content {
         flex-direction: column;
         text-align: center;
