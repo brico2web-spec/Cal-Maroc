@@ -24,7 +24,6 @@
             <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
         </div>
         <div class="nav-actions">
-            <!-- زر تبديل الثيم -->
             <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم">
                 <span id="themeIcon">🌙</span>
             </button>
@@ -47,6 +46,27 @@
             <span class="badge">🚗 <span data-i18n="hero.badge">Location de Voitures - Kénitra</span></span>
             <h2 data-i18n="hero.title">أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
             <p id="hero-desc" data-i18n="hero.desc">أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
+            
+            <!-- حقول الحجز العمودية -->
+            <div class="booking-fields">
+                <div class="field-group">
+                    <label for="pickup-location">📍 <span data-i18n="booking.location">مكان الإستلام</span></label>
+                    <input type="text" id="pickup-location" placeholder="مثال: المطار، المدينة..." data-i18n-placeholder="booking.locationPlaceholder">
+                </div>
+                <div class="field-group">
+                    <label for="pickup-date">📅 <span data-i18n="booking.pickup">يوم الإستلام</span></label>
+                    <input type="date" id="pickup-date">
+                </div>
+                <div class="field-group">
+                    <label for="return-date">📅 <span data-i18n="booking.return">يوم الرجوع</span></label>
+                    <input type="date" id="return-date">
+                </div>
+                <div class="field-group">
+                    <label for="booking-price">💰 <span data-i18n="booking.price">ثمن الكراء</span></label>
+                    <input type="text" id="booking-price" placeholder="سيتم حسابه تلقائياً" readonly style="background:var(--primary-light);font-weight:700;color:var(--primary);">
+                </div>
+            </div>
+            
             <div class="hero-buttons">
                 <button onclick="scrollToSection('vehicules')" class="btn-primary btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
                 <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">تواصل معنا</span></button>

@@ -1,11 +1,11 @@
 // ============================================================
-// 🔴🔴🔴 معلومات Supabase الجديدة 🔴🔴🔴
+// 🔴🔴🔴 معلومات Supabase 🔴🔴🔴
 // ============================================================
 const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
 
 // ============================================================
-// LANGUAGE SUPPORT (مختصر للطول)
+// LANGUAGE SUPPORT
 // ============================================================
 const translations = {
     ar: {
@@ -60,6 +60,11 @@ const translations = {
         'type.luxury': 'فاخرة',
         'reserve.book': 'احجز الآن',
         'reserve.reserved': '🔒 محجوزة',
+        'booking.location': 'مكان الإستلام',
+        'booking.locationPlaceholder': 'مثال: المطار، المدينة...',
+        'booking.pickup': 'يوم الإستلام',
+        'booking.return': 'يوم الرجوع',
+        'booking.price': 'ثمن الكراء',
     },
     fr: {
         'nav.home': 'Accueil',
@@ -113,6 +118,11 @@ const translations = {
         'type.luxury': 'Luxe',
         'reserve.book': 'Réserver',
         'reserve.reserved': '🔒 Réservée',
+        'booking.location': 'Lieu de retrait',
+        'booking.locationPlaceholder': 'Ex: Aéroport, ville...',
+        'booking.pickup': 'Date de retrait',
+        'booking.return': 'Date de retour',
+        'booking.price': 'Prix de location',
     }
 };
 
@@ -228,7 +238,6 @@ async function fetchCarsFromSupabase() {
             console.log('📦 لا توجد سيارات في قاعدة البيانات');
         }
         
-        // جلب معلومات الموقع
         try {
             const siteResponse = await fetch(`${SUPABASE_URL}site_info?id=eq.1&select=*`, {
                 headers: {
@@ -416,6 +425,101 @@ function loadSiteInfo() {
 }
 
 // ============================================================
+// 📋 إدارة حقول الحجز في الهيرو
+// ============================================================
+function updateBookingPrice() {
+    const pickupDate = document.getElementById('pickup-date')?.value;
+    const returnDate = document.getElementById('return-date')?.value;
+    const priceField = document.getElementById('booking-price');
+    
+    if (!priceField) return;
+    
+    if (!pickupDate || !returnDate) {
+        priceField.value = '0 DH';
+        return;
+    }
+    
+    const start = new Date(pickupDate);
+    const end = new Date(returnDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+        priceField.value = '0 DH';
+        return;
+    }
+    
+    const cars = getCars();
+    if (cars.length === 0) {
+        priceField.value = '0 DH';
+        return;
+    }
+    
+    const firstCar = cars[0];
+    const periods = typeof firstCar.periods === 'string' ? JSON.parse(firstCar.periods) : (firstCar.periods || []);
+    
+    if (periods.length === 0) {
+        priceField.value = '0 DH';
+        return;
+    }
+    
+    let bestPrice = 0;
+    const sortedPeriods = [...periods].sort((a, b) => b.days - a.days);
+    
+    for (const period of sortedPeriods) {
+        if (diffDays >= period.days) {
+            const fullPeriods = Math.floor(diffDays / period.days);
+            const remainingDays = diffDays % period.days;
+            let total = fullPeriods * period.price;
+            
+            if (remainingDays > 0) {
+                const remainingPeriod = periods.find(p => p.days === 1);
+                if (remainingPeriod) {
+                    total += remainingDays * remainingPeriod.price;
+                } else {
+                    total += remainingDays * (period.price / period.days);
+                }
+            }
+            bestPrice = Math.round(total);
+            break;
+        }
+    }
+    
+    if (bestPrice === 0 && periods.length > 0) {
+        const daily = periods.find(p => p.days === 1) || periods[0];
+        bestPrice = daily.price * diffDays;
+    }
+    
+    priceField.value = bestPrice + ' DH';
+}
+
+// ============================================================
+// 💬 إرسال رسالة واتساب عند تأكيد الحجز
+// ============================================================
+function sendWhatsAppBooking(carName, customerName, phone, startDate, endDate, totalPrice, location) {
+    const whatsappNumber = '0601749553';
+    
+    const message = `🚗 *طلب حجز سيارة جديد* 🚗
+    
+📋 *تفاصيل الحجز:*
+• 🚙 السيارة: ${carName}
+• 👤 الاسم: ${customerName}
+• 📱 الهاتف: ${phone}
+• 📅 تاريخ الإستلام: ${startDate}
+• 📅 تاريخ الرجوع: ${endDate}
+• 📍 مكان الإستلام: ${location || 'لم يتم التحديد'}
+• 💰 السعر الإجمالي: ${totalPrice}
+
+📌 *يرجى تأكيد الحجز في أقرب وقت.*
+    
+📍 *Ahmed TOUR - Groupe Bahia*
+📍 *Kénitra, Maroc`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+}
+
+// ============================================================
 // RESERVATION FUNCTIONS
 // ============================================================
 let currentCarId = null;
@@ -513,8 +617,29 @@ function handleSubmit(e) {
 
 function handleReserve(e) {
     e.preventDefault();
+    
+    const carType = document.getElementById('car-type').value;
+    const customerName = document.querySelector('#reserve-modal input[type="text"]').value;
+    const phone = document.querySelector('#reserve-modal input[type="tel"]').value;
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    const totalPrice = document.getElementById('total-price').textContent;
+    const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
+    
     closeModal();
-    showToast(currentLang === 'ar' ? '✅ تم تأكيد حجزك بنجاح! سنتواصل معك لتأكيد التفاصيل' : '✅ Votre réservation a été confirmée! Nous vous contacterons pour confirmer les détails');
+    
+    showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
+    
+    sendWhatsAppBooking(
+        carType,
+        customerName,
+        phone,
+        startDate,
+        endDate,
+        totalPrice,
+        location
+    );
+    
     e.target.reset();
 }
 
@@ -540,8 +665,26 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 // 🚀 INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', async function() {
-    // تحميل الثيم
     loadTheme();
+    
+    // إعداد حقول الحجز
+    const pickupDate = document.getElementById('pickup-date');
+    const returnDate = document.getElementById('return-date');
+    
+    if (pickupDate) {
+        pickupDate.addEventListener('change', updateBookingPrice);
+        const today = new Date();
+        pickupDate.value = today.toISOString().split('T')[0];
+    }
+    
+    if (returnDate) {
+        returnDate.addEventListener('change', updateBookingPrice);
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        returnDate.value = tomorrow.toISOString().split('T')[0];
+    }
+    
+    setTimeout(updateBookingPrice, 500);
     
     const grid = document.getElementById('cars-grid');
     grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">⏳ جاري تحميل البيانات...</p>';
@@ -573,3 +716,4 @@ window.siteData = siteData;
 window.fetchCarsFromSupabase = fetchCarsFromSupabase;
 window.toggleTheme = toggleTheme;
 window.loadTheme = loadTheme;
+window.updateBookingPrice = updateBookingPrice;
