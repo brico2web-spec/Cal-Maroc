@@ -32,6 +32,8 @@ async function fetchCarsFromSupabase() {
         if (cars && cars.length > 0) {
             carsData = cars;
             console.log('✅ تم جلب السيارات:', carsData.length, 'سيارة');
+            renderCars();
+            renderPricing();
         } else {
             carsData = [];
             console.log('📦 لا توجد سيارات في قاعدة البيانات');
@@ -51,6 +53,7 @@ async function fetchCarsFromSupabase() {
                 if (site && site.length > 0) {
                     siteData = site[0];
                     console.log('✅ تم جلب معلومات الموقع');
+                    loadSiteInfo();
                 }
             }
         } catch (e) {
@@ -81,3 +84,160 @@ function updateCarsData(newData) {
     }
     return false;
 }
+
+// ============================================================
+// عرض السيارات
+// ============================================================
+function renderCars() {
+    const container = document.getElementById('cars-container') || document.querySelector('.cars-grid');
+    if (!container) return;
+    
+    const cars = getCars();
+    
+    if (!cars || cars.length === 0) {
+        container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-500);">🚗 لا توجد سيارات متاحة حالياً</p>';
+        return;
+    }
+    
+    container.innerHTML = cars.map(car => {
+        const statusText = car.status === 'available' ? 'متاحة ✅' : 'محجوزة 🔴';
+        const statusClass = car.status === 'available' ? 'available' : 'reserved';
+        
+        return `
+            <div class="car-card" data-car-id="${car.id}">
+                <div class="car-image">
+                    <img src="${car.img}" alt="${car.name}" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'">
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+                <div class="car-info">
+                    <h3>${car.name}</h3>
+                    <p class="car-type">${car.type}</p>
+                    <button class="btn-book" onclick="openBookingModal(${car.id})" ${car.status !== 'available' ? 'disabled' : ''}>
+                        حجز الآن
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================================
+// عرض الأسعار
+// ============================================================
+function renderPricing() {
+    const container = document.getElementById('pricing-container') || document.querySelector('.pricing-grid');
+    if (!container) return;
+    
+    const cars = getCars();
+    
+    if (!cars || cars.length === 0) {
+        container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-500);">📋 لا توجد سيارات لعرض الأسعار</p>';
+        return;
+    }
+    
+    container.innerHTML = cars.map(car => {
+        let periods = [];
+        if (car.periods) {
+            if (typeof car.periods === 'string') {
+                try {
+                    periods = JSON.parse(car.periods);
+                } catch (e) {
+                    periods = [];
+                }
+            } else {
+                periods = car.periods;
+            }
+        }
+        
+        const pricesHtml = periods.length > 0 
+            ? periods.map(p => `<div class="price-item"><span>${p.days} أيام</span><strong>${p.price} DH</strong></div>`).join('')
+            : '<p>لا توجد أسعار متاحة</p>';
+        
+        return `
+            <div class="price-card">
+                <h3>${car.name}</h3>
+                <p class="car-type">${car.type}</p>
+                <div class="prices">
+                    ${pricesHtml}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================================
+// تحميل معلومات الموقع
+// ============================================================
+function loadSiteInfo() {
+    const data = getSiteData();
+    
+    // تحديث رقم الهاتف
+    const phoneElements = document.querySelectorAll('[data-phone]');
+    phoneElements.forEach(el => {
+        if (el.tagName === 'A') {
+            el.href = `tel:${data.phone}`;
+            el.textContent = data.phone;
+        } else {
+            el.textContent = data.phone;
+        }
+    });
+    
+    // تحديث الهاتف الثاني
+    const phone2Elements = document.querySelectorAll('[data-phone2]');
+    phone2Elements.forEach(el => {
+        if (el.tagName === 'A') {
+            el.href = `tel:${data.phone2}`;
+            el.textContent = data.phone2;
+        } else {
+            el.textContent = data.phone2;
+        }
+    });
+    
+    // تحديث البريد الإلكتروني
+    const emailElements = document.querySelectorAll('[data-email]');
+    emailElements.forEach(el => {
+        if (el.tagName === 'A') {
+            el.href = `mailto:${data.email}`;
+            el.textContent = data.email;
+        } else {
+            el.textContent = data.email;
+        }
+    });
+    
+    // تحديث العنوان
+    const addressElements = document.querySelectorAll('[data-address]');
+    addressElements.forEach(el => {
+        el.textContent = data.address;
+    });
+    
+    // تحديث الوصف
+    const descElements = document.querySelectorAll('[data-description]');
+    descElements.forEach(el => {
+        el.textContent = data.description;
+    });
+}
+
+// ============================================================
+// دالة فتح نموذج الحجز
+// ============================================================
+function openBookingModal(carId) {
+    const cars = getCars();
+    const car = cars.find(c => c.id === carId);
+    if (!car) return;
+    
+    // يمكنك إضافة نموذج حجز هنا
+    console.log('حجز السيارة:', car.name);
+    alert(`سيتم حجز السيارة: ${car.name}`);
+}
+
+// ============================================================
+// تحميل البيانات عند تحميل الصفحة
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchCarsFromSupabase();
+});
+
+// تحديث البيانات كل 10 ثوانٍ (اختياري)
+setInterval(async () => {
+    await fetchCarsFromSupabase();
+}, 10000);
