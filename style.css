@@ -1,5 +1,5 @@
 /* ============================================================
-   ROOT & RESET - ثيم أبيض فاتح
+   ROOT & RESET - ثيم مزدوج (أبيض / داكن)
    ============================================================ */
 :root {
     --primary: #dc2626;
@@ -30,9 +30,172 @@
     
     --radius: 1rem;
     --radius-sm: 0.75rem;
-    --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    /* خلفية الهيرو */
+    --hero-bg: linear-gradient(135deg, #fef2f2 0%, #f8fafc 50%, #eff6ff 100%);
+    --hero-overlay: radial-gradient(ellipse at 20% 50%, rgba(220, 38, 38, 0.05) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
 }
 
+/* ============================================================
+   الثيم الداكن (Dark Mode)
+   ============================================================ */
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-hover: #334155;
+    --bg-nav: rgba(15, 23, 42, 0.9);
+    
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    
+    --border: #334155;
+    --border-light: #1e293b;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5);
+    
+    --primary-light: #451a1a;
+    --secondary-light: #3b2a0a;
+    --accent-light: #172554;
+    --success-light: #052e16;
+    
+    --hero-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    --hero-overlay: radial-gradient(ellipse at 20% 50%, rgba(220, 38, 38, 0.1) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
+}
+
+[data-theme="dark"] .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .btn-outline {
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+[data-theme="dark"] .btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+[data-theme="dark"] .badge {
+    background: var(--primary-light);
+}
+
+[data-theme="dark"] .lang-switcher {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .lang-btn {
+    color: var(--text-muted);
+}
+[data-theme="dark"] .lang-btn:hover {
+    color: var(--text-primary);
+}
+[data-theme="dark"] .lang-btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+[data-theme="dark"] .contact-form input,
+[data-theme="dark"] .contact-form textarea {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .contact-form input:focus,
+[data-theme="dark"] .contact-form textarea:focus {
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .modal input {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .modal input:focus {
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .modal-content {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .modal input[readonly] {
+    background: var(--primary-light);
+    border-color: rgba(220, 38, 38, 0.2);
+    color: #fb7185;
+}
+
+[data-theme="dark"] .period-tag {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .car-tag {
+    background: var(--primary-light);
+}
+
+[data-theme="dark"] .info-item .icon {
+    background: var(--primary-light);
+}
+
+[data-theme="dark"] .feature-icon {
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+}
+
+[data-theme="dark"] footer {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .glow-ring {
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+}
+
+/* ============================================================
+   زر تبديل الثيم
+   ============================================================ */
+.theme-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+.theme-toggle:hover {
+    transform: rotate(30deg) scale(1.1);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-hover);
+}
+.theme-toggle span {
+    transition: var(--transition);
+    display: inline-block;
+}
+.theme-toggle:hover span {
+    transform: rotate(360deg);
+}
+
+/* ============================================================
+   باقي الكود كما هو (نفس الستايل السابق)
+   ============================================================ */
 * {
     margin: 0;
     padding: 0;
@@ -49,6 +212,7 @@ body {
     color: var(--text-primary);
     line-height: 1.7;
     min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
 }
 
 ::selection {
@@ -329,16 +493,16 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: linear-gradient(135deg, #fef2f2 0%, #f8fafc 50%, #eff6ff 100%);
+    background: var(--hero-bg);
+    transition: background var(--transition);
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: 
-        radial-gradient(ellipse at 20% 50%, rgba(220, 38, 38, 0.05) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    background: var(--hero-overlay);
     z-index: 0;
+    transition: background var(--transition);
 }
 
 .hero-content {
@@ -414,7 +578,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Glow ring behind hero */
 .glow-ring {
     position: absolute;
     width: 600px;
@@ -544,6 +707,7 @@ body {
 .vehicles {
     padding: 5rem 0;
     background: var(--bg);
+    transition: background var(--transition);
 }
 
 .car-card {
@@ -656,6 +820,7 @@ body {
     padding: 5rem 0;
     background: var(--bg);
     position: relative;
+    transition: background var(--transition);
 }
 
 .pricing-card {
@@ -736,6 +901,7 @@ body {
 .contact {
     padding: 5rem 0;
     background: var(--bg);
+    transition: background var(--transition);
 }
 
 .contact-info,
@@ -823,6 +989,7 @@ footer {
     background: var(--bg-card);
     border-top: 1px solid var(--border);
     padding: 2.5rem 0;
+    transition: background var(--transition), border var(--transition);
 }
 .footer-content {
     display: flex;
@@ -1012,6 +1179,9 @@ footer {
     }
     .lang-switcher {
         order: -1;
+    }
+    .theme-toggle {
+        order: -2;
     }
 
     .hero h2 {

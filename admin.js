@@ -184,11 +184,6 @@ async function saveCars(cars) {
     // حفظ في Supabase
     const saved = await saveAllCarsToSupabase(carsData);
     
-    // 🔥 تحديث البيانات من Supabase
-    if (saved) {
-        await fetchCarsFromSupabase();
-    }
-    
     // تحديث الجدول
     renderCarsTable();
     
@@ -534,7 +529,7 @@ function editCar(id) {
     document.getElementById('car-modal').classList.add('active');
 }
 
-// ===== ⭐⭐⭐ دالة حفظ السيارة (المعدلة - الحل النهائي) ⭐⭐⭐ =====
+// ===== ⭐⭐⭐ دالة حفظ السيارة (المعدلة نهائياً) ⭐⭐⭐ =====
 async function saveCar(e) {
     e.preventDefault();
 
@@ -579,13 +574,33 @@ async function saveCar(e) {
 
         console.log('🚗 بيانات السيارة الجديدة:', carData);
 
+        // الحصول على قائمة السيارات الحالية
+        let cars = getCars();
+        if (!cars || !Array.isArray(cars)) {
+            cars = [];
+        }
+
+        // إضافة أو تعديل السيارة
+        if (editingCarId) {
+            const index = cars.findIndex(c => c.id === editingCarId);
+            if (index !== -1) {
+                cars[index] = carData;
+            } else {
+                cars.push(carData);
+            }
+            showToast('✅ تم تعديل السيارة بنجاح!');
+        } else {
+            cars.push(carData);
+            showToast('✅ تم إضافة السيارة بنجاح!');
+        }
+
         // ⭐⭐⭐ حفظ السيارة في Supabase ⭐⭐⭐
         const saved = await saveCarToSupabase(carData);
         
         if (saved) {
-            // 🔥🔥🔥 الحل الحاسم: إعادة جلب البيانات من Supabase 🔥🔥🔥
-            await fetchCarsFromSupabase();
-            
+            // تحديث البيانات المحلية
+            carsData = cars;
+            renderCarsTable();
             showToast('✅ تم حفظ السيارة ونشرها في جميع الأجهزة!');
             
             // تحديث الصفحة الرئيسية
@@ -604,15 +619,21 @@ async function saveCar(e) {
                         if (typeof window.opener.showToast === 'function') {
                             window.opener.showToast('✅ تم إضافة سيارة جديدة!');
                         }
-                    }, 500);
+                    }, 1000);
                 }
             } catch (e) {
                 console.warn('⚠️ تعذر تحديث الصفحة الرئيسية:', e);
             }
         } else {
-            console.error('❌ فشل حفظ السيارة في Supabase');
-            showToast('❌ فشل حفظ السيارة في السحابة', true);
-            return;
+            // حفظ في localStorage كنسخة احتياطية
+            try {
+                localStorage.setItem('carsData', JSON.stringify(cars));
+                carsData = cars;
+                renderCarsTable();
+                showToast('⚠️ تم حفظ السيارة محلياً، فشل النشر للسحابة');
+            } catch (e) {
+                showToast('❌ فشل حفظ السيارة', true);
+            }
         }
 
         // إغلاق المودال وتنظيف
@@ -641,8 +662,8 @@ async function deleteCar(id) {
         });
         
         if (response.ok) {
-            // 🔥 إعادة جلب البيانات من Supabase
-            await fetchCarsFromSupabase();
+            carsData = cars;
+            renderCarsTable();
             showToast('🗑️ تم حذف السيارة ونشرها في جميع الأجهزة!');
         } else {
             throw new Error('فشل الحذف من السحابة');
@@ -674,7 +695,7 @@ async function deleteCar(id) {
                 if (typeof window.opener.showToast === 'function') {
                     window.opener.showToast('🗑️ تم حذف السيارة!');
                 }
-            }, 500);
+            }, 1000);
         }
     } catch (e) {}
 }
