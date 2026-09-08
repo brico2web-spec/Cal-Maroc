@@ -49,26 +49,52 @@
             
             <!-- حقول الحجز العمودية -->
             <div class="booking-fields">
+                <!-- مكان الإستلام - خيارات -->
                 <div class="field-group">
                     <label for="pickup-location">📍 <span data-i18n="booking.location">مكان الإستلام</span></label>
-                    <input type="text" id="pickup-location" placeholder="مثال: المطار، المدينة..." data-i18n-placeholder="booking.locationPlaceholder">
+                    <select id="pickup-location">
+                        <option value="الوكالة" data-i18n="booking.agency">🏢 الوكالة</option>
+                        <option value="محطة القطار" data-i18n="booking.train">🚉 محطة القطار</option>
+                        <option value="محطة المطار" data-i18n="booking.airport">✈️ محطة المطار</option>
+                    </select>
                 </div>
+                
+                <!-- يوم الإستلام -->
                 <div class="field-group">
                     <label for="pickup-date">📅 <span data-i18n="booking.pickup">يوم الإستلام</span></label>
                     <input type="date" id="pickup-date">
                 </div>
+                
+                <!-- يوم الرجوع -->
                 <div class="field-group">
                     <label for="return-date">📅 <span data-i18n="booking.return">يوم الرجوع</span></label>
                     <input type="date" id="return-date">
                 </div>
+                
+                <!-- نوع السيارة - خيارات -->
                 <div class="field-group">
-                    <label for="booking-price">💰 <span data-i18n="booking.price">ثمن الكراء</span></label>
-                    <input type="text" id="booking-price" placeholder="سيتم حسابه تلقائياً" readonly style="background:var(--primary-light);font-weight:700;color:var(--primary);">
+                    <label for="car-type-select">🚗 <span data-i18n="booking.carType">نوع السيارة</span></label>
+                    <select id="car-type-select">
+                        <option value="اقتصادية" data-i18n="type.economy">💰 اقتصادية</option>
+                        <option value="عائلية" data-i18n="type.family">👨‍👩‍👧‍👦 عائلية</option>
+                        <option value="فاخرة" data-i18n="type.luxury">⭐ فاخرة</option>
+                    </select>
                 </div>
+            </div>
+
+            <!-- السعر + زر الحجز -->
+            <div class="booking-price-row">
+                <div class="price-display">
+                    <span data-i18n="booking.priceLabel">💰 ثمن الكراء:</span>
+                    <strong id="booking-price">0 DH</strong>
+                </div>
+                <button onclick="bookNow()" class="btn-primary btn-large" id="bookNowBtn">
+                    <span data-i18n="booking.bookNow">📝 حجز الآن</span>
+                </button>
             </div>
             
             <div class="hero-buttons">
-                <button onclick="scrollToSection('vehicules')" class="btn-primary btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
+                <button onclick="scrollToSection('vehicules')" class="btn-outline btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
                 <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">تواصل معنا</span></button>
             </div>
         </div>
