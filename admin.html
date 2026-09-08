@@ -3,190 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmed TOUR - Groupe Bahia | Location de Voitures</title>
-    <link rel="stylesheet" href="style.css">
+    <title>لوحة الإدارة | Ahmed TOUR</title>
+    <link rel="stylesheet" href="admin-style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-brand">
-            <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Groupe Bahia Logo" class="logo-img">
-            <div>
-                <h1><span class="text-red">Groupe</span> Bahia</h1>
-                <p class="subtitle">AHMED TOUR - Location de Voitures</p>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
+                <h2>لوحة الإدارة</h2>
+                <p>Groupe Bahia - Ahmed TOUR</p>
             </div>
-        </div>
-        <div class="nav-links">
-            <a href="#accueil" data-i18n="nav.home">الرئيسية</a>
-            <a href="#vehicules" data-i18n="nav.vehicles">المركبات</a>
-            <a href="#tarifs" data-i18n="nav.pricing">الأسعار</a>
-            <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
-        </div>
-        <div class="nav-actions">
-            <!-- زر تبديل الثيم (نهاري / ليلي) -->
-            <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم">
-                <span id="themeIcon">🌙</span>
-            </button>
-            
-            <!-- Language Switcher -->
-            <div class="lang-switcher">
-                <button onclick="switchLanguage('ar')" class="lang-btn active" id="lang-ar">AR</button>
-                <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
-            </div>
-            <a href="admin.html" class="btn-admin">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                <span data-i18n="nav.admin">لوحة الإدارة</span>
-            </a>
-            <a href="tel:0661170182" class="btn-primary"><span data-i18n="nav.book">احجز الآن</span></a>
-        </div>
-    </nav>
-
-    <!-- باقي المحتوى كما هو -->
-    <!-- Hero -->
-    <section id="accueil" class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <span class="badge">🚗 <span data-i18n="hero.badge">Location de Voitures - Kénitra</span></span>
-            <h2 data-i18n="hero.title">أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
-            <p id="hero-desc" data-i18n="hero.desc">أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
-            <div class="hero-buttons">
-                <button onclick="scrollToSection('vehicules')" class="btn-primary btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
-                <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">تواصل معنا</span></button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features">
-        <div class="container grid-3">
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3 data-i18n="features.bestPrice.title">أفضل الأسعار</h3>
-                <p data-i18n="features.bestPrice.desc">أسعار تنافسية وشفافة بدون رسوم خفية</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚗</div>
-                <h3 data-i18n="features.modernFleet.title">أسطول حديث</h3>
-                <p data-i18n="features.modernFleet.desc">سيارات جديدة ومجهزة بأحدث التقنيات</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⏰</div>
-                <h3 data-i18n="features.support247.title">خدمة 24/7</h3>
-                <p data-i18n="features.support247.desc">متاحون على مدار الساعة لخدمتكم</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Vehicles -->
-    <section id="vehicules" class="vehicles">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-i18n="vehicles.title">أسطول المركبات</h2>
-                <p data-i18n="vehicles.subtitle">اختر السيارة المناسبة لاحتياجاتك</p>
-            </div>
-            <div class="grid-3" id="cars-grid"></div>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="tarifs" class="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-i18n="pricing.title">أسعار التأجير</h2>
-                <p data-i18n="pricing.subtitle">أسعار تبدأ من 250 درهم/يوم</p>
-            </div>
-            <div class="grid-3" id="pricing-grid"></div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 data-i18n="contact.title">اتصل بنا</h2>
-                <p data-i18n="contact.subtitle">نحن هنا لمساعدتك في أي وقت</p>
-            </div>
-            <div class="grid-2">
-                <div class="contact-info">
-                    <h3 data-i18n="contact.info">معلومات التواصل</h3>
-                    <div class="info-item">
-                        <span class="icon">📱</span>
-                        <div><small data-i18n="contact.phone">الهاتف</small><strong id="info-phone">06 61 17 01 82</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">☎️</span>
-                        <div><small data-i18n="contact.landline">الهاتف الثابت</small><strong id="info-phone2">05 37 37 88 89</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">✉️</span>
-                        <div><small data-i18n="contact.email">البريد الإلكتروني</small><strong id="info-email">ahmadi2011@live.fr</strong></div>
-                    </div>
-                    <div class="info-item">
-                        <span class="icon">📍</span>
-                        <div><small data-i18n="contact.address">العنوان</small><strong id="info-address">زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة</strong></div>
-                    </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
                 </div>
-                <div class="contact-form">
-                    <h3 data-i18n="contact.sendMsg">أرسل رسالة</h3>
-                    <form onsubmit="handleSubmit(event)">
-                        <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
-                        <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
-                        <textarea placeholder="رسالتك..." rows="4" data-i18n-placeholder="contact.message" required></textarea>
-                        <button type="submit" class="btn-primary"><span data-i18n="contact.send">إرسال</span></button>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-login">تسجيل الدخول</button>
+                <p id="login-error" class="login-error"></p>
+            </form>
+            <a href="index.html" class="back-link">← العودة للموقع</a>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
+                <div>
+                    <h3>لوحة الإدارة</h3>
+                    <small>Ahmed TOUR</small>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <button onclick="showTab('info')" class="nav-item active" data-tab="info">
+                    <span>🏢</span> معلومات الشركة
+                </button>
+                <button onclick="showTab('cars')" class="nav-item" data-tab="cars">
+                    <span>🚗</span> إدارة السيارات
+                </button>
+                <button onclick="showTab('preview')" class="nav-item" data-tab="preview">
+                    <span>👁️</span> معاينة الموقع
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">🚪 تسجيل الخروج</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="dash-header">
+                <h1 id="page-title">معلومات الشركة</h1>
+                <div class="user-badge">
+                    <span>👤 مسؤول</span>
+                </div>
+            </header>
+
+            <!-- Info Tab -->
+            <div id="tab-info" class="tab-content active">
+                <div class="card">
+                    <h3>✏️ تعديل معلومات التواصل</h3>
+                    <form id="info-form" onsubmit="saveInfo(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>الهاتف المحمول</label>
+                                <input type="text" id="edit-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label>الهاتف الثابت</label>
+                                <input type="text" id="edit-phone2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>البريد الإلكتروني</label>
+                                <input type="email" id="edit-email" required>
+                            </div>
+                            <div class="form-group full">
+                                <label>العنوان</label>
+                                <input type="text" id="edit-address" required>
+                            </div>
+                            <div class="form-group full">
+                                <label>وصف الصفحة الرئيسية</label>
+                                <textarea id="edit-description" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save">💾 حفظ التغييرات</button>
+                        </div>
                     </form>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo" class="footer-logo">
-                <div>
-                    <p><span class="text-red">Groupe</span> Bahia - Ahmed TOUR</p>
-                    <small>Location de Voitures - Kénitra</small>
+            <!-- Cars Tab -->
+            <div id="tab-cars" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🚗 قائمة السيارات</h3>
+                        <button onclick="openCarModal()" class="btn-add">+ إضافة سيارة جديدة</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>الاسم</th>
+                                    <th>النوع</th>
+                                    <th>الحالة</th>
+                                    <th>فترات الحجز</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cars-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="footer-links">
-                <a href="admin.html" class="admin-link">
-                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                    <span data-i18n="nav.admin">لوحة الإدارة</span>
-                </a>
-                <p class="copyright">© 2026 <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
-            </div>
-        </div>
-    </footer>
 
-    <!-- Reservation Modal -->
-    <div id="reserve-modal" class="modal">
+            <!-- Preview Tab -->
+            <div id="tab-preview" class="tab-content">
+                <div class="card">
+                    <h3>👁️ معاينة الموقع</h3>
+                    <p class="text-gray-400 mb-4" style="color:var(--text-muted);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
+                    <a href="index.html" target="_blank" class="btn-primary">🌐 فتح الموقع</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Car Modal -->
+    <div id="car-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="modal.title">حجز سيارة</h3>
-                <button onclick="closeModal()" class="close-btn">&times;</button>
+                <h3 id="car-modal-title">إضافة سيارة جديدة</h3>
+                <button onclick="closeCarModal()" class="close-btn">&times;</button>
             </div>
-            <form onsubmit="handleReserve(event)">
-                <input type="text" id="car-type" readonly>
-                <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
-                <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
-                <div class="grid-2">
-                    <input type="date" id="start-date" required>
-                    <input type="date" id="end-date" required>
+            <form id="car-form" onsubmit="saveCar(event)">
+                <input type="hidden" id="car-id">
+
+                <div class="form-group">
+                    <label>اسم السيارة</label>
+                    <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
                 </div>
-                <div id="price-display" style="text-align:center;padding:0.5rem;background:rgba(225,29,72,0.1);border-radius:0.75rem;border:1px solid rgba(225,29,72,0.2);">
-                    <span data-i18n="modal.priceLabel">السعر الإجمالي:</span>
-                    <strong id="total-price" style="color:var(--secondary);font-size:1.25rem;">0 DH</strong>
+
+                <div class="form-group">
+                    <label>النوع</label>
+                    <select id="car-type" required>
+                        <option value="اقتصادية">اقتصادية</option>
+                        <option value="عائلية">عائلية</option>
+                        <option value="فاخرة">فاخرة</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-primary"><span data-i18n="modal.confirm">تأكيد الحجز</span></button>
+
+                <div class="form-group">
+                    <label>📌 حالة السيارة</label>
+                    <select id="car-status" required>
+                        <option value="available">✅ متاحة حاليا</option>
+                        <option value="reserved">🔴 محجوزة حاليا</option>
+                    </select>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label>📸 صورة السيارة (JPG, PNG)</label>
+                    <div class="file-upload-wrapper">
+                        <label for="car-image-input" class="file-upload-label">
+                            📤 اضغط لاختيار صورة
+                        </label>
+                        <input type="file" id="car-image-input" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                            <img id="file-preview" class="file-preview" alt="معاينة الصورة">
+                            <span id="file-name" class="file-name">لم يتم اختيار صورة</span>
+                        </div>
+                    </div>
+                    <small class="hint">يمكنك رفع صورة JPG أو إدخال رابط صورة في الحقل أدناه</small>
+                </div>
+
+                <div class="form-group">
+                    <label>أو رابط صورة (URL)</label>
+                    <input type="url" id="car-img-url" placeholder="https://example.com/image.jpg">
+                    <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
+                </div>
+
+                <!-- Periods Management -->
+                <div class="form-group">
+                    <label>📅 فترات الحجز والأسعار</label>
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;background:var(--bg);padding:1rem;border-radius:0.75rem;border:1px solid var(--border);">
+                        <div id="periods-container">
+                            <!-- Periods will be added here dynamically -->
+                        </div>
+                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;">
+                            + إضافة فترة جديدة
+                        </button>
+                    </div>
+                    <small class="hint">حدد عدد الأيام والسعر المقابل لتلك المدة</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeCarModal()" class="btn-cancel">إلغاء</button>
+                    <button type="submit" class="btn-save">💾 حفظ</button>
+                </div>
             </form>
         </div>
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="toast">تم إرسال طلبك بنجاح!</div>
+    <div id="admin-toast" class="toast"></div>
 
-    <script src="script.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
