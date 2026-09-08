@@ -2,15 +2,10 @@
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
 
-// ============================================================
 // معلومات Supabase
-// ============================================================
 const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
 
-// ============================================================
-// البيانات
-// ============================================================
 let carsData = [];
 let siteData = {};
 let slidersData = [];
@@ -37,7 +32,6 @@ async function fetchCarsFromSupabase() {
             }
         } catch (e) {}
 
-        // جلب السلايدر
         await fetchSlidersFromSupabase();
         
         renderCarsTable();
@@ -63,9 +57,13 @@ function addSliderRow() {
     const div = document.createElement('div');
     div.className = 'slider-row';
     div.innerHTML = `
-        <div class="form-group">
-            <label>رابط الصورة (URL)</label>
-            <input type="url" class="slider-img-url" placeholder="https://example.com/slide.jpg">
+        <div class="file-upload-wrapper">
+            <label for="slider-img-input-${Date.now()}" class="file-upload-label">📤 اضغط لرفع صورة السلايدر</label>
+            <input type="file" class="slider-file-input" accept="image/*" onchange="handleSliderImageUpload(event)">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                <img class="slider-file-preview file-preview" alt="معاينة الصورة">
+                <span class="file-name">لم يتم اختيار صورة</span>
+            </div>
         </div>
         <div class="form-group">
             <label>العنوان الرئيسي (مثال: أفضل تأجير سيارات)</label>
@@ -75,9 +73,37 @@ function addSliderRow() {
             <label>العنوان الفرعي (مثال: توصيل مجاني)</label>
             <input type="text" class="slider-subtitle" placeholder="مثال: أفضل الأسعار في القنيطرة">
         </div>
-        <button type="button" class="btn-delete" onclick="this.parentElement.remove()">🗑️ حذف</button>
+        <button type="button" class="btn-delete" style="margin-top: 0.5rem;" onclick="this.parentElement.remove()">🗑️ حذف</button>
     `;
     container.appendChild(div);
+}
+
+function handleSliderImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) { 
+        alert('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت');
+        return; 
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        const wrapper = event.target.closest('.file-upload-wrapper');
+        const preview = wrapper.querySelector('.slider-file-preview');
+        const fileName = wrapper.querySelector('.file-name');
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.className = 'slider-img-data';
+        hiddenInput.value = imageData;
+        wrapper.appendChild(hiddenInput);
+
+        preview.src = imageData;
+        preview.classList.add('show');
+        fileName.textContent = file.name;
+    };
+    reader.readAsDataURL(file);
 }
 
 function renderSlidersTable() {
@@ -90,9 +116,14 @@ function renderSlidersTable() {
             const div = document.createElement('div');
             div.className = 'slider-row';
             div.innerHTML = `
-                <div class="form-group">
-                    <label>رابط الصورة (URL)</label>
-                    <input type="url" class="slider-img-url" value="${s.img || ''}" placeholder="https://example.com/slide.jpg">
+                <div class="file-upload-wrapper">
+                    <label for="slider-img-input-${Date.now()}" class="file-upload-label">📤 اضغط لرفع صورة السلايدر</label>
+                    <input type="file" class="slider-file-input" accept="image/*" onchange="handleSliderImageUpload(event)">
+                    <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                        <img class="slider-file-preview file-preview" src="${s.img}" alt="معاينة الصورة" style="display: block;">
+                        <span class="file-name">صورة مرفوعة</span>
+                        <input type="hidden" class="slider-img-data" value="${s.img}">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>العنوان الرئيسي</label>
@@ -102,14 +133,11 @@ function renderSlidersTable() {
                     <label>العنوان الفرعي</label>
                     <input type="text" class="slider-subtitle" value="${s.subtitle || ''}" placeholder="مثال: أفضل الأسعار في القنيطرة">
                 </div>
-                <div style="display:flex; align-items:flex-end;">
-                    <button type="button" class="btn-delete" onclick="this.parentElement.parentElement.remove()">🗑️ حذف</button>
-                </div>
+                <button type="button" class="btn-delete" style="margin-top: 0.5rem;" onclick="this.parentElement.remove()">🗑️ حذف</button>
             `;
             container.appendChild(div);
         });
     } else {
-        // إضافة صف فارغ افتراضي
         addSliderRow();
     }
 }
@@ -119,22 +147,22 @@ async function saveSliders() {
     const newSliders = [];
     
     rows.forEach(row => {
-        const img = row.querySelector('.slider-img-url').value.trim();
+        const imgData = row.querySelector('.slider-img-data')?.value || '';
         const title = row.querySelector('.slider-title').value.trim();
         const subtitle = row.querySelector('.slider-subtitle').value.trim();
         
-        if (img) {
-            newSliders.push({ img, title, subtitle });
+        if (imgData) {
+            newSliders.push({ img: imgData, title, subtitle });
         }
     });
 
     if (newSliders.length === 0) {
-        showToast('❌ يرجى إدخال رابط صورة واحدة على الأقل', true);
+        showToast('❌ يرجى رفع صورة واحدة على الأقل', true);
         return;
     }
 
     try {
-        // حذف القيم القديمة وإعادة الإدخال (أفضل طريقة للسلايدر لسهولة الترتيب)
+        // حذف القديم ثم إعادة الإدخال
         await fetch(`${SUPABASE_URL}sliders?id=neq.0`, {
             method: 'DELETE',
             headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
@@ -154,6 +182,7 @@ async function saveSliders() {
         if (response.ok) {
             slidersData = newSliders;
             showToast('✅ تم حفظ السلايدر بنجاح!');
+            
             // تحديث واجهة الزوار فوراً
             try {
                 if (window.opener && !window.opener.closed) {
@@ -332,7 +361,7 @@ function getPeriodsFromForm() {
     return periods.sort((a, b) => a.days - b.days);
 }
 
-// ===== IMAGE UPLOAD =====
+// ===== CAR IMAGE UPLOAD =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
