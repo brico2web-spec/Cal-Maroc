@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-brand">
             <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Groupe Bahia Logo" class="logo-img">
@@ -25,31 +24,27 @@
             <a href="#contact" data-i18n="nav.contact">Contact</a>
         </div>
         <div class="nav-actions">
-            <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم">
-                <span id="themeIcon">🌙</span>
-            </button>
-            
-            <!-- إضافة زر اللغة الإنجليزية هنا -->
+            <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم"><span id="themeIcon">🌙</span></button>
             <div class="lang-switcher">
                 <button onclick="switchLanguage('fr')" class="lang-btn active" id="lang-fr">FR</button>
                 <button onclick="switchLanguage('en')" class="lang-btn" id="lang-en">EN</button>
                 <button onclick="switchLanguage('ar')" class="lang-btn" id="lang-ar">AR</button>
             </div>
-
-            <a href="admin.html" class="btn-admin">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                <span data-i18n="nav.admin">Tableau de bord</span>
-            </a>
+            <a href="admin.html" class="btn-admin"><svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg><span data-i18n="nav.admin">Tableau de bord</span></a>
             <a href="tel:0661170182" class="btn-primary"><span data-i18n="nav.book">Réserver</span></a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section id="accueil" class="hero">
+    <!-- ===== Hero Slider ===== -->
+    <section id="accueil" class="hero-slider-section">
+        <div id="hero-slider" class="hero-slider">
+            <!-- سيتم توليد الشرائح من السكربت -->
+        </div>
+        
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="badge">🚗 <span data-i18n="hero.badge">Location de Voitures - Kénitra</span></span>
-            <h2 data-i18n="hero.title">Ahmed TOUR<br><span class="gradient-text">Location de Voitures</span></h2>
+            <h2 id="hero-title" data-i18n="hero.title">Ahmed TOUR<br><span class="gradient-text">Location de Voitures</span></h2>
             <p id="hero-desc" data-i18n="hero.desc">Meilleurs prix de location de voitures à Kénitra. Flotte moderne, service professionnel et livraison gratuite.</p>
             
             <div class="booking-fields">
@@ -84,9 +79,7 @@
                     <span data-i18n="booking.priceLabel">💰 Prix de location:</span>
                     <strong id="booking-price">0 DH</strong>
                 </div>
-                <button onclick="bookNow()" class="btn-primary btn-large" id="bookNowBtn">
-                    <span data-i18n="booking.bookNow">📝 Réserver maintenant</span>
-                </button>
+                <button onclick="bookNow()" class="btn-primary btn-large" id="bookNowBtn"><span data-i18n="booking.bookNow">📝 Réserver maintenant</span></button>
             </div>
             
             <div class="hero-buttons">
@@ -193,12 +186,7 @@
                 <p data-i18n="map.subtitle">Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra</p>
             </div>
             <div class="map-container">
-                <iframe 
-                    src="https://maps.google.com/maps?q=34.250657,-6.580206&z=17&output=embed" 
-                    style="border:0; width:100%; height:350px; pointer-events: none;"
-                    allowfullscreen="" 
-                    loading="lazy">
-                </iframe>
+                <iframe src="https://maps.google.com/maps?q=34.250657,-6.580206&z=17&output=embed" style="border:0; width:100%; height:350px; pointer-events: none;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
     </section>
@@ -215,10 +203,7 @@
                     </div>
                 </div>
                 <div class="footer-links">
-                    <a href="admin.html" class="admin-link">
-                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                        <span data-i18n="nav.admin">Tableau de bord</span>
-                    </a>
+                    <a href="admin.html" class="admin-link"><svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg><span data-i18n="nav.admin">Tableau de bord</span></a>
                     <p class="copyright">© 2026 <span data-i18n="footer.rights">Tous droits réservés</span></p>
                 </div>
             </div>
@@ -249,7 +234,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast" class="toast">Votre message a été envoyé avec succès!</div>
 
     <script src="script.js"></script>

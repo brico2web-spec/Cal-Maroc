@@ -45,6 +45,7 @@
             <nav class="sidebar-nav">
                 <button onclick="showTab('info')" class="nav-item active" data-tab="info"><span>🏢</span> معلومات الشركة</button>
                 <button onclick="showTab('cars')" class="nav-item" data-tab="cars"><span>🚗</span> إدارة السيارات</button>
+                <button onclick="showTab('sliders')" class="nav-item" data-tab="sliders"><span>🖼️</span> صور السلايدر</button>
                 <button onclick="showTab('preview')" class="nav-item" data-tab="preview"><span>👁️</span> معاينة الموقع</button>
             </nav>
             <div class="sidebar-footer">
@@ -98,6 +99,21 @@
                 </div>
             </div>
 
+            <!-- ===== قسم إدارة السلايدر ===== -->
+            <div id="tab-sliders" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🖼️ صور السلايدر (الواجهة الرئيسية)</h3>
+                        <button onclick="addSliderRow()" class="btn-add">+ إضافة صورة جديدة</button>
+                    </div>
+                    <p class="hint" style="margin-bottom: 1rem;">أضف صور السلايدر هنا. سيتم عرضها تلقائياً في واجهة الزوار.</p>
+                    <div id="sliders-container" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                    <div class="form-actions" style="margin-top: 1.5rem;">
+                        <button onclick="saveSliders()" class="btn-save">💾 حفظ السلايدر</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="tab-preview" class="tab-content">
                 <div class="card">
                     <h3>👁️ معاينة الموقع</h3>
@@ -117,36 +133,17 @@
             </div>
             <form id="car-form" onsubmit="saveCar(event)">
                 <input type="hidden" id="car-id">
-
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>اسم السيارة</label>
-                        <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>النوع</label>
-                        <select id="car-type" required>
-                            <option value="اقتصادية">اقتصادية</option>
-                            <option value="عائلية">عائلية</option>
-                            <option value="فاخرة">فاخرة</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>اسم السيارة</label><input type="text" id="car-name" placeholder="مثال: Renault Clio" required></div>
+                    <div class="form-group"><label>النوع</label><select id="car-type" required><option value="اقتصادية">اقتصادية</option><option value="عائلية">عائلية</option><option value="فاخرة">فاخرة</option></select></div>
                 </div>
-
-                <!-- زر التبديل الجديد للحالة -->
                 <div class="form-group">
                     <label>📌 حالة السيارة (اضغط للتبديل)</label>
                     <div class="toggle-status-wrapper">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="car-status-toggle" checked>
-                            <span class="slider"></span>
-                        </label>
+                        <label class="toggle-switch"><input type="checkbox" id="car-status-toggle" checked><span class="slider"></span></label>
                         <span id="status-text" class="status-text">✅ متاحة حالياً</span>
                     </div>
                 </div>
-
-                <!-- Image Upload -->
                 <div class="form-group">
                     <label>📸 صورة السيارة (JPG, PNG)</label>
                     <div class="file-upload-wrapper">
@@ -159,14 +156,11 @@
                     </div>
                     <small class="hint">يمكنك رفع صورة JPG أو إدخال رابط صورة في الحقل أدناه</small>
                 </div>
-
                 <div class="form-group">
                     <label>أو رابط صورة (URL)</label>
                     <input type="url" id="car-img-url" placeholder="https://example.com/image.jpg">
                     <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
                 </div>
-
-                <!-- Periods Management (مرتبة بشكل أفقي ومنظم) -->
                 <div class="form-group">
                     <label>📅 فترات الحجز والأسعار</label>
                     <div style="background:var(--bg);padding:1rem;border-radius:0.75rem;border:1px solid var(--border);">
@@ -175,7 +169,6 @@
                     </div>
                     <small class="hint">حدد عدد الأيام والسعر المقابل لتلك المدة</small>
                 </div>
-
                 <div class="form-actions">
                     <button type="button" onclick="closeCarModal()" class="btn-cancel">إلغاء</button>
                     <button type="submit" class="btn-save">💾 حفظ</button>
