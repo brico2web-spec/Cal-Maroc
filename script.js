@@ -11,6 +11,7 @@ const translations = {
     ar: {
         'nav.home': 'الرئيسية',
         'nav.vehicles': 'المركبات',
+        'nav.features': 'المميزات',
         'nav.pricing': 'الأسعار',
         'nav.contact': 'اتصل بنا',
         'nav.admin': 'لوحة الإدارة',
@@ -20,6 +21,8 @@ const translations = {
         'hero.desc': 'أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.',
         'hero.explore': 'استكشف المركبات',
         'hero.contact': 'تواصل معنا',
+        'features.title': 'لماذا تختارنا؟',
+        'features.subtitle': 'خدماتنا المميزة تجعل رحلتك أفضل',
         'features.bestPrice.title': 'أفضل الأسعار',
         'features.bestPrice.desc': 'أسعار تنافسية وشفافة بدون رسوم خفية',
         'features.modernFleet.title': 'أسطول حديث',
@@ -29,7 +32,7 @@ const translations = {
         'vehicles.title': 'أسطول المركبات',
         'vehicles.subtitle': 'اختر السيارة المناسبة لاحتياجاتك',
         'pricing.title': 'أسعار التأجير',
-        'pricing.subtitle': 'أسعار تبدأ من 250 درهم/يوم',
+        'pricing.subtitle': 'أسعار تبدأ من أرخص سعر في الموقع',
         'contact.title': 'اتصل بنا',
         'contact.subtitle': 'نحن هنا لمساعدتك في أي وقت',
         'contact.info': 'معلومات التواصل',
@@ -61,20 +64,21 @@ const translations = {
         'reserve.book': 'احجز الآن',
         'reserve.reserved': '🔒 محجوزة',
         'booking.location': 'مكان الإستلام',
-        'booking.locationPlaceholder': 'مثال: المطار، المدينة...',
         'booking.pickup': 'يوم الإستلام',
         'booking.return': 'يوم الرجوع',
-        'booking.price': 'ثمن الكراء',
         'booking.agency': '🏢 الوكالة',
         'booking.train': '🚉 محطة القطار',
         'booking.airport': '✈️ محطة المطار',
         'booking.carType': 'نوع السيارة',
         'booking.priceLabel': '💰 ثمن الكراء:',
         'booking.bookNow': '📝 حجز الآن',
+        'pricing.from': 'من',
+        'pricing.perDay': 'درهم/يوم',
     },
     fr: {
         'nav.home': 'Accueil',
         'nav.vehicles': 'Véhicules',
+        'nav.features': 'Caractéristiques',
         'nav.pricing': 'Tarifs',
         'nav.contact': 'Contact',
         'nav.admin': 'Tableau de bord',
@@ -84,6 +88,8 @@ const translations = {
         'hero.desc': 'Meilleurs prix de location de voitures à Kénitra. Flotte moderne, service professionnel et livraison gratuite.',
         'hero.explore': 'Explorer les véhicules',
         'hero.contact': 'Nous contacter',
+        'features.title': 'Pourquoi nous choisir ?',
+        'features.subtitle': 'Nos services exclusifs rendent votre voyage meilleur',
         'features.bestPrice.title': 'Meilleurs prix',
         'features.bestPrice.desc': 'Prix compétitifs et transparents sans frais cachés',
         'features.modernFleet.title': 'Flotte moderne',
@@ -93,7 +99,7 @@ const translations = {
         'vehicles.title': 'Flotte de véhicules',
         'vehicles.subtitle': 'Choisissez la voiture adaptée à vos besoins',
         'pricing.title': 'Tarifs de location',
-        'pricing.subtitle': 'Tarifs à partir de 250 DH/jour',
+        'pricing.subtitle': 'Tarifs à partir du prix le plus bas du site',
         'contact.title': 'Contactez-nous',
         'contact.subtitle': 'Nous sommes là pour vous aider à tout moment',
         'contact.info': 'Informations de contact',
@@ -125,16 +131,16 @@ const translations = {
         'reserve.book': 'Réserver',
         'reserve.reserved': '🔒 Réservée',
         'booking.location': 'Lieu de retrait',
-        'booking.locationPlaceholder': 'Ex: Aéroport, ville...',
         'booking.pickup': 'Date de retrait',
         'booking.return': 'Date de retour',
-        'booking.price': 'Prix de location',
         'booking.agency': '🏢 Agence',
         'booking.train': '🚉 Gare',
         'booking.airport': '✈️ Aéroport',
         'booking.carType': 'Type de voiture',
         'booking.priceLabel': '💰 Prix de location:',
         'booking.bookNow': '📝 Réserver maintenant',
+        'pricing.from': 'à partir de',
+        'pricing.perDay': 'DH/jour',
     }
 };
 
@@ -295,7 +301,7 @@ function updateCarsData(newData) {
 }
 
 // ============================================================
-// RENDER FUNCTIONS
+// ⭐ RENDER CARS (مع ألوان البطاقات)
 // ============================================================
 function renderCars() {
     const grid = document.getElementById('cars-grid');
@@ -305,6 +311,12 @@ function renderCars() {
         grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">🚗 لا توجد سيارات متاحة حالياً</p>';
         return;
     }
+
+    const typeColors = {
+        'اقتصادية': { bg: '#eff6ff', border: '#3b82f6', tag: '#3b82f6', text: '#1e40af' },
+        'عائلية': { bg: '#fffbeb', border: '#f59e0b', tag: '#f59e0b', text: '#92400e' },
+        'فاخرة': { bg: '#f0fdf4', border: '#22c55e', tag: '#22c55e', text: '#166534' }
+    };
 
     grid.innerHTML = cars.map(car => {
         const statusText = car.status === 'available' ?
@@ -317,6 +329,8 @@ function renderCars() {
         else if (car.type === 'عائلية') typeKey = 'type.family';
         else if (car.type === 'فاخرة') typeKey = 'type.luxury';
         const typeText = translations[currentLang][typeKey] || car.type;
+
+        const colors = typeColors[car.type] || typeColors['اقتصادية'];
 
         let periodHtml = '';
         if (car.periods) {
@@ -334,9 +348,9 @@ function renderCars() {
 
                     const label = translations[currentLang][periodKey] || p.days + ' يوم';
                     periodHtml += `
-                        <span class="period-tag">
+                        <span class="period-tag" style="border-color:${colors.border};background:${colors.bg}">
                             <span class="period-label" data-period-key="${periodKey}">${label}</span>
-                            : <span class="period-price">${p.price} DH</span>
+                            : <span class="period-price" style="color:${colors.tag}">${p.price} DH</span>
                         </span>
                     `;
                 });
@@ -353,19 +367,27 @@ function renderCars() {
         const bookText = isReserved ? translations[currentLang]['reserve.reserved'] : translations[currentLang]['reserve.book'];
 
         return `
-            <div class="car-card">
+            <div class="car-card" style="border-top-color: ${colors.border} !important;">
                 <div class="car-image">
                     <img src="${car.img}" alt="${car.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'">
                     <span class="car-badge ${statusClass}">${statusText}</span>
+                    <span class="car-type-badge" style="background:${colors.bg};color:${colors.tag};border:1px solid ${colors.border}">
+                        ${typeText}
+                    </span>
                 </div>
                 <div class="car-info">
                     <div class="car-header">
-                        <h3>${car.name}</h3>
-                        <span class="car-tag">${typeText}</span>
+                        <h3 style="color:${colors.text}">${car.name}</h3>
+                        <span class="car-tag" style="background:${colors.bg};color:${colors.tag};border-color:${colors.border}">
+                            ${typeText}
+                        </span>
                     </div>
-                    <div class="car-price">${dailyPrice} <small>DH / ${translations[currentLang]['period.daily']}</small></div>
+                    <div class="car-price">
+                        ${dailyPrice} 
+                        <small>DH / ${translations[currentLang]['period.daily']}</small>
+                    </div>
                     ${periodHtml}
-                    <button onclick="openReserve('${car.name} - ${typeText}', ${car.id})" class="btn-secondary" ${isReserved ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                    <button onclick="openReserve('${car.name} - ${typeText}', ${car.id})" class="btn-secondary" ${isReserved ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} style="border-color:${colors.border};color:${colors.tag};">
                         ${bookText}
                     </button>
                 </div>
@@ -374,38 +396,62 @@ function renderCars() {
     }).join('');
 }
 
+// ============================================================
+// ⭐ RENDER PRICING (مع ترتيب وألوان البطاقات)
+// ============================================================
 function renderPricing() {
     const grid = document.getElementById('pricing-grid');
     const cars = getCars();
 
-    const types = ['اقتصادية', 'عائلية', 'فاخرة'];
+    const typeOrder = ['عائلية', 'اقتصادية', 'فاخرة'];
+    
+    const typeColors = {
+        'اقتصادية': { bg: '#eff6ff', border: '#3b82f6', text: '#2563eb', icon: '💙' },
+        'عائلية': { bg: '#fffbeb', border: '#f59e0b', text: '#d97706', icon: '🧡' },
+        'فاخرة': { bg: '#f0fdf4', border: '#22c55e', text: '#16a34a', icon: '💚' }
+    };
+
     const typeLabels = {
         'اقتصادية': translations[currentLang]['type.economy'],
         'عائلية': translations[currentLang]['type.family'],
         'فاخرة': translations[currentLang]['type.luxury']
     };
 
-    const typeData = types.map(type => {
+    const typeData = typeOrder.map(type => {
         const carsOfType = cars.filter(c => c.type === type);
-        const avgPrice = carsOfType.length > 0 ?
-            carsOfType.reduce((sum, c) => {
-                const periods = typeof c.periods === 'string' ? JSON.parse(c.periods) : (c.periods || []);
-                const daily = periods.find(p => p.days === 1)?.price || 0;
-                return sum + daily;
-            }, 0) / carsOfType.length :
-            0;
-        return { type, count: carsOfType.length, avgPrice: Math.round(avgPrice) };
+        let minPrice = Infinity;
+        carsOfType.forEach(car => {
+            const periods = typeof car.periods === 'string' ? JSON.parse(car.periods) : (car.periods || []);
+            const daily = periods.find(p => p.days === 1)?.price || periods[0]?.price || 0;
+            if (daily > 0 && daily < minPrice) minPrice = daily;
+        });
+        return { 
+            type, 
+            count: carsOfType.length, 
+            minPrice: minPrice === Infinity ? 0 : minPrice,
+            color: typeColors[type] || typeColors['اقتصادية']
+        };
     });
 
     grid.innerHTML = typeData.map((data, index) => {
         const isFeatured = index === 1;
-        const priceDisplay = data.avgPrice > 0 ? data.avgPrice : '---';
-
+        const priceDisplay = data.minPrice > 0 ? data.minPrice : '---';
+        const color = data.color;
+        
         return `
-            <div class="pricing-card ${isFeatured ? 'featured' : ''}">
+            <div class="pricing-card ${isFeatured ? 'featured' : ''}" style="border-color: ${isFeatured ? color.border : 'var(--border)'};">
                 ${isFeatured ? '<div class="badge-popular">🌟 ' + (currentLang === 'ar' ? 'الأكثر طلباً' : 'Le plus demandé') + '</div>' : ''}
-                <h3>${typeLabels[data.type]}</h3>
-                <div class="price">${priceDisplay} <span>DH/${translations[currentLang]['period.daily']}</span></div>
+                <div class="pricing-icon" style="background:${color.bg};color:${color.text};font-size:2rem;width:4rem;height:4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:2px solid ${color.border}">
+                    ${color.icon}
+                </div>
+                <h3 style="color:${color.text}">${typeLabels[data.type]}</h3>
+                <div class="price">
+                    ${priceDisplay} 
+                    <span>${translations[currentLang]['pricing.perDay']}</span>
+                </div>
+                <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">
+                    ${translations[currentLang]['pricing.from']} ${priceDisplay} ${currentLang === 'ar' ? 'درهم/يوم' : 'DH/jour'}
+                </p>
                 <ul>
                     <li>✓ ${currentLang === 'ar' ? 'تأمين شامل' : 'Assurance complète'}</li>
                     <li>✓ ${currentLang === 'ar' ? 'مسافة غير محدودة' : 'Kilométrage illimité'}</li>
@@ -413,7 +459,7 @@ function renderPricing() {
                     ${isFeatured ? '<li>✓ ' + (currentLang === 'ar' ? 'مقعد أطفال مجاني' : 'Siège enfant gratuit') + '</li>' : ''}
                     <li>✓ ${currentLang === 'ar' ? 'دعم على مدار الساعة' : 'Support 24/7'}</li>
                 </ul>
-                <button onclick="openReserve('${typeLabels[data.type]}')" class="${isFeatured ? 'btn-primary' : 'btn-secondary'}">
+                <button onclick="openReserve('${typeLabels[data.type]}')" class="${isFeatured ? 'btn-primary' : 'btn-secondary'}" style="${isFeatured ? '' : 'border-color:' + color.border + ';color:' + color.text + ';'}">
                     ${currentLang === 'ar' ? 'احجز الآن' : 'Réserver'}
                 </button>
             </div>
@@ -437,7 +483,7 @@ function loadSiteInfo() {
 }
 
 // ============================================================
-// 📋 إدارة حقول الحجز في الهيرو
+// 📋 إدارة حقول الحجز
 // ============================================================
 function updateBookingPrice() {
     const pickupDate = document.getElementById('pickup-date')?.value;
@@ -516,7 +562,6 @@ function bookNow() {
     const returnDate = document.getElementById('return-date')?.value;
     const carType = document.getElementById('car-type-select')?.value;
     const location = document.getElementById('pickup-location')?.value;
-    const price = document.getElementById('booking-price')?.textContent;
     
     if (!pickupDate || !returnDate) {
         showToast(currentLang === 'ar' ? '❌ يرجى تحديد تاريخ الإستلام وتاريخ الرجوع' : '❌ Veuillez sélectionner les dates de retrait et de retour');
@@ -545,7 +590,7 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب عند تأكيد الحجز
+// 💬 إرسال رسالة واتساب
 // ============================================================
 function sendWhatsAppBooking(carName, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
@@ -718,7 +763,6 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', async function() {
     loadTheme();
     
-    // إعداد حقول الحجز
     const pickupDate = document.getElementById('pickup-date');
     const returnDate = document.getElementById('return-date');
     const carTypeSelect = document.getElementById('car-type-select');

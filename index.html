@@ -20,6 +20,7 @@
         <div class="nav-links">
             <a href="#accueil" data-i18n="nav.home">الرئيسية</a>
             <a href="#vehicules" data-i18n="nav.vehicles">المركبات</a>
+            <a href="#features" data-i18n="nav.features">المميزات</a>
             <a href="#tarifs" data-i18n="nav.pricing">الأسعار</a>
             <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
         </div>
@@ -47,9 +48,7 @@
             <h2 data-i18n="hero.title">أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
             <p id="hero-desc" data-i18n="hero.desc">أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
             
-            <!-- حقول الحجز العمودية -->
             <div class="booking-fields">
-                <!-- مكان الإستلام - خيارات -->
                 <div class="field-group">
                     <label for="pickup-location">📍 <span data-i18n="booking.location">مكان الإستلام</span></label>
                     <select id="pickup-location">
@@ -58,20 +57,14 @@
                         <option value="محطة المطار" data-i18n="booking.airport">✈️ محطة المطار</option>
                     </select>
                 </div>
-                
-                <!-- يوم الإستلام -->
                 <div class="field-group">
                     <label for="pickup-date">📅 <span data-i18n="booking.pickup">يوم الإستلام</span></label>
                     <input type="date" id="pickup-date">
                 </div>
-                
-                <!-- يوم الرجوع -->
                 <div class="field-group">
                     <label for="return-date">📅 <span data-i18n="booking.return">يوم الرجوع</span></label>
                     <input type="date" id="return-date">
                 </div>
-                
-                <!-- نوع السيارة - خيارات -->
                 <div class="field-group">
                     <label for="car-type-select">🚗 <span data-i18n="booking.carType">نوع السيارة</span></label>
                     <select id="car-type-select">
@@ -82,7 +75,6 @@
                 </div>
             </div>
 
-            <!-- السعر + زر الحجز -->
             <div class="booking-price-row">
                 <div class="price-display">
                     <span data-i18n="booking.priceLabel">💰 ثمن الكراء:</span>
@@ -100,27 +92,6 @@
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="features">
-        <div class="container grid-3">
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3 data-i18n="features.bestPrice.title">أفضل الأسعار</h3>
-                <p data-i18n="features.bestPrice.desc">أسعار تنافسية وشفافة بدون رسوم خفية</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🚗</div>
-                <h3 data-i18n="features.modernFleet.title">أسطول حديث</h3>
-                <p data-i18n="features.modernFleet.desc">سيارات جديدة ومجهزة بأحدث التقنيات</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⏰</div>
-                <h3 data-i18n="features.support247.title">خدمة 24/7</h3>
-                <p data-i18n="features.support247.desc">متاحون على مدار الساعة لخدمتكم</p>
-            </div>
-        </div>
-    </section>
-
     <!-- Vehicles -->
     <section id="vehicules" class="vehicles">
         <div class="container">
@@ -132,14 +103,41 @@
         </div>
     </section>
 
+    <!-- Features -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="features.title">لماذا تختارنا؟</h2>
+                <p data-i18n="features.subtitle">خدماتنا المميزة تجعل رحلتك أفضل</p>
+            </div>
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 data-i18n="features.bestPrice.title">أفضل الأسعار</h3>
+                    <p data-i18n="features.bestPrice.desc">أسعار تنافسية وشفافة بدون رسوم خفية</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3 data-i18n="features.modernFleet.title">أسطول حديث</h3>
+                    <p data-i18n="features.modernFleet.desc">سيارات جديدة ومجهزة بأحدث التقنيات</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3 data-i18n="features.support247.title">خدمة 24/7</h3>
+                    <p data-i18n="features.support247.desc">متاحون على مدار الساعة لخدمتكم</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Pricing -->
     <section id="tarifs" class="pricing">
         <div class="container">
             <div class="section-header">
                 <h2 data-i18n="pricing.title">أسعار التأجير</h2>
-                <p data-i18n="pricing.subtitle">أسعار تبدأ من 250 درهم/يوم</p>
+                <p id="pricing-subtitle" data-i18n="pricing.subtitle">أسعار تبدأ من أرخص سعر في الموقع</p>
             </div>
-            <div class="grid-3" id="pricing-grid"></div>
+            <div class="grid-3 pricing-grid-custom" id="pricing-grid"></div>
         </div>
     </section>
 
