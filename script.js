@@ -599,7 +599,7 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب
+// 💬 إرسال رسالة واتساب (معدلة - ترتيب المعاملات صحيح)
 // ============================================================
 function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
@@ -750,22 +750,23 @@ function handleSubmit(e) {
 }
 
 // ============================================================
-// 🔄 دالة handleReserve (المعدلة - تظهر الاسم بشكل صحيح)
+// 🔄 دالة handleReserve (المعدلة نهائياً)
 // ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
-    // جلب البيانات من النموذج
+    // ✅ جلب اسم السيارة من الحقل المحدد
     const carFullName = document.getElementById('car-type')?.value || '';
     
-    // ✅ جلب الاسم الكامل من الحقل الأول في المودال
-    const nameInputs = document.querySelectorAll('#reserve-modal input[type="text"]');
-    const customerName = nameInputs.length > 0 ? nameInputs[0].value : '';
+    // ✅ جلب الاسم الكامل من الحقل الأول في المودال (باستخدام querySelector)
+    const nameInput = document.querySelector('#reserve-modal input[type="text"]');
+    const customerName = nameInput ? nameInput.value : '';
     
-    // ✅ جلب رقم الهاتف
-    const phoneInputs = document.querySelectorAll('#reserve-modal input[type="tel"]');
-    const phone = phoneInputs.length > 0 ? phoneInputs[0].value : '';
+    // ✅ جلب رقم الهاتف من الحقل الثاني في المودال
+    const phoneInput = document.querySelector('#reserve-modal input[type="tel"]');
+    const phone = phoneInput ? phoneInput.value : '';
     
+    // ✅ جلب التواريخ
     const startDate = document.getElementById('start-date')?.value || '';
     const endDate = document.getElementById('end-date')?.value || '';
     const totalPrice = document.getElementById('total-price')?.textContent || '0 DH';
@@ -782,7 +783,7 @@ function handleReserve(e) {
         return;
     }
     
-    // استخراج اسم السيارة والنوع
+    // ✅ استخراج اسم السيارة والنوع
     let carName = carFullName;
     let carType = '';
     
@@ -790,7 +791,13 @@ function handleReserve(e) {
     const typeMatch = carFullName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carType = typeMatch[0];
+        // إزالة النوع والموقع من اسم السيارة
         carName = carFullName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
+        // إزالة اسم المكان إذا وجد
+        const locationMatch = carName.match(/-.*$/);
+        if (locationMatch) {
+            carName = carName.replace(locationMatch[0], '').trim();
+        }
         if (!carName) carName = carFullName;
     } else {
         // إذا لم يتم العثور على نوع، نبحث عن السيارة في قاعدة البيانات
@@ -811,16 +818,16 @@ function handleReserve(e) {
     // إظهار رسالة تأكيد
     showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
     
-    // إرسال رسالة واتساب مع البيانات الصحيحة
+    // ✅ إرسال رسالة واتساب مع البيانات الصحيحة (ترتيب المعاملات صحيح)
     sendWhatsAppBooking(
-        carName,
-        carType,
-        customerName,   // ✅ الآن الاسم صحيح
-        phone,
-        startDate,
-        endDate,
-        totalPrice,
-        location
+        carName,        // اسم السيارة
+        carType,        // نوع السيارة
+        customerName,   // ✅ اسم العميل (يجب أن يكون هنا)
+        phone,          // رقم الهاتف
+        startDate,      // تاريخ الإستلام
+        endDate,        // تاريخ الرجوع
+        totalPrice,     // السعر الإجمالي
+        location        // مكان الإستلام
     );
     
     // إعادة تعيين النموذج
