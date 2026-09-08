@@ -3,7 +3,7 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
 
 // ============================================================
-// 🔴🔴🔴 معلومات Supabase 🔴🔴🔴
+// معلومات Supabase
 // ============================================================
 const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
@@ -19,8 +19,6 @@ let siteData = {};
 // ============================================================
 async function fetchCarsFromSupabase() {
     try {
-        console.log('🔄 جاري جلب البيانات من Supabase...');
-        
         const response = await fetch(`${SUPABASE_URL}cars?select=*&order=id.asc`, {
             headers: {
                 'apikey': SUPABASE_ANON_KEY,
@@ -28,20 +26,14 @@ async function fetchCarsFromSupabase() {
             }
         });
         
-        if (!response.ok) {
-            console.warn('⚠️ فشل جلب السيارات:', response.status);
-            return false;
-        }
+        if (!response.ok) return false;
         
         const cars = await response.json();
-        console.log('📦 البيانات المستلمة:', cars);
         
         if (cars && cars.length > 0) {
             carsData = cars;
-            console.log('✅ تم جلب السيارات:', carsData.length, 'سيارة');
         } else {
             carsData = [];
-            console.log('📦 لا توجد سيارات في قاعدة البيانات');
         }
         
         try {
@@ -56,27 +48,30 @@ async function fetchCarsFromSupabase() {
                 const site = await siteResponse.json();
                 if (site && site.length > 0) {
                     siteData = site[0];
-                    console.log('✅ تم جلب معلومات الموقع');
                 }
             }
-        } catch (e) {
-            console.warn('⚠️ تعذر جلب معلومات الموقع:', e.message);
-        }
+        } catch (e) {}
         
         renderCarsTable();
         return true;
     } catch (error) {
-        console.warn('⚠️ تعذر جلب البيانات:', error.message);
         return false;
     }
 }
 
 // ============================================================
-// حفظ معلومات الموقع (آمن)
+// دوال البيانات
 // ============================================================
+function getCars() {
+    return carsData;
+}
+
+function getSiteData() {
+    return siteData;
+}
+
 async function saveSiteToSupabase(site) {
     try {
-        console.log('💾 جاري حفظ معلومات الموقع...');
         const response = await fetch(`${SUPABASE_URL}site_info?id=eq.1`, {
             method: 'PUT',
             headers: {
@@ -96,10 +91,8 @@ async function saveSiteToSupabase(site) {
         });
         
         if (!response.ok) return false;
-        console.log('✅ تم حفظ معلومات الموقع');
         return true;
     } catch (error) {
-        console.warn('⚠️ تعذر حفظ معلومات الموقع:', error.message);
         return false;
     }
 }
@@ -204,8 +197,6 @@ function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
 
-    console.log('📊 تحديث الجدول، عدد السيارات:', cars ? cars.length : 0);
-
     if (!cars || cars.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">🚗 لا توجد سيارات مضافة بعد</td></tr>';
         return;
@@ -298,13 +289,18 @@ function getPeriodsFromForm() {
     return periods;
 }
 
-// ===== IMAGE UPLOAD (تم إصلاح مشكلة الصور الكبيرة) =====
+// ===== IMAGE UPLOAD =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
         showToast('❌ يرجى اختيار ملف صورة فقط', true);
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        showToast('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت', true);
         return;
     }
 
@@ -315,7 +311,7 @@ function handleImageUpload(event) {
         preview.src = uploadedImageData;
         preview.classList.add('show');
         document.getElementById('file-name').textContent = file.name;
-        document.getElementById('car-img-url').value = ''; 
+        document.getElementById('car-img-url').value = '';
     };
     reader.readAsDataURL(file);
 }
@@ -380,7 +376,7 @@ function editCar(id) {
 }
 
 // ============================================================
-// 🔥 الحفظ الآمن والنهائي (إصلاح مشكلة الحفظ)
+// 🔥 دالة الحفظ الآمنة (تعديل وإضافة بدون حذف جماعي)
 // ============================================================
 async function saveCar(e) {
     e.preventDefault();
@@ -404,8 +400,8 @@ async function saveCar(e) {
         }
 
         let finalImage;
-        // الحل: إذا رفع المستخدم صورة كبيرة، نستخدم رابط تلقائي (Placeholder) بدلاً من كسر الحفظ
-        if (uploadedImageData && uploadedImageData.length < 500000) { // أقل من 500 كيلوبايت
+        // إذا كانت الصورة مرفوعة من الجهاز، نتحقق من حجمها. إذا كانت كبيرة نستخدم رابط افتراضي لتجنب فشل الحفظ.
+        if (uploadedImageData && uploadedImageData.length < 500000) {
             finalImage = uploadedImageData;
         } else if (imageUrl) {
             finalImage = imageUrl;
@@ -423,7 +419,7 @@ async function saveCar(e) {
 
         let saved = false;
 
-        // تعديل سيارة موجودة
+        // تعديل سيارة موجودة (PATCH)
         if (editingCarId) {
             const index = cars.findIndex(c => c.id === editingCarId);
             if (index !== -1) {
@@ -446,7 +442,7 @@ async function saveCar(e) {
             showToast('✅ تم تعديل السيارة بنجاح!');
 
         } 
-        // إضافة سيارة جديدة
+        // إضافة سيارة جديدة (POST)
         else {
             const newId = Date.now();
             cars.push({ id: newId, ...carData });
@@ -497,9 +493,7 @@ async function saveCar(e) {
                     window.opener.showToast('✅ تم تحديث الموقع!');
                 }
             }
-        } catch (e) {
-            console.warn('⚠️ تعذر تحديث الصفحة الرئيسية:', e);
-        }
+        } catch (e) {}
 
         closeCarModal();
         uploadedImageData = null;
@@ -512,7 +506,7 @@ async function saveCar(e) {
 }
 
 // ============================================================
-// 🔥 الحذف الفردي الآمن
+// 🔥 دالة الحذف الفردي
 // ============================================================
 async function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;

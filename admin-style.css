@@ -1,5 +1,5 @@
 /* ============================================================
-   ستايل لوحة الإدارة - أنيق وبسيط
+   ستايل لوحة الإدارة - أنيق وبسيط ومتجاوب
    ============================================================ */
 :root {
     --primary: #e11d48;
@@ -500,7 +500,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* ===== TABLE (تنسيق الحاسوب) ===== */
+/* ===== TABLE (تنسيق الكمبيوتر) ===== */
 .table-wrap {
     overflow-x: auto;
 }
@@ -673,8 +673,14 @@ body {
 }
 
 /* ============================================================
-   RESPONSIVE (الهاتف: تحويل الجدول إلى بطاقات بدون فراغات)
+   RESPONSIVE (مقاسات متكيفة للهاتف والتابلت)
    ============================================================ */
+@media (max-width: 992px) {
+    .main-content {
+        padding: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -695,7 +701,7 @@ body {
         align-items: stretch;
     }
     
-    /* ===== تحويل الجدول لبطاقات ===== */
+    /* تحويل الجدول لبطاقات */
     .data-table thead {
         display: none;
     }
@@ -704,7 +710,7 @@ body {
         width: 100%;
     }
     .data-table tr {
-        margin-bottom: 1.2rem;
+        margin-bottom: 1rem;
         border: 1px solid var(--border);
         border-radius: 0.8rem;
         padding: 1rem;
@@ -713,14 +719,13 @@ body {
     }
     .data-table td {
         border: none;
-        padding: 0.4rem 0;
+        padding: 0.5rem 0;
         text-align: right;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 0.5rem;
     }
-    /* إضافة عنوان لكل خانة ليظهر بجانب القيمة */
     .data-table td::before {
         content: attr(data-label);
         font-weight: 700;
@@ -728,7 +733,6 @@ body {
         color: var(--text-muted);
         flex-shrink: 0;
     }
-    /* ترتيب الصورة في الأعلى */
     .data-table td:first-child {
         justify-content: center;
         margin-bottom: 0.5rem;
@@ -741,7 +745,6 @@ body {
         height: 150px;
         border-radius: 0.6rem;
     }
-    /* إصلاح فترات الحجز لتظهر كأزرار متراصة */
     .periods-cell {
         flex-wrap: wrap;
         justify-content: flex-start;
