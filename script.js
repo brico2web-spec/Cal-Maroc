@@ -301,7 +301,7 @@ function updateCarsData(newData) {
 }
 
 // ============================================================
-// ⭐ RENDER CARS (مع ألوان البطاقات)
+// ⭐ RENDER CARS
 // ============================================================
 function renderCars() {
     const grid = document.getElementById('cars-grid');
@@ -397,7 +397,7 @@ function renderCars() {
 }
 
 // ============================================================
-// ⭐ RENDER PRICING (مع ترتيب وألوان البطاقات)
+// ⭐ RENDER PRICING
 // ============================================================
 function renderPricing() {
     const grid = document.getElementById('pricing-grid');
@@ -573,7 +573,7 @@ function bookNow() {
         return;
     }
     
-    const carName = carType + ' (' + (currentLang === 'ar' ? 'نوع' : 'Type') + ')';
+    const carName = carType;
     document.getElementById('car-type').value = carName + ' - ' + location;
     document.getElementById('start-date').value = pickupDate;
     document.getElementById('end-date').value = returnDate;
@@ -590,15 +590,35 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب
+// 💬 إرسال رسالة واتساب (معدلة)
 // ============================================================
-function sendWhatsAppBooking(carName, customerName, phone, startDate, endDate, totalPrice, location) {
+function sendWhatsAppBooking(carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
+    
+    // الحصول على التاريخ والوقت الحالي
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ar-MA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+    const timeStr = now.toLocaleTimeString('ar-MA', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    // تحديد نوع السيارة فقط
+    let carTypeDisplay = carType;
+    // استخراج النوع من النص
+    const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
+    if (typeMatch) {
+        carTypeDisplay = typeMatch[0];
+    }
     
     const message = `🚗 *طلب حجز سيارة جديد* 🚗
     
 📋 *تفاصيل الحجز:*
-• 🚙 السيارة: ${carName}
+• 🚙 السيارة: ${carTypeDisplay}
 • 👤 الاسم: ${customerName}
 • 📱 الهاتف: ${phone}
 • 📅 تاريخ الإستلام: ${startDate}
@@ -609,7 +629,8 @@ function sendWhatsAppBooking(carName, customerName, phone, startDate, endDate, t
 📌 *يرجى تأكيد الحجز في أقرب وقت.*
     
 📍 *Ahmed TOUR - Groupe Bahia*
-📍 *Kénitra, Maroc`;
+📍 *Kénitra, Maroc
+📅 تاريخ الإرسال: ${dateStr} - ${timeStr}`;
     
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
@@ -711,9 +732,13 @@ function handleSubmit(e) {
     e.target.reset();
 }
 
+// ============================================================
+// 🔄 دالة handleReserve (معدلة)
+// ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
+    // جلب البيانات من النموذج
     const carType = document.getElementById('car-type').value;
     const customerName = document.querySelector('#reserve-modal input[type="text"]').value;
     const phone = document.querySelector('#reserve-modal input[type="tel"]').value;
@@ -722,12 +747,33 @@ function handleReserve(e) {
     const totalPrice = document.getElementById('total-price').textContent;
     const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
     
+    // التحقق من صحة البيانات
+    if (!customerName || customerName.trim() === '') {
+        showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : '❌ Veuillez entrer votre nom complet');
+        return;
+    }
+    
+    if (!phone || phone.trim() === '') {
+        showToast(currentLang === 'ar' ? '❌ يرجى إدخال رقم الهاتف' : '❌ Veuillez entrer votre numéro de téléphone');
+        return;
+    }
+    
+    // استخراج نوع السيارة فقط
+    let carTypeDisplay = carType;
+    const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
+    if (typeMatch) {
+        carTypeDisplay = typeMatch[0];
+    }
+    
+    // إغلاق المودال
     closeModal();
     
+    // إظهار رسالة تأكيد
     showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
     
+    // إرسال رسالة واتساب مع البيانات الصحيحة
     sendWhatsAppBooking(
-        carType,
+        carTypeDisplay,
         customerName,
         phone,
         startDate,
@@ -736,6 +782,7 @@ function handleReserve(e) {
         location
     );
     
+    // إعادة تعيين النموذج
     e.target.reset();
 }
 
