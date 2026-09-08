@@ -2,13 +2,17 @@
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
 
+// ============================================================
 // معلومات Supabase
+// ============================================================
 const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
 
+// ============================================================
+// البيانات
+// ============================================================
 let carsData = [];
 let siteData = {};
-let slidersData = [];
 
 // ============================================================
 // جلب البيانات
@@ -31,177 +35,14 @@ async function fetchCarsFromSupabase() {
                 if (site && site.length > 0) siteData = site[0];
             }
         } catch (e) {}
-
-        await fetchSlidersFromSupabase();
         
         renderCarsTable();
         return true;
     } catch (error) { return false; }
 }
 
-// ========== دوال السلايدر ==========
-async function fetchSlidersFromSupabase() {
-    try {
-        const response = await fetch(`${SUPABASE_URL}sliders?select=*&order=id.asc`, {
-            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-        });
-        if (!response.ok) { slidersData = []; return; }
-        const data = await response.json();
-        slidersData = (data && data.length > 0) ? data : [];
-        renderSlidersTable();
-    } catch (e) { slidersData = []; }
-}
-
-function addSliderRow() {
-    const container = document.getElementById('sliders-container');
-    const div = document.createElement('div');
-    div.className = 'slider-row';
-    div.innerHTML = `
-        <div class="file-upload-wrapper">
-            <label for="slider-img-input-${Date.now()}" class="file-upload-label">📤 اضغط لرفع صورة السلايدر</label>
-            <input type="file" class="slider-file-input" accept="image/*" onchange="handleSliderImageUpload(event)">
-            <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
-                <img class="slider-file-preview file-preview" alt="معاينة الصورة">
-                <span class="file-name">لم يتم اختيار صورة</span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>العنوان الرئيسي (مثال: أفضل تأجير سيارات)</label>
-            <input type="text" class="slider-title" placeholder="مثال: Groupe Bahia - Ahmed TOUR">
-        </div>
-        <div class="form-group">
-            <label>العنوان الفرعي (مثال: توصيل مجاني)</label>
-            <input type="text" class="slider-subtitle" placeholder="مثال: أفضل الأسعار في القنيطرة">
-        </div>
-        <button type="button" class="btn-delete" style="margin-top: 0.5rem;" onclick="this.parentElement.remove()">🗑️ حذف</button>
-    `;
-    container.appendChild(div);
-}
-
-function handleSliderImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) { 
-        alert('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت');
-        return; 
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const imageData = e.target.result;
-        const wrapper = event.target.closest('.file-upload-wrapper');
-        const preview = wrapper.querySelector('.slider-file-preview');
-        const fileName = wrapper.querySelector('.file-name');
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.className = 'slider-img-data';
-        hiddenInput.value = imageData;
-        wrapper.appendChild(hiddenInput);
-
-        preview.src = imageData;
-        preview.classList.add('show');
-        fileName.textContent = file.name;
-    };
-    reader.readAsDataURL(file);
-}
-
-function renderSlidersTable() {
-    const container = document.getElementById('sliders-container');
-    if (!container) return;
-    container.innerHTML = '';
-    
-    if (slidersData && slidersData.length > 0) {
-        slidersData.forEach(s => {
-            const div = document.createElement('div');
-            div.className = 'slider-row';
-            div.innerHTML = `
-                <div class="file-upload-wrapper">
-                    <label for="slider-img-input-${Date.now()}" class="file-upload-label">📤 اضغط لرفع صورة السلايدر</label>
-                    <input type="file" class="slider-file-input" accept="image/*" onchange="handleSliderImageUpload(event)">
-                    <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
-                        <img class="slider-file-preview file-preview" src="${s.img}" alt="معاينة الصورة" style="display: block;">
-                        <span class="file-name">صورة مرفوعة</span>
-                        <input type="hidden" class="slider-img-data" value="${s.img}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>العنوان الرئيسي</label>
-                    <input type="text" class="slider-title" value="${s.title || ''}" placeholder="مثال: Groupe Bahia - Ahmed TOUR">
-                </div>
-                <div class="form-group">
-                    <label>العنوان الفرعي</label>
-                    <input type="text" class="slider-subtitle" value="${s.subtitle || ''}" placeholder="مثال: أفضل الأسعار في القنيطرة">
-                </div>
-                <button type="button" class="btn-delete" style="margin-top: 0.5rem;" onclick="this.parentElement.remove()">🗑️ حذف</button>
-            `;
-            container.appendChild(div);
-        });
-    } else {
-        addSliderRow();
-    }
-}
-
-async function saveSliders() {
-    const rows = document.querySelectorAll('.slider-row');
-    const newSliders = [];
-    
-    rows.forEach(row => {
-        const imgData = row.querySelector('.slider-img-data')?.value || '';
-        const title = row.querySelector('.slider-title').value.trim();
-        const subtitle = row.querySelector('.slider-subtitle').value.trim();
-        
-        if (imgData) {
-            newSliders.push({ img: imgData, title, subtitle });
-        }
-    });
-
-    if (newSliders.length === 0) {
-        showToast('❌ يرجى رفع صورة واحدة على الأقل', true);
-        return;
-    }
-
-    try {
-        // حذف القديم ثم إعادة الإدخال
-        await fetch(`${SUPABASE_URL}sliders?id=neq.0`, {
-            method: 'DELETE',
-            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-        });
-
-        const response = await fetch(`${SUPABASE_URL}sliders`, {
-            method: 'POST',
-            headers: { 
-                'apikey': SUPABASE_ANON_KEY, 
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 
-                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
-            },
-            body: JSON.stringify(newSliders)
-        });
-
-        if (response.ok) {
-            slidersData = newSliders;
-            showToast('✅ تم حفظ السلايدر بنجاح!');
-            
-            // تحديث واجهة الزوار فوراً
-            try {
-                if (window.opener && !window.opener.closed) {
-                    if (typeof window.opener.loadSliders === 'function') {
-                        window.opener.loadSliders();
-                    }
-                }
-            } catch (e) {}
-        } else {
-            showToast('❌ فشل حفظ السلايدر', true);
-        }
-    } catch (error) {
-        showToast('❌ حدث خطأ أثناء الحفظ', true);
-    }
-}
-
 function getCars() { return carsData; }
 function getSiteData() { return siteData; }
-function getSlidersData() { return slidersData; }
 
 async function saveSiteToSupabase(site) {
     try {
@@ -226,7 +67,7 @@ async function saveSiteData(data) {
 document.addEventListener('DOMContentLoaded', async () => {
     await fetchCarsFromSupabase();
     if (localStorage.getItem('adminSession') === 'active') {
-        showDashboard(); loadInfoForm(); renderCarsTable(); renderSlidersTable();
+        showDashboard(); loadInfoForm(); renderCarsTable();
     }
 });
 
@@ -236,7 +77,7 @@ function handleLogin(e) {
     const pass = document.getElementById('password').value;
     if (user === ADMIN_USER && pass === ADMIN_PASS) {
         localStorage.setItem('adminSession', 'active');
-        showDashboard(); loadInfoForm(); renderCarsTable(); renderSlidersTable();
+        showDashboard(); loadInfoForm(); renderCarsTable();
         showToast('✅ تم تسجيل الدخول بنجاح!');
     } else {
         document.getElementById('login-error').textContent = '❌ بيانات الدخول غير صحيحة';
@@ -256,12 +97,7 @@ function showTab(tabName) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
     document.querySelector('[data-tab="' + tabName + '"]').classList.add('active');
-    document.getElementById('page-title').textContent = { 
-        info: 'معلومات الشركة', 
-        cars: 'إدارة السيارات', 
-        sliders: 'إدارة صور السلايدر', 
-        preview: 'معاينة الموقع' 
-    }[tabName];
+    document.getElementById('page-title').textContent = { info: 'معلومات الشركة', cars: 'إدارة السيارات', preview: 'معاينة الموقع' }[tabName];
 }
 
 // ===== INFO =====
@@ -285,7 +121,7 @@ function saveInfo(e) {
     });
 }
 
-// ===== CARS TABLE =====
+// ===== RENDER CARS TABLE =====
 function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
@@ -297,6 +133,7 @@ function renderCarsTable() {
     tbody.innerHTML = cars.map(car => {
         const statusText = car.status === 'available' ? '✅ متاحة' : '🔴 محجوزة';
         const statusClass = car.status === 'available' ? 'available' : 'reserved';
+
         let periodsHtml = '';
         if (car.periods) {
             let periods = car.periods;
@@ -361,7 +198,7 @@ function getPeriodsFromForm() {
     return periods.sort((a, b) => a.days - b.days);
 }
 
-// ===== CAR IMAGE UPLOAD =====
+// ===== IMAGE UPLOAD =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -378,7 +215,7 @@ function handleImageUpload(event) {
     reader.readAsDataURL(file);
 }
 
-// ===== CAR MODAL =====
+// ===== CAR MODAL (مع دعم زر الحالة الجديد) =====
 function openCarModal() {
     editingCarId = null; uploadedImageData = null;
     document.getElementById('car-modal-title').textContent = 'إضافة سيارة جديدة';
@@ -386,8 +223,12 @@ function openCarModal() {
     document.getElementById('file-preview').classList.remove('show');
     document.getElementById('file-name').textContent = 'لم يتم اختيار صورة';
     document.getElementById('car-img-url').value = '';
+    
+    // إعداد زر الحالة للوضع الافتراضي (متاحة)
     document.getElementById('car-status-toggle').checked = true;
     document.getElementById('status-text').textContent = '✅ متاحة حالياً';
+    document.getElementById('status-text').style.color = 'var(--success)';
+    
     loadPeriods([]);
     document.getElementById('car-modal').classList.add('active');
 }
@@ -403,9 +244,13 @@ function editCar(id) {
     document.getElementById('car-name').value = car.name;
     document.getElementById('car-type').value = car.type;
     document.getElementById('car-img-url').value = car.img;
+
+    // تفعيل زر التبديل حسب الحالة
     const isAvailable = car.status === 'available';
     document.getElementById('car-status-toggle').checked = isAvailable;
     document.getElementById('status-text').textContent = isAvailable ? '✅ متاحة حالياً' : '🔴 محجوزة حالياً';
+    document.getElementById('status-text').style.color = isAvailable ? 'var(--success)' : '#ef4444';
+
     if (car.img && car.img.startsWith('data:image')) {
         const preview = document.getElementById('file-preview');
         preview.src = car.img; preview.classList.add('show');
@@ -414,6 +259,7 @@ function editCar(id) {
         document.getElementById('file-preview').classList.remove('show');
         document.getElementById('file-name').textContent = 'صورة من رابط';
     }
+    
     let periods = [];
     if (car.periods) {
         if (typeof car.periods === 'string') { try { periods = JSON.parse(car.periods); } catch (e) { periods = []; } }
@@ -423,13 +269,19 @@ function editCar(id) {
     document.getElementById('car-modal').classList.add('active');
 }
 
+// منطق زر التبديل: تغيير النص واللون فورياً
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('car-status-toggle');
     const text = document.getElementById('status-text');
     if(toggle) {
         toggle.addEventListener('change', () => {
-            if (toggle.checked) { text.textContent = '✅ متاحة حالياً'; text.style.color = 'var(--success)'; }
-            else { text.textContent = '🔴 محجوزة حالياً'; text.style.color = '#ef4444'; }
+            if (toggle.checked) {
+                text.textContent = '✅ متاحة حالياً';
+                text.style.color = 'var(--success)';
+            } else {
+                text.textContent = '🔴 محجوزة حالياً';
+                text.style.color = '#ef4444';
+            }
         });
     }
 });
@@ -444,18 +296,23 @@ async function saveCar(e) {
         const status = document.getElementById('car-status-toggle').checked ? 'available' : 'reserved';
         const imageUrl = document.getElementById('car-img-url').value.trim();
         const periods = getPeriodsFromForm();
+
         if (!name) { showToast('❌ يرجى إدخال اسم السيارة', true); return; }
         if (periods.length === 0) { showToast('❌ يرجى إضافة فترة حجز واحدة على الأقل', true); return; }
+
         let finalImage;
         if (uploadedImageData && uploadedImageData.length < 500000) finalImage = uploadedImageData;
         else if (imageUrl) finalImage = imageUrl;
         else finalImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80';
+
         const carData = { name, type, status, img: finalImage, periods };
         let saved = false;
+
         if (editingCarId) {
             const index = cars.findIndex(c => c.id === editingCarId);
             if (index !== -1) cars[index] = { ...cars[index], ...carData };
             else cars.push({ id: editingCarId, ...carData });
+            
             const response = await fetch(`${SUPABASE_URL}cars?id=eq.${editingCarId}`, {
                 method: 'PATCH',
                 headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
@@ -474,8 +331,18 @@ async function saveCar(e) {
             if (response.ok) saved = true;
             showToast('✅ تم إضافة السيارة بنجاح!');
         }
-        if (saved) { carsData = cars; renderCarsTable(); showToast('✅ تم حفظ السيارة!'); }
-        else { localStorage.setItem('carsData', JSON.stringify(cars)); carsData = cars; renderCarsTable(); showToast('⚠️ تم الحفظ محلياً، فشل النشر للسحابة'); }
+
+        if (saved) {
+            carsData = cars;
+            renderCarsTable();
+            showToast('✅ تم حفظ السيارة!');
+        } else {
+            localStorage.setItem('carsData', JSON.stringify(cars));
+            carsData = cars; renderCarsTable();
+            showToast('⚠️ تم الحفظ محلياً، فشل النشر للسحابة');
+        }
+
+        // تحديث فوري لصفحة الزوار
         try {
             if (window.opener && !window.opener.closed) {
                 if (typeof window.opener.fetchCarsFromSupabase === 'function') await window.opener.fetchCarsFromSupabase();
@@ -484,10 +351,13 @@ async function saveCar(e) {
                 if (typeof window.opener.showToast === 'function') window.opener.showToast('✅ تم تحديث الموقع!');
             }
         } catch (e) {}
+
         closeCarModal();
         uploadedImageData = null;
         document.getElementById('car-form').reset();
-    } catch (error) { showToast('❌ حدث خطأ أثناء حفظ السيارة', true); }
+    } catch (error) {
+        showToast('❌ حدث خطأ أثناء حفظ السيارة', true);
+    }
 }
 
 // ===== DELETE CAR =====
@@ -533,9 +403,6 @@ document.addEventListener('keydown', (e) => {
 
 window.getCars = getCars;
 window.getSiteData = getSiteData;
-window.getSlidersData = getSlidersData;
 window.saveSiteData = saveSiteData;
 window.renderCarsTable = renderCarsTable;
 window.fetchCarsFromSupabase = fetchCarsFromSupabase;
-window.saveSliders = saveSliders;
-window.addSliderRow = addSliderRow;
