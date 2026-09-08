@@ -3,10 +3,10 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'bahia2026';
 
 // ============================================================
-// 🔴🔴🔴 معلومات Supabase 🔴🔴🔴
+// 🔴🔴🔴 معلومات Supabase الجديدة 🔴🔴🔴
 // ============================================================
-const SUPABASE_URL = 'https://ykjtxziksebpypruvulp.supabase.co/rest/v1/';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlranR4emlrc2VicHlwcnV2dWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTQ2NzAsImV4cCI6MjEwNDM5MDY3MH0.Z8Z8CUusEkhrlHGHHsrlQGs8z0GRqzOPQaTjIPXVEME';
+const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
 
 // ============================================================
 // البيانات
@@ -74,15 +74,14 @@ async function fetchCarsFromSupabase() {
 }
 
 // ============================================================
-// ⭐⭐⭐ حفظ السيارة في Supabase (طريقة صحيحة 100%) ⭐⭐⭐
+// ⭐⭐⭐ حفظ السيارة في Supabase ⭐⭐⭐
 // ============================================================
 async function saveCarToSupabase(car) {
     try {
         console.log('💾 جاري حفظ السيارة:', car.name);
         console.log('📦 البيانات:', JSON.stringify(car, null, 2));
         
-        // ⭐⭐⭐ تحويل periods إلى JSON string صحيح ⭐⭐⭐
-        // periods هي مصفوفة من {days, price}
+        // تحويل periods إلى JSON string صحيح
         const periodsJson = JSON.stringify(car.periods);
         console.log('📦 periods كـ JSON:', periodsJson);
         
@@ -93,7 +92,7 @@ async function saveCarToSupabase(car) {
             type: String(car.type),
             img: String(car.img),
             status: String(car.status || 'available'),
-            periods: periodsJson  // إرسال كـ JSON string
+            periods: periodsJson
         };
         
         console.log('📤 البيانات المرسلة:', JSON.stringify(carData, null, 2));
@@ -352,7 +351,7 @@ function renderCarsTable() {
     console.log('📊 تحديث الجدول، عدد السيارات:', cars ? cars.length : 0);
 
     if (!cars || cars.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:2rem;">🚗 لا توجد سيارات مضافة بعد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">🚗 لا توجد سيارات مضافة بعد</td></tr>';
         return;
     }
 
@@ -382,7 +381,7 @@ function renderCarsTable() {
             <tr>
                 <td><img src="${car.img}" alt="${car.name}" class="car-thumb" onerror="this.src='https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'"></td>
                 <td><strong>${car.name}</strong></td>
-                <td><span style="background:rgba(225,29,72,0.15);color:var(--primary-light);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
+                <td><span style="background:rgba(220,38,38,0.15);color:var(--primary);padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.8rem;">${car.type}</span></td>
                 <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                 <td class="periods-cell">${periodsHtml}</td>
                 <td>
@@ -529,7 +528,7 @@ function editCar(id) {
     document.getElementById('car-modal').classList.add('active');
 }
 
-// ===== ⭐⭐⭐ دالة حفظ السيارة (المعدلة نهائياً) ⭐⭐⭐ =====
+// ===== ⭐⭐⭐ دالة حفظ السيارة ⭐⭐⭐ =====
 async function saveCar(e) {
     e.preventDefault();
 
