@@ -145,10 +145,81 @@ const translations = {
         'pricing.perDay': 'DH/jour',
         'map.title': '📍 Notre emplacement sur la carte',
         'map.subtitle': 'Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra',
+    },
+    // تمت إضافة اللغة الإنجليزية هنا
+    en: {
+        'nav.home': 'Home',
+        'nav.vehicles': 'Vehicles',
+        'nav.features': 'Features',
+        'nav.pricing': 'Pricing',
+        'nav.contact': 'Contact Us',
+        'nav.admin': 'Admin Panel',
+        'nav.book': 'Book Now',
+        'hero.badge': '🚗 Car Rental - Kénitra',
+        'hero.title': 'Ahmed TOUR<br><span class="gradient-text">Car Rental</span>',
+        'hero.desc': 'Best car rental prices in Kénitra. Modern fleet, professional service, and free delivery.',
+        'hero.explore': 'Explore Vehicles',
+        'hero.contact': 'Contact Us',
+        'features.title': 'Why Choose Us?',
+        'features.subtitle': 'Our exclusive services make your trip better',
+        'features.bestPrice.title': 'Best Prices',
+        'features.bestPrice.desc': 'Competitive and transparent prices with no hidden fees',
+        'features.modernFleet.title': 'Modern Fleet',
+        'features.modernFleet.desc': 'New cars equipped with the latest technologies',
+        'features.support247.title': '24/7 Service',
+        'features.support247.desc': 'Available 24/7 to serve you',
+        'vehicles.title': 'Vehicle Fleet',
+        'vehicles.subtitle': 'Choose the right car for your needs',
+        'pricing.title': 'Rental Prices',
+        'pricing.subtitle': 'Prices starting from the lowest price on the site',
+        'contact.title': 'Contact Us',
+        'contact.subtitle': 'We are here to help you at any time',
+        'contact.info': 'Contact Information',
+        'contact.phone': 'Phone',
+        'contact.landline': 'Landline',
+        'contact.email': 'Email',
+        'contact.address': 'Address',
+        'contact.sendMsg': 'Send a Message',
+        'contact.fullName': 'Full Name',
+        'contact.phoneNumber': 'Phone Number',
+        'contact.message': 'Your message...',
+        'contact.send': 'Send',
+        'modal.title': 'Book a Car',
+        'modal.priceLabel': 'Total Price:',
+        'modal.confirm': 'Confirm Booking',
+        'footer.rights': 'All rights reserved',
+        'status.available': 'Available',
+        'status.reserved': 'Reserved',
+        'period.daily': 'Daily',
+        'period.weekly': 'Weekly',
+        'period.monthly': 'Monthly',
+        'period.3days': '3 days',
+        'period.7days': '7 days',
+        'period.14days': '14 days',
+        'period.30days': '30 days',
+        'type.economy': 'Economy',
+        'type.family': 'Family',
+        'type.luxury': 'Luxury',
+        'reserve.book': 'Book Now',
+        'reserve.reserved': '🔒 Reserved',
+        'booking.location': 'Pickup Location',
+        'booking.pickup': 'Pickup Date',
+        'booking.return': 'Return Date',
+        'booking.agency': '🏢 Agency',
+        'booking.train': '🚉 Train Station',
+        'booking.airport': '✈️ Airport',
+        'booking.carType': 'Car Type',
+        'booking.priceLabel': '💰 Rental Price:',
+        'booking.bookNow': '📝 Book Now',
+        'pricing.from': 'from',
+        'pricing.perDay': 'DH/day',
+        'map.title': '📍 Our Location on the Map',
+        'map.subtitle': 'Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra',
     }
 };
 
-let currentLang = 'ar';
+// تم تغيير اللغة الافتراضية من 'ar' إلى 'fr'
+let currentLang = 'fr';
 
 function switchLanguage(lang) {
     currentLang = lang;
@@ -170,10 +241,8 @@ function switchLanguage(lang) {
     });
 
     const descEl = document.getElementById('hero-desc');
-    if (lang === 'ar') {
-        descEl.textContent = translations.ar['hero.desc'];
-    } else {
-        descEl.textContent = translations.fr['hero.desc'];
+    if (translations[lang]['hero.desc']) {
+        descEl.textContent = translations[lang]['hero.desc'];
     }
 
     renderCars();
@@ -312,7 +381,7 @@ function renderCars() {
     const cars = getCars();
 
     if (!cars || cars.length === 0) {
-        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">🚗 لا توجد سيارات متاحة حالياً</p>';
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">🚗 Aucun véhicule disponible pour le moment</p>';
         return;
     }
 
@@ -350,7 +419,7 @@ function renderCars() {
                     else if (p.days === 30) periodKey = 'period.monthly';
                     else periodKey = 'period.daily';
 
-                    const label = translations[currentLang][periodKey] || p.days + ' يوم';
+                    const label = translations[currentLang][periodKey] || p.days + ' days';
                     periodHtml += `
                         <span class="period-tag" style="border-color:${colors.border};background:${colors.bg}">
                             <span class="period-label" data-period-key="${periodKey}">${label}</span>
@@ -444,7 +513,7 @@ function renderPricing() {
         
         return `
             <div class="pricing-card ${isFeatured ? 'featured' : ''}" style="border-color: ${isFeatured ? color.border : 'var(--border)'};">
-                ${isFeatured ? '<div class="badge-popular">🌟 ' + (currentLang === 'ar' ? 'الأكثر طلباً' : 'Le plus demandé') + '</div>' : ''}
+                ${isFeatured ? '<div class="badge-popular">🌟 ' + (currentLang === 'ar' ? 'الأكثر طلباً' : (currentLang === 'fr' ? 'Le plus demandé' : 'Most Popular')) + '</div>' : ''}
                 <div class="pricing-icon" style="background:${color.bg};color:${color.text};font-size:2rem;width:4rem;height:4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:2px solid ${color.border}">
                     ${color.icon}
                 </div>
@@ -454,17 +523,17 @@ function renderPricing() {
                     <span>${translations[currentLang]['pricing.perDay']}</span>
                 </div>
                 <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">
-                    ${translations[currentLang]['pricing.from']} ${priceDisplay} ${currentLang === 'ar' ? 'درهم/يوم' : 'DH/jour'}
+                    ${translations[currentLang]['pricing.from']} ${priceDisplay} ${currentLang === 'ar' ? 'درهم/يوم' : 'DH/day'}
                 </p>
                 <ul>
-                    <li>✓ ${currentLang === 'ar' ? 'تأمين شامل' : 'Assurance complète'}</li>
-                    <li>✓ ${currentLang === 'ar' ? 'مسافة غير محدودة' : 'Kilométrage illimité'}</li>
-                    <li>✓ ${currentLang === 'ar' ? 'خدمة التوصيل' : 'Service de livraison'}</li>
-                    ${isFeatured ? '<li>✓ ' + (currentLang === 'ar' ? 'مقعد أطفال مجاني' : 'Siège enfant gratuit') + '</li>' : ''}
-                    <li>✓ ${currentLang === 'ar' ? 'دعم على مدار الساعة' : 'Support 24/7'}</li>
+                    <li>✓ ${currentLang === 'ar' ? 'تأمين شامل' : 'Full Insurance'}</li>
+                    <li>✓ ${currentLang === 'ar' ? 'مسافة غير محدودة' : 'Unlimited Mileage'}</li>
+                    <li>✓ ${currentLang === 'ar' ? 'خدمة التوصيل' : 'Delivery Service'}</li>
+                    ${isFeatured ? '<li>✓ ' + (currentLang === 'ar' ? 'مقعد أطفال مجاني' : 'Free Child Seat') + '</li>' : ''}
+                    <li>✓ ${currentLang === 'ar' ? 'دعم على مدار الساعة' : '24/7 Support'}</li>
                 </ul>
                 <button onclick="openReserve('${typeLabels[data.type]}')" class="${isFeatured ? 'btn-primary' : 'btn-secondary'}" style="${isFeatured ? '' : 'border-color:' + color.border + ';color:' + color.text + ';'}">
-                    ${currentLang === 'ar' ? 'احجز الآن' : 'Réserver'}
+                    ${currentLang === 'ar' ? 'احجز الآن' : (currentLang === 'fr' ? 'Réserver' : 'Book Now')}
                 </button>
             </div>
         `;
@@ -481,8 +550,10 @@ function loadSiteInfo() {
     const descEl = document.getElementById('hero-desc');
     if (currentLang === 'ar') {
         descEl.textContent = data.description || translations.ar['hero.desc'];
-    } else {
+    } else if (currentLang === 'fr') {
         descEl.textContent = data.description ? data.description.replace(/القنيطرة/g, 'Kénitra') : translations.fr['hero.desc'];
+    } else {
+        descEl.textContent = translations.en['hero.desc'];
     }
 }
 
@@ -568,12 +639,12 @@ function bookNow() {
     const location = document.getElementById('pickup-location')?.value;
     
     if (!pickupDate || !returnDate) {
-        showToast(currentLang === 'ar' ? '❌ يرجى تحديد تاريخ الإستلام وتاريخ الرجوع' : '❌ Veuillez sélectionner les dates de retrait et de retour');
+        showToast(currentLang === 'ar' ? '❌ يرجى تحديد تاريخ الإستلام وتاريخ الرجوع' : (currentLang === 'fr' ? '❌ Veuillez sélectionner les dates de retrait et de retour' : '❌ Please select pickup and return dates'));
         return;
     }
     
     if (!carType) {
-        showToast(currentLang === 'ar' ? '❌ يرجى اختيار نوع السيارة' : '❌ Veuillez sélectionner le type de voiture');
+        showToast(currentLang === 'ar' ? '❌ يرجى اختيار نوع السيارة' : (currentLang === 'fr' ? '❌ Veuillez sélectionner le type de voiture' : '❌ Please select a car type'));
         return;
     }
     
@@ -599,12 +670,11 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب (معدلة - ترتيب المعاملات صحيح)
+// 💬 إرسال رسالة واتساب
 // ============================================================
 function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
     
-    // الحصول على التاريخ والوقت الحالي
     const now = new Date();
     const dateStr = now.toLocaleDateString('ar-MA', {
         year: 'numeric',
@@ -616,14 +686,12 @@ function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, e
         minute: '2-digit'
     });
     
-    // تحديد نوع السيارة بالعربي
     let typeDisplay = carType;
     if (carType === 'اقتصادية') typeDisplay = 'اقتصادية';
     else if (carType === 'عائلية') typeDisplay = 'عائلية';
     else if (carType === 'فاخرة') typeDisplay = 'فاخرة';
     else typeDisplay = carType;
     
-    // تحديد اسم السيارة
     let carDisplay = carName;
     const typeMatch = carName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
@@ -631,7 +699,6 @@ function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, e
         if (!carDisplay) carDisplay = carName;
     }
     
-    // ✅ بناء الرسالة مع الاسم الصحيح
     const message = `🚗 *طلب حجز سيارة جديد* 🚗
     
 📋 *تفاصيل الحجز:*
@@ -745,62 +812,52 @@ function closeModal() {
 
 function handleSubmit(e) {
     e.preventDefault();
-    showToast(currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً' : 'Votre message a été envoyé avec succès! Nous vous contacterons bientôt');
+    showToast(currentLang === 'ar' ? 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً' : (currentLang === 'fr' ? 'Votre message a été envoyé avec succès! Nous vous contacterons bientôt' : 'Your message has been sent successfully! We will contact you soon'));
     e.target.reset();
 }
 
 // ============================================================
-// 🔄 دالة handleReserve (المعدلة نهائياً)
+// 🔄 دالة handleReserve
 // ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
-    // ✅ جلب اسم السيارة من الحقل المحدد
     const carFullName = document.getElementById('car-type')?.value || '';
     
-    // ✅ جلب الاسم الكامل من الحقل الأول في المودال (باستخدام querySelector)
     const nameInput = document.querySelector('#reserve-modal input[type="text"]');
     const customerName = nameInput ? nameInput.value : '';
     
-    // ✅ جلب رقم الهاتف من الحقل الثاني في المودال
     const phoneInput = document.querySelector('#reserve-modal input[type="tel"]');
     const phone = phoneInput ? phoneInput.value : '';
     
-    // ✅ جلب التواريخ
     const startDate = document.getElementById('start-date')?.value || '';
     const endDate = document.getElementById('end-date')?.value || '';
     const totalPrice = document.getElementById('total-price')?.textContent || '0 DH';
     const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
     
-    // ✅ التحقق من صحة البيانات
     if (!customerName || customerName.trim() === '') {
-        showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : '❌ Veuillez entrer votre nom complet');
+        showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : (currentLang === 'fr' ? '❌ Veuillez entrer votre nom complet' : '❌ Please enter your full name'));
         return;
     }
     
     if (!phone || phone.trim() === '') {
-        showToast(currentLang === 'ar' ? '❌ يرجى إدخال رقم الهاتف' : '❌ Veuillez entrer votre numéro de téléphone');
+        showToast(currentLang === 'ar' ? '❌ يرجى إدخال رقم الهاتف' : (currentLang === 'fr' ? '❌ Veuillez entrer votre numéro de téléphone' : '❌ Please enter your phone number'));
         return;
     }
     
-    // ✅ استخراج اسم السيارة والنوع
     let carName = carFullName;
     let carType = '';
     
-    // البحث عن النوع في النص
     const typeMatch = carFullName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carType = typeMatch[0];
-        // إزالة النوع والموقع من اسم السيارة
         carName = carFullName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
-        // إزالة اسم المكان إذا وجد
         const locationMatch = carName.match(/-.*$/);
         if (locationMatch) {
             carName = carName.replace(locationMatch[0], '').trim();
         }
         if (!carName) carName = carFullName;
     } else {
-        // إذا لم يتم العثور على نوع، نبحث عن السيارة في قاعدة البيانات
         const cars = getCars();
         const foundCar = cars.find(c => carFullName.includes(c.name));
         if (foundCar) {
@@ -812,25 +869,21 @@ function handleReserve(e) {
         }
     }
     
-    // إغلاق المودال
     closeModal();
     
-    // إظهار رسالة تأكيد
-    showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
+    showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : (currentLang === 'fr' ? '✅ Redirection vers WhatsApp pour confirmer la réservation...' : '✅ Redirecting to WhatsApp to confirm booking...'));
     
-    // ✅ إرسال رسالة واتساب مع البيانات الصحيحة (ترتيب المعاملات صحيح)
     sendWhatsAppBooking(
-        carName,        // اسم السيارة
-        carType,        // نوع السيارة
-        customerName,   // ✅ اسم العميل (يجب أن يكون هنا)
-        phone,          // رقم الهاتف
-        startDate,      // تاريخ الإستلام
-        endDate,        // تاريخ الرجوع
-        totalPrice,     // السعر الإجمالي
-        location        // مكان الإستلام
+        carName,
+        carType,
+        customerName,
+        phone,
+        startDate,
+        endDate,
+        totalPrice,
+        location
     );
     
-    // إعادة تعيين النموذج
     e.target.reset();
 }
 
@@ -853,7 +906,7 @@ document.getElementById('reserve-modal').addEventListener('click', (e) => {
 });
 
 // ============================================================
-// 🚀 INIT
+// 🚀 INIT (تم تغيير الإعداد الافتراضي إلى الفرنسية)
 // ============================================================
 document.addEventListener('DOMContentLoaded', async function() {
     loadTheme();
@@ -887,7 +940,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     setTimeout(updateBookingPrice, 500);
     
     const grid = document.getElementById('cars-grid');
-    grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">⏳ جاري تحميل البيانات...</p>';
+    grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">⏳ Chargement des données...</p>';
     
     const success = await fetchCarsFromSupabase();
     
@@ -895,12 +948,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         renderCars();
         renderPricing();
         loadSiteInfo();
-        switchLanguage('ar');
-        showToast('✅ تم تحميل البيانات بنجاح!');
+        switchLanguage('fr'); // تم تغيير اللغة الافتراضية إلى الفرنسية
+        showToast('✅ Données chargées avec succès!');
     } else {
-        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">⚠️ لا توجد سيارات، يرجى إضافة سيارات من لوحة الإدارة</p>';
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:2rem;">⚠️ Aucun véhicule, veuillez ajouter des véhicules depuis le panneau d\'administration</p>';
         renderPricing();
-        switchLanguage('ar');
+        switchLanguage('fr'); // تم تغيير اللغة الافتراضية إلى الفرنسية
     }
 });
 

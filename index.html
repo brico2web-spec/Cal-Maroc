@@ -18,25 +18,29 @@
             </div>
         </div>
         <div class="nav-links">
-            <a href="#accueil" data-i18n="nav.home">الرئيسية</a>
-            <a href="#vehicules" data-i18n="nav.vehicles">المركبات</a>
-            <a href="#features" data-i18n="nav.features">المميزات</a>
-            <a href="#tarifs" data-i18n="nav.pricing">الأسعار</a>
-            <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
+            <a href="#accueil" data-i18n="nav.home">Accueil</a>
+            <a href="#vehicules" data-i18n="nav.vehicles">Véhicules</a>
+            <a href="#features" data-i18n="nav.features">Caractéristiques</a>
+            <a href="#tarifs" data-i18n="nav.pricing">Tarifs</a>
+            <a href="#contact" data-i18n="nav.contact">Contact</a>
         </div>
         <div class="nav-actions">
             <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم">
                 <span id="themeIcon">🌙</span>
             </button>
+            
+            <!-- إضافة زر اللغة الإنجليزية هنا -->
             <div class="lang-switcher">
-                <button onclick="switchLanguage('ar')" class="lang-btn active" id="lang-ar">AR</button>
-                <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
+                <button onclick="switchLanguage('fr')" class="lang-btn active" id="lang-fr">FR</button>
+                <button onclick="switchLanguage('en')" class="lang-btn" id="lang-en">EN</button>
+                <button onclick="switchLanguage('ar')" class="lang-btn" id="lang-ar">AR</button>
             </div>
+
             <a href="admin.html" class="btn-admin">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                <span data-i18n="nav.admin">لوحة الإدارة</span>
+                <span data-i18n="nav.admin">Tableau de bord</span>
             </a>
-            <a href="tel:0661170182" class="btn-primary"><span data-i18n="nav.book">احجز الآن</span></a>
+            <a href="tel:0661170182" class="btn-primary"><span data-i18n="nav.book">Réserver</span></a>
         </div>
     </nav>
 
@@ -45,49 +49,49 @@
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="badge">🚗 <span data-i18n="hero.badge">Location de Voitures - Kénitra</span></span>
-            <h2 data-i18n="hero.title">أحمد تور<br><span class="gradient-text">لتأجير السيارات</span></h2>
-            <p id="hero-desc" data-i18n="hero.desc">أفضل أسعار تأجير السيارات في القنيطرة. أسطول حديث، خدمة احترافية، وتوصيل مجاني.</p>
+            <h2 data-i18n="hero.title">Ahmed TOUR<br><span class="gradient-text">Location de Voitures</span></h2>
+            <p id="hero-desc" data-i18n="hero.desc">Meilleurs prix de location de voitures à Kénitra. Flotte moderne, service professionnel et livraison gratuite.</p>
             
             <div class="booking-fields">
                 <div class="field-group">
-                    <label for="pickup-location">📍 <span data-i18n="booking.location">مكان الإستلام</span></label>
+                    <label for="pickup-location">📍 <span data-i18n="booking.location">Lieu de retrait</span></label>
                     <select id="pickup-location">
-                        <option value="الوكالة" data-i18n="booking.agency">🏢 الوكالة</option>
-                        <option value="محطة القطار" data-i18n="booking.train">🚉 محطة القطار</option>
-                        <option value="محطة المطار" data-i18n="booking.airport">✈️ محطة المطار</option>
+                        <option value="الوكالة" data-i18n="booking.agency">🏢 Agence</option>
+                        <option value="محطة القطار" data-i18n="booking.train">🚉 Gare</option>
+                        <option value="محطة المطار" data-i18n="booking.airport">✈️ Aéroport</option>
                     </select>
                 </div>
                 <div class="field-group">
-                    <label for="pickup-date">📅 <span data-i18n="booking.pickup">يوم الإستلام</span></label>
+                    <label for="pickup-date">📅 <span data-i18n="booking.pickup">Date de retrait</span></label>
                     <input type="date" id="pickup-date">
                 </div>
                 <div class="field-group">
-                    <label for="return-date">📅 <span data-i18n="booking.return">يوم الرجوع</span></label>
+                    <label for="return-date">📅 <span data-i18n="booking.return">Date de retour</span></label>
                     <input type="date" id="return-date">
                 </div>
                 <div class="field-group">
-                    <label for="car-type-select">🚗 <span data-i18n="booking.carType">نوع السيارة</span></label>
+                    <label for="car-type-select">🚗 <span data-i18n="booking.carType">Type de voiture</span></label>
                     <select id="car-type-select">
-                        <option value="اقتصادية" data-i18n="type.economy">💰 اقتصادية</option>
-                        <option value="عائلية" data-i18n="type.family">👨‍👩‍👧‍👦 عائلية</option>
-                        <option value="فاخرة" data-i18n="type.luxury">⭐ فاخرة</option>
+                        <option value="اقتصادية" data-i18n="type.economy">💰 Économique</option>
+                        <option value="عائلية" data-i18n="type.family">👨‍👩‍👧‍👦 Familiale</option>
+                        <option value="فاخرة" data-i18n="type.luxury">⭐ Luxe</option>
                     </select>
                 </div>
             </div>
 
             <div class="booking-price-row">
                 <div class="price-display">
-                    <span data-i18n="booking.priceLabel">💰 ثمن الكراء:</span>
+                    <span data-i18n="booking.priceLabel">💰 Prix de location:</span>
                     <strong id="booking-price">0 DH</strong>
                 </div>
                 <button onclick="bookNow()" class="btn-primary btn-large" id="bookNowBtn">
-                    <span data-i18n="booking.bookNow">📝 حجز الآن</span>
+                    <span data-i18n="booking.bookNow">📝 Réserver maintenant</span>
                 </button>
             </div>
             
             <div class="hero-buttons">
-                <button onclick="scrollToSection('vehicules')" class="btn-outline btn-large"><span data-i18n="hero.explore">استكشف المركبات</span></button>
-                <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">تواصل معنا</span></button>
+                <button onclick="scrollToSection('vehicules')" class="btn-outline btn-large"><span data-i18n="hero.explore">Explorer les véhicules</span></button>
+                <button onclick="scrollToSection('contact')" class="btn-outline btn-large"><span data-i18n="hero.contact">Nous contacter</span></button>
             </div>
         </div>
     </section>
@@ -96,8 +100,8 @@
     <section id="vehicules" class="vehicles">
         <div class="container">
             <div class="section-header">
-                <h2 data-i18n="vehicles.title">أسطول المركبات</h2>
-                <p data-i18n="vehicles.subtitle">اختر السيارة المناسبة لاحتياجاتك</p>
+                <h2 data-i18n="vehicles.title">Flotte de véhicules</h2>
+                <p data-i18n="vehicles.subtitle">Choisissez la voiture adaptée à vos besoins</p>
             </div>
             <div class="grid-3" id="cars-grid"></div>
         </div>
@@ -107,24 +111,24 @@
     <section id="features" class="features">
         <div class="container">
             <div class="section-header">
-                <h2 data-i18n="features.title">لماذا تختارنا؟</h2>
-                <p data-i18n="features.subtitle">خدماتنا المميزة تجعل رحلتك أفضل</p>
+                <h2 data-i18n="features.title">Pourquoi nous choisir ?</h2>
+                <p data-i18n="features.subtitle">Nos services exclusifs rendent votre voyage meilleur</p>
             </div>
             <div class="grid-3">
                 <div class="feature-card">
                     <div class="feature-icon">💰</div>
-                    <h3 data-i18n="features.bestPrice.title">أفضل الأسعار</h3>
-                    <p data-i18n="features.bestPrice.desc">أسعار تنافسية وشفافة بدون رسوم خفية</p>
+                    <h3 data-i18n="features.bestPrice.title">Meilleurs prix</h3>
+                    <p data-i18n="features.bestPrice.desc">Prix compétitifs et transparents sans frais cachés</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🚗</div>
-                    <h3 data-i18n="features.modernFleet.title">أسطول حديث</h3>
-                    <p data-i18n="features.modernFleet.desc">سيارات جديدة ومجهزة بأحدث التقنيات</p>
+                    <h3 data-i18n="features.modernFleet.title">Flotte moderne</h3>
+                    <p data-i18n="features.modernFleet.desc">Voitures neuves équipées des dernières technologies</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⏰</div>
-                    <h3 data-i18n="features.support247.title">خدمة 24/7</h3>
-                    <p data-i18n="features.support247.desc">متاحون على مدار الساعة لخدمتكم</p>
+                    <h3 data-i18n="features.support247.title">Service 24/7</h3>
+                    <p data-i18n="features.support247.desc">Disponibles 24h/24 pour vous servir</p>
                 </div>
             </div>
         </div>
@@ -134,8 +138,8 @@
     <section id="tarifs" class="pricing">
         <div class="container">
             <div class="section-header">
-                <h2 data-i18n="pricing.title">أسعار التأجير</h2>
-                <p id="pricing-subtitle" data-i18n="pricing.subtitle">أسعار تبدأ من أرخص سعر في الموقع</p>
+                <h2 data-i18n="pricing.title">Tarifs de location</h2>
+                <p id="pricing-subtitle" data-i18n="pricing.subtitle">Tarifs à partir du prix le plus bas du site</p>
             </div>
             <div class="grid-3 pricing-grid-custom" id="pricing-grid"></div>
         </div>
@@ -145,54 +149,56 @@
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header">
-                <h2 data-i18n="contact.title">اتصل بنا</h2>
-                <p data-i18n="contact.subtitle">نحن هنا لمساعدتك في أي وقت</p>
+                <h2 data-i18n="contact.title">Contactez-nous</h2>
+                <p data-i18n="contact.subtitle">Nous sommes là pour vous aider à tout moment</p>
             </div>
             <div class="grid-2">
                 <div class="contact-info">
-                    <h3 data-i18n="contact.info">معلومات التواصل</h3>
+                    <h3 data-i18n="contact.info">Informations de contact</h3>
                     <div class="info-item">
                         <span class="icon">📱</span>
-                        <div><small data-i18n="contact.phone">الهاتف</small><strong id="info-phone">06 61 17 01 82</strong></div>
+                        <div><small data-i18n="contact.phone">Téléphone</small><strong id="info-phone">06 61 17 01 82</strong></div>
                     </div>
                     <div class="info-item">
                         <span class="icon">☎️</span>
-                        <div><small data-i18n="contact.landline">الهاتف الثابت</small><strong id="info-phone2">05 37 37 88 89</strong></div>
+                        <div><small data-i18n="contact.landline">Téléphone fixe</small><strong id="info-phone2">05 37 37 88 89</strong></div>
                     </div>
                     <div class="info-item">
                         <span class="icon">✉️</span>
-                        <div><small data-i18n="contact.email">البريد الإلكتروني</small><strong id="info-email">ahmadi2011@live.fr</strong></div>
+                        <div><small data-i18n="contact.email">Email</small><strong id="info-email">ahmadi2011@live.fr</strong></div>
                     </div>
                     <div class="info-item">
                         <span class="icon">📍</span>
-                        <div><small data-i18n="contact.address">العنوان</small><strong id="info-address">زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة</strong></div>
+                        <div><small data-i18n="contact.address">Adresse</small><strong id="info-address">Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra</strong></div>
                     </div>
                 </div>
                 <div class="contact-form">
-                    <h3 data-i18n="contact.sendMsg">أرسل رسالة</h3>
+                    <h3 data-i18n="contact.sendMsg">Envoyer un message</h3>
                     <form onsubmit="handleSubmit(event)">
-                        <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
-                        <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
-                        <textarea placeholder="رسالتك..." rows="4" data-i18n-placeholder="contact.message" required></textarea>
-                        <button type="submit" class="btn-primary"><span data-i18n="contact.send">إرسال</span></button>
+                        <input type="text" placeholder="Nom complet" data-i18n-placeholder="contact.fullName" required>
+                        <input type="tel" placeholder="Numéro de téléphone" data-i18n-placeholder="contact.phoneNumber" required>
+                        <textarea placeholder="Votre message..." rows="4" data-i18n-placeholder="contact.message" required></textarea>
+                        <button type="submit" class="btn-primary"><span data-i18n="contact.send">Envoyer</span></button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== Map Section (تم تثبيت الخريطة كصورة ثابتة) ===== -->
+    <!-- Map Section -->
     <section class="map-section">
         <div class="container">
             <div class="map-title">
-                <h3 data-i18n="map.title">📍 موقعنا على الخريطة</h3>
-                <p data-i18n="map.subtitle">زاوية شارع الإمام علي وشارع ياريك زياد - القنيطرة</p>
+                <h3 data-i18n="map.title">📍 Notre emplacement sur la carte</h3>
+                <p data-i18n="map.subtitle">Angle Rue Imam Ali et Rue Yarik Ziad - Kénitra</p>
             </div>
             <div class="map-container">
-                <!-- استخدام صورة ثابتة بدلاً من iframe لمنع فتح تطبيق خرائط جوجل -->
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=34.250657,-6.580206&zoom=17&size=1200x350&maptype=roadmap&markers=color:red%7C34.250657,-6.580206&key=VOTRE_CLE_API_GOOGLE_MAPS" 
-                     alt="موقع الوكالة على الخريطة - Groupe Bahia"
-                     style="width: 100%; height: 350px; display: block; object-fit: cover; border: none;">
+                <iframe 
+                    src="https://maps.google.com/maps?q=34.250657,-6.580206&z=17&output=embed" 
+                    style="border:0; width:100%; height:350px; pointer-events: none;"
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
             </div>
         </div>
     </section>
@@ -211,9 +217,9 @@
                 <div class="footer-links">
                     <a href="admin.html" class="admin-link">
                         <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/></svg>
-                        <span data-i18n="nav.admin">لوحة الإدارة</span>
+                        <span data-i18n="nav.admin">Tableau de bord</span>
                     </a>
-                    <p class="copyright">© 2026 <span data-i18n="footer.rights">جميع الحقوق محفوظة</span></p>
+                    <p class="copyright">© 2026 <span data-i18n="footer.rights">Tous droits réservés</span></p>
                 </div>
             </div>
         </div>
@@ -223,28 +229,28 @@
     <div id="reserve-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="modal.title">حجز سيارة</h3>
+                <h3 data-i18n="modal.title">Réserver une voiture</h3>
                 <button onclick="closeModal()" class="close-btn">&times;</button>
             </div>
             <form onsubmit="handleReserve(event)">
                 <input type="text" id="car-type" readonly>
-                <input type="text" placeholder="الاسم الكامل" data-i18n-placeholder="contact.fullName" required>
-                <input type="tel" placeholder="رقم الهاتف" data-i18n-placeholder="contact.phoneNumber" required>
+                <input type="text" placeholder="Nom complet" data-i18n-placeholder="contact.fullName" required>
+                <input type="tel" placeholder="Numéro de téléphone" data-i18n-placeholder="contact.phoneNumber" required>
                 <div class="grid-2">
                     <input type="date" id="start-date" required>
                     <input type="date" id="end-date" required>
                 </div>
                 <div id="price-display" style="text-align:center;padding:0.5rem;background:rgba(225,29,72,0.1);border-radius:0.75rem;border:1px solid rgba(225,29,72,0.2);">
-                    <span data-i18n="modal.priceLabel">السعر الإجمالي:</span>
+                    <span data-i18n="modal.priceLabel">Prix total:</span>
                     <strong id="total-price" style="color:var(--secondary);font-size:1.25rem;">0 DH</strong>
                 </div>
-                <button type="submit" class="btn-primary"><span data-i18n="modal.confirm">تأكيد الحجز</span></button>
+                <button type="submit" class="btn-primary"><span data-i18n="modal.confirm">Confirmer la réservation</span></button>
             </form>
         </div>
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="toast">تم إرسال طلبك بنجاح!</div>
+    <div id="toast" class="toast">Votre message a été envoyé avec succès!</div>
 
     <script src="script.js"></script>
 </body>

@@ -15,7 +15,7 @@ let carsData = [];
 let siteData = {};
 
 // ============================================================
-// جلب البيانات من Supabase (سريع)
+// جلب البيانات من Supabase
 // ============================================================
 async function fetchCarsFromSupabase() {
     try {
@@ -72,64 +72,14 @@ async function fetchCarsFromSupabase() {
 }
 
 // ============================================================
-// حفظ البيانات في Supabase (سريع جداً)
+// دوال البيانات الآمنة (بدون حذف جماعي)
 // ============================================================
-async function saveCarsToSupabase(cars) {
-    try {
-        console.log('💾 جاري حفظ السيارات في Supabase...');
-        
-        if (!cars || cars.length === 0) {
-            console.log('📦 لا توجد سيارات للحفظ');
-            return true;
-        }
-        
-        const carsToSave = cars.map(car => {
-            let periodsJson = car.periods;
-            if (typeof periodsJson !== 'string') {
-                periodsJson = JSON.stringify(periodsJson || []);
-            }
-            
-            return {
-                id: Number(car.id),
-                name: String(car.name || ''),
-                type: String(car.type || 'اقتصادية'),
-                img: String(car.img || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=600&q=80'),
-                status: String(car.status || 'available'),
-                periods: periodsJson
-            };
-        });
-        
-        await fetch(`${SUPABASE_URL}cars?id=neq.0`, {
-            method: 'DELETE',
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            }
-        });
-        
-        const response = await fetch(`${SUPABASE_URL}cars`, {
-            method: 'POST',
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
-            },
-            body: JSON.stringify(carsToSave)
-        });
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ خطأ في الإدراج:', errorText);
-            throw new Error('فشل حفظ السيارات');
-        }
-        
-        console.log('✅ تم حفظ السيارات في Supabase');
-        return true;
-    } catch (error) {
-        console.warn('⚠️ تعذر حفظ السيارات:', error.message);
-        return false;
-    }
+function getCars() {
+    return carsData;
+}
+
+function getSiteData() {
+    return siteData;
 }
 
 async function saveSiteToSupabase(site) {
@@ -165,50 +115,6 @@ async function saveSiteToSupabase(site) {
     } catch (error) {
         console.warn('⚠️ تعذر حفظ معلومات الموقع:', error.message);
         return false;
-    }
-}
-
-// ============================================================
-// دوال البيانات
-// ============================================================
-function getCars() {
-    return carsData;
-}
-
-function getSiteData() {
-    return siteData;
-}
-
-async function saveCars(cars) {
-    carsData = cars;
-    
-    const saved = await saveCarsToSupabase(carsData);
-    
-    renderCarsTable();
-    
-    try {
-        if (window.opener && !window.opener.closed) {
-            if (typeof window.opener.updateCarsData === 'function') {
-                window.opener.updateCarsData(carsData);
-            }
-            if (typeof window.opener.renderCars === 'function') {
-                window.opener.renderCars();
-            }
-            if (typeof window.opener.renderPricing === 'function') {
-                window.opener.renderPricing();
-            }
-            if (typeof window.opener.showToast === 'function') {
-                window.opener.showToast('🔄 تم تحديث قائمة السيارات!');
-            }
-        }
-    } catch (e) {
-        console.warn('⚠️ تعذر تحديث الصفحة الرئيسية:', e);
-    }
-    
-    if (saved) {
-        showToast('✅ تم حفظ التغييرات ونشرها في جميع الأجهزة!');
-    } else {
-        showToast('⚠️ تعذر حفظ البيانات في السحابة، تم الحفظ محلياً');
     }
 }
 
@@ -307,9 +213,7 @@ function saveInfo(e) {
     } catch (e) {}
 }
 
-// ============================================================
-// CARS TABLE (تم إضافة data-label ليعمل على الهاتف)
-// ============================================================
+// ===== CARS TABLE =====
 function renderCarsTable() {
     const tbody = document.getElementById('cars-table-body');
     const cars = getCars();
@@ -495,7 +399,7 @@ function editCar(id) {
 }
 
 // ============================================================
-// 🔥 دالة الحفظ السريعة (بدون حذف قاعدة البيانات وبدون مهلة)
+// 🔥 دالة الحفظ السريعة والآمنة (PATCH أو POST فقط)
 // ============================================================
 async function saveCar(e) {
     e.preventDefault();
@@ -537,7 +441,7 @@ async function saveCar(e) {
 
         let saved = false;
 
-        // 🚀 1. إذا كان تعديلاً: نستخدم PATCH (تحديث السطر المحدد فقط = أسرع بكثير)
+        // 🚀 1. إذا كان تعديلاً: نستخدم PATCH (تحديث السطر المحدد فقط = آمن وسريع)
         if (editingCarId) {
             const index = cars.findIndex(c => c.id === editingCarId);
             if (index !== -1) {
@@ -546,7 +450,7 @@ async function saveCar(e) {
                 cars.push({ id: editingCarId, ...carData });
             }
             
-            // تحديث مباشر في Supabase
+            // تحديث مباشر في Supabase (لا يمس السيارات الأخرى)
             const response = await fetch(`${SUPABASE_URL}cars?id=eq.${editingCarId}`, {
                 method: 'PATCH',
                 headers: {
@@ -561,12 +465,12 @@ async function saveCar(e) {
             showToast('✅ تم تعديل السيارة بنجاح!');
 
         } 
-        // 🚀 2. إذا كان إضافة جديدة: نستخدم POST (إدراج سطر واحد فقط = أسرع بكثير)
+        // 🚀 2. إذا كان إضافة جديدة: نستخدم POST (إدراج سطر واحد فقط = آمن وسريع)
         else {
             const newId = Date.now();
             cars.push({ id: newId, ...carData });
 
-            // إدراج جديد مباشر في Supabase
+            // إدراج جديد مباشر في Supabase (لا يمس السيارات الأخرى)
             const response = await fetch(`${SUPABASE_URL}cars`, {
                 method: 'POST',
                 headers: {
@@ -628,14 +532,14 @@ async function saveCar(e) {
 }
 
 // ============================================================
-// 🔥 دالة الحذف السريعة (بدون مهلة)
+// 🔥 دالة الحذف الفردي الآمنة
 // ============================================================
 async function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;
     const cars = getCars().filter(c => c.id !== id);
     
     try {
-        // حذف مباشر من قاعدة البيانات
+        // حذف السيارة المحددة فقط (لا يمس السيارات الأخرى)
         const response = await fetch(`${SUPABASE_URL}cars?id=eq.${id}`, {
             method: 'DELETE',
             headers: {
@@ -711,7 +615,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 window.getCars = getCars;
-window.saveCars = saveCars;
 window.getSiteData = getSiteData;
 window.saveSiteData = saveSiteData;
 window.renderCarsTable = renderCarsTable;
