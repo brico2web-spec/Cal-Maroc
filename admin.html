@@ -17,8 +17,14 @@
                 <p>Groupe Bahia - Ahmed TOUR</p>
             </div>
             <form id="login-form" onsubmit="handleLogin(event)">
-                <div class="input-group"><label>اسم المستخدم</label><input type="text" id="username" placeholder="أدخل اسم المستخدم" required></div>
-                <div class="input-group"><label>كلمة المرور</label><input type="password" id="password" placeholder="أدخل كلمة المرور" required></div>
+                <div class="input-group">
+                    <label>اسم المستخدم</label>
+                    <input type="text" id="username" placeholder="أدخل اسم المستخدم" required>
+                </div>
+                <div class="input-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+                </div>
                 <button type="submit" class="btn-login">تسجيل الدخول</button>
                 <p id="login-error" class="login-error"></p>
             </form>
@@ -28,35 +34,75 @@
 
     <!-- Dashboard -->
     <div id="dashboard" class="dashboard hidden">
+        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-brand"><img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo"><div><h3>لوحة الإدارة</h3><small>Ahmed TOUR</small></div></div>
+            <div class="sidebar-brand">
+                <img src="https://www.dropbox.com/scl/fi/9ek43nwoadd82wckg5yrm/Picsart_26-09-07_17-38-09-252.jpg?rlkey=dq0nv9dhvq9f9rs5juy2iw5st&st=a9k215ph&raw=1" alt="Logo">
+                <div>
+                    <h3>لوحة الإدارة</h3>
+                    <small>Ahmed TOUR</small>
+                </div>
+            </div>
             <nav class="sidebar-nav">
-                <button onclick="showTab('info')" class="nav-item active" data-tab="info"><span>🏢</span> معلومات الشركة</button>
-                <button onclick="showTab('cars')" class="nav-item" data-tab="cars"><span>🚗</span> إدارة السيارات</button>
-                <button onclick="showTab('preview')" class="nav-item" data-tab="preview"><span>👁️</span> معاينة الموقع</button>
+                <button onclick="showTab('info')" class="nav-item active" data-tab="info">
+                    <span>🏢</span> معلومات الشركة
+                </button>
+                <button onclick="showTab('cars')" class="nav-item" data-tab="cars">
+                    <span>🚗</span> إدارة السيارات
+                </button>
+                <button onclick="showTab('preview')" class="nav-item" data-tab="preview">
+                    <span>👁️</span> معاينة الموقع
+                </button>
             </nav>
-            <div class="sidebar-footer"><button onclick="logout()" class="btn-logout">🚪 تسجيل الخروج</button></div>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn-logout">🚪 تسجيل الخروج</button>
+            </div>
         </aside>
 
+        <!-- Main Content -->
         <main class="main-content">
-            <header class="dash-header"><h1 id="page-title">معلومات الشركة</h1><div class="user-badge"><span>👤 مسؤول</span></div></header>
+            <header class="dash-header">
+                <h1 id="page-title">معلومات الشركة</h1>
+                <div class="user-badge">
+                    <span>👤 مسؤول</span>
+                </div>
+            </header>
 
+            <!-- Info Tab -->
             <div id="tab-info" class="tab-content active">
                 <div class="card">
                     <h3>✏️ تعديل معلومات التواصل</h3>
                     <form id="info-form" onsubmit="saveInfo(event)">
                         <div class="form-grid">
-                            <div class="form-group"><label>الهاتف المحمول</label><input type="text" id="edit-phone" required></div>
-                            <div class="form-group"><label>الهاتف الثابت</label><input type="text" id="edit-phone2" required></div>
-                            <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="edit-email" required></div>
-                            <div class="form-group full"><label>العنوان</label><input type="text" id="edit-address" required></div>
-                            <div class="form-group full"><label>وصف الصفحة الرئيسية</label><textarea id="edit-description" rows="3" required></textarea></div>
+                            <div class="form-group">
+                                <label>الهاتف المحمول</label>
+                                <input type="text" id="edit-phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label>الهاتف الثابت</label>
+                                <input type="text" id="edit-phone2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>البريد الإلكتروني</label>
+                                <input type="email" id="edit-email" required>
+                            </div>
+                            <div class="form-group full">
+                                <label>العنوان</label>
+                                <input type="text" id="edit-address" required>
+                            </div>
+                            <div class="form-group full">
+                                <label>وصف الصفحة الرئيسية</label>
+                                <textarea id="edit-description" rows="3" required></textarea>
+                            </div>
                         </div>
-                        <div class="form-actions"><button type="submit" class="btn-save">💾 حفظ التغييرات</button></div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save">💾 حفظ التغييرات</button>
+                        </div>
                     </form>
                 </div>
             </div>
 
+            <!-- Cars Tab -->
             <div id="tab-cars" class="tab-content">
                 <div class="card">
                     <div class="card-header">
@@ -65,63 +111,112 @@
                     </div>
                     <div class="table-wrap">
                         <table class="data-table">
-                            <thead><tr><th>الصورة</th><th>الاسم</th><th>النوع</th><th>الحالة</th><th>فترات الحجز</th><th>الإجراءات</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>الاسم</th>
+                                    <th>النوع</th>
+                                    <th>الحالة</th>
+                                    <th>فترات الحجز</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
                             <tbody id="cars-table-body"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
+            <!-- Preview Tab -->
             <div id="tab-preview" class="tab-content">
                 <div class="card">
                     <h3>👁️ معاينة الموقع</h3>
-                    <p style="color:var(--text-muted);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
-                    <a href="index.html" target="_blank" class="btn-save" style="text-decoration:none;">🌐 فتح الموقع</a>
+                    <p class="text-gray-400 mb-4" style="color:var(--text-muted);margin-bottom:1rem;">انقر على الرابط لفتح الموقع في نافذة جديدة</p>
+                    <a href="index.html" target="_blank" class="btn-primary">🌐 فتح الموقع</a>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Car Modal -->
     <div id="car-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><h3 id="car-modal-title">إضافة سيارة جديدة</h3><button onclick="closeCarModal()" class="close-btn">&times;</button></div>
+            <div class="modal-header">
+                <h3 id="car-modal-title">إضافة سيارة جديدة</h3>
+                <button onclick="closeCarModal()" class="close-btn">&times;</button>
+            </div>
             <form id="car-form" onsubmit="saveCar(event)">
                 <input type="hidden" id="car-id">
-                <div class="form-group"><label>اسم السيارة</label><input type="text" id="car-name" placeholder="مثال: Renault Clio" required></div>
-                <div class="form-group"><label>النوع</label><select id="car-type" required><option value="اقتصادية">اقتصادية</option><option value="عائلية">عائلية</option><option value="فاخرة">فاخرة</option></select></div>
-                <div class="form-group"><label>📌 حالة السيارة</label><select id="car-status" required><option value="available">✅ متاحة حاليا</option><option value="reserved">🔴 محجوزة حاليا</option></select></div>
-                
+
+                <div class="form-group">
+                    <label>اسم السيارة</label>
+                    <input type="text" id="car-name" placeholder="مثال: Renault Clio" required>
+                </div>
+
+                <div class="form-group">
+                    <label>النوع</label>
+                    <select id="car-type" required>
+                        <option value="اقتصادية">اقتصادية</option>
+                        <option value="عائلية">عائلية</option>
+                        <option value="فاخرة">فاخرة</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>📌 حالة السيارة</label>
+                    <select id="car-status" required>
+                        <option value="available">✅ متاحة حاليا</option>
+                        <option value="reserved">🔴 محجوزة حاليا</option>
+                    </select>
+                </div>
+
+                <!-- Image Upload -->
                 <div class="form-group">
                     <label>📸 صورة السيارة (JPG, PNG)</label>
                     <div class="file-upload-wrapper">
-                        <label for="car-image-input" class="file-upload-label">📤 اضغط لاختيار صورة</label>
+                        <label for="car-image-input" class="file-upload-label">
+                            📤 اضغط لاختيار صورة
+                        </label>
                         <input type="file" id="car-image-input" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
-                        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;"><img id="file-preview" class="file-preview" alt="معاينة"><span id="file-name" class="file-name">لم يتم اختيار صورة</span></div>
+                        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                            <img id="file-preview" class="file-preview" alt="معاينة الصورة">
+                            <span id="file-name" class="file-name">لم يتم اختيار صورة</span>
+                        </div>
                     </div>
                     <small class="hint">يمكنك رفع صورة JPG أو إدخال رابط صورة في الحقل أدناه</small>
                 </div>
 
-                <div class="form-group" style="margin-top: 0.8rem;">
+                <div class="form-group">
                     <label>أو رابط صورة (URL)</label>
                     <input type="url" id="car-img-url" placeholder="https://example.com/image.jpg">
                     <small class="hint">اترك هذا الحقل فارغاً إذا قمت برفع صورة</small>
                 </div>
 
+                <!-- Periods Management -->
                 <div class="form-group">
                     <label>📅 فترات الحجز والأسعار</label>
                     <div style="display:flex;flex-direction:column;gap:0.75rem;background:var(--bg);padding:1rem;border-radius:0.75rem;border:1px solid var(--border);">
-                        <div id="periods-container"></div>
-                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;">+ إضافة فترة جديدة</button>
+                        <div id="periods-container">
+                            <!-- Periods will be added here dynamically -->
+                        </div>
+                        <button type="button" onclick="addPeriod()" class="btn-add" style="width:auto;padding:0.5rem 1rem;font-size:0.85rem;">
+                            + إضافة فترة جديدة
+                        </button>
                     </div>
                     <small class="hint">حدد عدد الأيام والسعر المقابل لتلك المدة</small>
                 </div>
 
-                <div class="form-actions"><button type="button" onclick="closeCarModal()" class="btn-cancel">إلغاء</button><button type="submit" class="btn-save">💾 حفظ</button></div>
+                <div class="form-actions">
+                    <button type="button" onclick="closeCarModal()" class="btn-cancel">إلغاء</button>
+                    <button type="submit" class="btn-save">💾 حفظ</button>
+                </div>
             </form>
         </div>
     </div>
 
+    <!-- Toast -->
     <div id="admin-toast" class="toast"></div>
+
     <script src="admin.js"></script>
 </body>
 </html>
