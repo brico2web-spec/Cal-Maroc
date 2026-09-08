@@ -391,7 +391,7 @@ function renderCars() {
                         <small>DH / ${translations[currentLang]['period.daily']}</small>
                     </div>
                     ${periodHtml}
-                    <button onclick="openReserve('${car.name} - ${typeText}', ${car.id})" class="btn-secondary" ${isReserved ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} style="border-color:${colors.border};color:${colors.tag};">
+                    <button onclick="openReserve('${car.name}', ${car.id})" class="btn-secondary" ${isReserved ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} style="border-color:${colors.border};color:${colors.tag};">
                         ${bookText}
                     </button>
                 </div>
@@ -559,7 +559,7 @@ function updateBookingPrice() {
 }
 
 // ============================================================
-// 📝 زر "حجز الآن"
+// 📝 زر "حجز الآن" (معدل)
 // ============================================================
 function bookNow() {
     const pickupDate = document.getElementById('pickup-date')?.value;
@@ -577,14 +577,19 @@ function bookNow() {
         return;
     }
     
-    const carName = carType;
+    // الحصول على اسم سيارة من النوع المختار
+    const cars = getCars();
+    const filteredCars = cars.filter(c => c.type === carType);
+    let carName = carType;
+    if (filteredCars.length > 0) {
+        carName = filteredCars[0].name;
+    }
+    
     document.getElementById('car-type').value = carName + ' - ' + location;
     document.getElementById('start-date').value = pickupDate;
     document.getElementById('end-date').value = returnDate;
     
     currentCarId = null;
-    const cars = getCars();
-    const filteredCars = cars.filter(c => c.type === carType);
     if (filteredCars.length > 0) {
         currentCarId = filteredCars[0].id;
     }
@@ -594,11 +599,12 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب
+// 💬 إرسال رسالة واتساب (معدلة)
 // ============================================================
-function sendWhatsAppBooking(carType, customerName, phone, startDate, endDate, totalPrice, location) {
+function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
     
+    // الحصول على التاريخ والوقت الحالي
     const now = new Date();
     const dateStr = now.toLocaleDateString('ar-MA', {
         year: 'numeric',
@@ -610,16 +616,26 @@ function sendWhatsAppBooking(carType, customerName, phone, startDate, endDate, t
         minute: '2-digit'
     });
     
-    let carTypeDisplay = carType;
-    const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
+    // تحديد نوع السيارة بالعربي
+    let typeDisplay = carType;
+    if (carType === 'اقتصادية') typeDisplay = 'اقتصادية';
+    else if (carType === 'عائلية') typeDisplay = 'عائلية';
+    else if (carType === 'فاخرة') typeDisplay = 'فاخرة';
+    else typeDisplay = carType;
+    
+    // تحديد اسم السيارة (بدون النوع)
+    let carDisplay = carName;
+    // إزالة النوع من اسم السيارة إذا كان موجوداً
+    const typeMatch = carName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
-        carTypeDisplay = typeMatch[0];
+        carDisplay = carName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
+        if (!carDisplay) carDisplay = carName;
     }
     
     const message = `🚗 *طلب حجز سيارة جديد* 🚗
     
 📋 *تفاصيل الحجز:*
-• 🚙 السيارة: ${carTypeDisplay}
+• 🚙 السيارة: ${carDisplay} (${typeDisplay})
 • 👤 الاسم: ${customerName}
 • 📱 الهاتف: ${phone}
 • 📅 تاريخ الإستلام: ${startDate}
@@ -644,6 +660,7 @@ let currentCarId = null;
 
 function openReserve(carName, carId) {
     currentCarId = carId;
+    // نضع اسم السيارة فقط (بدون النوع)
     document.getElementById('car-type').value = carName;
     document.getElementById('reserve-modal').classList.add('active');
 
@@ -733,10 +750,14 @@ function handleSubmit(e) {
     e.target.reset();
 }
 
+// ============================================================
+// 🔄 دالة handleReserve (معدلة)
+// ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
-    const carType = document.getElementById('car-type').value;
+    // جلب البيانات من النموذج
+    const carFullName = document.getElementById('car-type').value;
     const customerName = document.querySelector('#reserve-modal input[type="text"]').value;
     const phone = document.querySelector('#reserve-modal input[type="tel"]').value;
     const startDate = document.getElementById('start-date').value;
@@ -744,6 +765,7 @@ function handleReserve(e) {
     const totalPrice = document.getElementById('total-price').textContent;
     const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
     
+    // التحقق من صحة البيانات
     if (!customerName || customerName.trim() === '') {
         showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : '❌ Veuillez entrer votre nom complet');
         return;
@@ -754,18 +776,40 @@ function handleReserve(e) {
         return;
     }
     
-    let carTypeDisplay = carType;
-    const typeMatch = carType.match(/اقتصادية|عائلية|فاخرة/);
+    // استخراج اسم السيارة والنوع
+    let carName = carFullName;
+    let carType = '';
+    
+    // البحث عن النوع في النص
+    const typeMatch = carFullName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
-        carTypeDisplay = typeMatch[0];
+        carType = typeMatch[0];
+        // إزالة النوع من اسم السيارة
+        carName = carFullName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
+        if (!carName) carName = carFullName;
+    } else {
+        // إذا لم يتم العثور على نوع، نبحث عن السيارة في قاعدة البيانات
+        const cars = getCars();
+        const foundCar = cars.find(c => carFullName.includes(c.name));
+        if (foundCar) {
+            carName = foundCar.name;
+            carType = foundCar.type;
+        } else {
+            carName = carFullName;
+            carType = 'غير محدد';
+        }
     }
     
+    // إغلاق المودال
     closeModal();
     
+    // إظهار رسالة تأكيد
     showToast(currentLang === 'ar' ? '✅ جاري توجيهك إلى واتساب لتأكيد الحجز...' : '✅ Redirection vers WhatsApp pour confirmer la réservation...');
     
+    // إرسال رسالة واتساب مع البيانات الصحيحة
     sendWhatsAppBooking(
-        carTypeDisplay,
+        carName,
+        carType,
         customerName,
         phone,
         startDate,
@@ -774,6 +818,7 @@ function handleReserve(e) {
         location
     );
     
+    // إعادة تعيين النموذج
     e.target.reset();
 }
 
