@@ -559,7 +559,7 @@ function updateBookingPrice() {
 }
 
 // ============================================================
-// 📝 زر "حجز الآن" (معدل)
+// 📝 زر "حجز الآن"
 // ============================================================
 function bookNow() {
     const pickupDate = document.getElementById('pickup-date')?.value;
@@ -599,7 +599,7 @@ function bookNow() {
 }
 
 // ============================================================
-// 💬 إرسال رسالة واتساب (معدلة)
+// 💬 إرسال رسالة واتساب
 // ============================================================
 function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, endDate, totalPrice, location) {
     const whatsappNumber = '0601749553';
@@ -623,15 +623,15 @@ function sendWhatsAppBooking(carName, carType, customerName, phone, startDate, e
     else if (carType === 'فاخرة') typeDisplay = 'فاخرة';
     else typeDisplay = carType;
     
-    // تحديد اسم السيارة (بدون النوع)
+    // تحديد اسم السيارة
     let carDisplay = carName;
-    // إزالة النوع من اسم السيارة إذا كان موجوداً
     const typeMatch = carName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carDisplay = carName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
         if (!carDisplay) carDisplay = carName;
     }
     
+    // ✅ بناء الرسالة مع الاسم الصحيح
     const message = `🚗 *طلب حجز سيارة جديد* 🚗
     
 📋 *تفاصيل الحجز:*
@@ -660,7 +660,6 @@ let currentCarId = null;
 
 function openReserve(carName, carId) {
     currentCarId = carId;
-    // نضع اسم السيارة فقط (بدون النوع)
     document.getElementById('car-type').value = carName;
     document.getElementById('reserve-modal').classList.add('active');
 
@@ -751,21 +750,28 @@ function handleSubmit(e) {
 }
 
 // ============================================================
-// 🔄 دالة handleReserve (معدلة)
+// 🔄 دالة handleReserve (المعدلة - تظهر الاسم بشكل صحيح)
 // ============================================================
 function handleReserve(e) {
     e.preventDefault();
     
     // جلب البيانات من النموذج
-    const carFullName = document.getElementById('car-type').value;
-    const customerName = document.querySelector('#reserve-modal input[type="text"]').value;
-    const phone = document.querySelector('#reserve-modal input[type="tel"]').value;
-    const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
-    const totalPrice = document.getElementById('total-price').textContent;
+    const carFullName = document.getElementById('car-type')?.value || '';
+    
+    // ✅ جلب الاسم الكامل من الحقل الأول في المودال
+    const nameInputs = document.querySelectorAll('#reserve-modal input[type="text"]');
+    const customerName = nameInputs.length > 0 ? nameInputs[0].value : '';
+    
+    // ✅ جلب رقم الهاتف
+    const phoneInputs = document.querySelectorAll('#reserve-modal input[type="tel"]');
+    const phone = phoneInputs.length > 0 ? phoneInputs[0].value : '';
+    
+    const startDate = document.getElementById('start-date')?.value || '';
+    const endDate = document.getElementById('end-date')?.value || '';
+    const totalPrice = document.getElementById('total-price')?.textContent || '0 DH';
     const location = document.getElementById('pickup-location')?.value || 'لم يتم التحديد';
     
-    // التحقق من صحة البيانات
+    // ✅ التحقق من صحة البيانات
     if (!customerName || customerName.trim() === '') {
         showToast(currentLang === 'ar' ? '❌ يرجى إدخال الاسم الكامل' : '❌ Veuillez entrer votre nom complet');
         return;
@@ -784,7 +790,6 @@ function handleReserve(e) {
     const typeMatch = carFullName.match(/اقتصادية|عائلية|فاخرة/);
     if (typeMatch) {
         carType = typeMatch[0];
-        // إزالة النوع من اسم السيارة
         carName = carFullName.replace(typeMatch[0], '').replace(/[()\-]/g, '').trim();
         if (!carName) carName = carFullName;
     } else {
@@ -810,7 +815,7 @@ function handleReserve(e) {
     sendWhatsAppBooking(
         carName,
         carType,
-        customerName,
+        customerName,   // ✅ الآن الاسم صحيح
         phone,
         startDate,
         endDate,
