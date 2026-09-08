@@ -139,19 +139,3 @@ document.addEventListener('DOMContentLoaded', function() {
 // تحديث الدالة القديمة updateBookingPrice لتكون عامة
 window.updateBookingPrice = updateBookingPrice;
 window.bookNow = bookNow;
-
-// في كائن ar:
-'booking.agency': '🏢 الوكالة',
-'booking.train': '🚉 محطة القطار',
-'booking.airport': '✈️ محطة المطار',
-'booking.carType': 'نوع السيارة',
-'booking.priceLabel': '💰 ثمن الكراء:',
-'booking.bookNow': '📝 حجز الآن',
-
-// في كائن fr:
-'booking.agency': '🏢 Agence',
-'booking.train': '🚉 Gare',
-'booking.airport': '✈️ Aéroport',
-'booking.carType': 'Type de voiture',
-'booking.priceLabel': '💰 Prix de location:',
-'booking.bookNow': '📝 Réserver maintenant',
