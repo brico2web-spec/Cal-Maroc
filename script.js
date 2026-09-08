@@ -1,11 +1,11 @@
 // ============================================================
-// 🔴🔴🔴 معلومات Supabase 🔴🔴🔴
+// 🔴🔴🔴 معلومات Supabase الجديدة 🔴🔴🔴
 // ============================================================
-const SUPABASE_URL = 'https://ykjtxziksebpypruvulp.supabase.co/rest/v1/';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlranR4emlrc2VicHlwcnV2dWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTQ2NzAsImV4cCI6MjEwNDM5MDY3MH0.Z8Z8CUusEkhrlHGHHsrlQGs8z0GRqzOPQaTjIPXVEME';
+const SUPABASE_URL = 'https://ykuzhzhbxdfujbpaxqlu.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrdXpoemhieGRmdWpicGF4cWx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4MTg1MTcsImV4cCI6MjEwNDM5NDUxN30.OUS_ZoC9_Lhk9nme23D7dSwK0pK1rfVivJXL6EF3xlc';
 
 // ============================================================
-// LANGUAGE SUPPORT
+// LANGUAGE SUPPORT (مختصر للطول)
 // ============================================================
 const translations = {
     ar: {
@@ -165,7 +165,7 @@ function switchLanguage(lang) {
 }
 
 // ============================================================
-// 🌓 تبديل الثيم (نهاري / ليلي)
+// 🌓 تبديل الثيم
 // ============================================================
 function toggleTheme() {
     const html = document.documentElement;

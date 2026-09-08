@@ -24,7 +24,10 @@
             <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
         </div>
         <div class="nav-actions">
-            <!-- Language Switcher -->
+            <!-- زر تبديل الثيم -->
+            <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="تبديل الثيم">
+                <span id="themeIcon">🌙</span>
+            </button>
             <div class="lang-switcher">
                 <button onclick="switchLanguage('ar')" class="lang-btn active" id="lang-ar">AR</button>
                 <button onclick="switchLanguage('fr')" class="lang-btn" id="lang-fr">FR</button>
@@ -37,7 +40,7 @@
         </div>
     </nav>
 
-    <!-- Hero (تم إزالة اللوغو) -->
+    <!-- Hero -->
     <section id="accueil" class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -171,7 +174,7 @@
                 </div>
                 <div id="price-display" style="text-align:center;padding:0.5rem;background:rgba(225,29,72,0.1);border-radius:0.75rem;border:1px solid rgba(225,29,72,0.2);">
                     <span data-i18n="modal.priceLabel">السعر الإجمالي:</span>
-                    <strong id="total-price" style="color:var(--gold);font-size:1.25rem;">0 DH</strong>
+                    <strong id="total-price" style="color:var(--secondary);font-size:1.25rem;">0 DH</strong>
                 </div>
                 <button type="submit" class="btn-primary"><span data-i18n="modal.confirm">تأكيد الحجز</span></button>
             </form>
