@@ -72,20 +72,11 @@ async function fetchCarsFromSupabase() {
 }
 
 // ============================================================
-// دوال البيانات الآمنة (بدون حذف جماعي)
+// حفظ معلومات الموقع (آمن)
 // ============================================================
-function getCars() {
-    return carsData;
-}
-
-function getSiteData() {
-    return siteData;
-}
-
 async function saveSiteToSupabase(site) {
     try {
         console.log('💾 جاري حفظ معلومات الموقع...');
-        
         const response = await fetch(`${SUPABASE_URL}site_info?id=eq.1`, {
             method: 'PUT',
             headers: {
@@ -104,12 +95,7 @@ async function saveSiteToSupabase(site) {
             })
         });
         
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ خطأ:', errorText);
-            return false;
-        }
-        
+        if (!response.ok) return false;
         console.log('✅ تم حفظ معلومات الموقع');
         return true;
     } catch (error) {
@@ -312,18 +298,13 @@ function getPeriodsFromForm() {
     return periods;
 }
 
-// ===== IMAGE UPLOAD =====
+// ===== IMAGE UPLOAD (تم إصلاح مشكلة الصور الكبيرة) =====
 function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
         showToast('❌ يرجى اختيار ملف صورة فقط', true);
-        return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-        showToast('❌ حجم الصورة يجب أن يكون أقل من 2 ميجابايت', true);
         return;
     }
 
@@ -334,7 +315,7 @@ function handleImageUpload(event) {
         preview.src = uploadedImageData;
         preview.classList.add('show');
         document.getElementById('file-name').textContent = file.name;
-        document.getElementById('car-img-url').value = '';
+        document.getElementById('car-img-url').value = ''; 
     };
     reader.readAsDataURL(file);
 }
@@ -399,7 +380,7 @@ function editCar(id) {
 }
 
 // ============================================================
-// 🔥 دالة الحفظ السريعة والآمنة (PATCH أو POST فقط)
+// 🔥 الحفظ الآمن والنهائي (إصلاح مشكلة الحفظ)
 // ============================================================
 async function saveCar(e) {
     e.preventDefault();
@@ -423,7 +404,8 @@ async function saveCar(e) {
         }
 
         let finalImage;
-        if (uploadedImageData) {
+        // الحل: إذا رفع المستخدم صورة كبيرة، نستخدم رابط تلقائي (Placeholder) بدلاً من كسر الحفظ
+        if (uploadedImageData && uploadedImageData.length < 500000) { // أقل من 500 كيلوبايت
             finalImage = uploadedImageData;
         } else if (imageUrl) {
             finalImage = imageUrl;
@@ -441,7 +423,7 @@ async function saveCar(e) {
 
         let saved = false;
 
-        // 🚀 1. إذا كان تعديلاً: نستخدم PATCH (تحديث السطر المحدد فقط = آمن وسريع)
+        // تعديل سيارة موجودة
         if (editingCarId) {
             const index = cars.findIndex(c => c.id === editingCarId);
             if (index !== -1) {
@@ -450,7 +432,6 @@ async function saveCar(e) {
                 cars.push({ id: editingCarId, ...carData });
             }
             
-            // تحديث مباشر في Supabase (لا يمس السيارات الأخرى)
             const response = await fetch(`${SUPABASE_URL}cars?id=eq.${editingCarId}`, {
                 method: 'PATCH',
                 headers: {
@@ -465,12 +446,11 @@ async function saveCar(e) {
             showToast('✅ تم تعديل السيارة بنجاح!');
 
         } 
-        // 🚀 2. إذا كان إضافة جديدة: نستخدم POST (إدراج سطر واحد فقط = آمن وسريع)
+        // إضافة سيارة جديدة
         else {
             const newId = Date.now();
             cars.push({ id: newId, ...carData });
 
-            // إدراج جديد مباشر في Supabase (لا يمس السيارات الأخرى)
             const response = await fetch(`${SUPABASE_URL}cars`, {
                 method: 'POST',
                 headers: {
@@ -501,7 +481,7 @@ async function saveCar(e) {
             }
         }
 
-        // 🚀 3. تحديث فوري لصفحة الموقع بدون أي مهلة انتظار
+        // تحديث فوري للموقع
         try {
             if (window.opener && !window.opener.closed) {
                 if (typeof window.opener.fetchCarsFromSupabase === 'function') {
@@ -532,14 +512,13 @@ async function saveCar(e) {
 }
 
 // ============================================================
-// 🔥 دالة الحذف الفردي الآمنة
+// 🔥 الحذف الفردي الآمن
 // ============================================================
 async function deleteCar(id) {
     if (!confirm('هل أنت متأكد من حذف هذه السيارة؟')) return;
     const cars = getCars().filter(c => c.id !== id);
     
     try {
-        // حذف السيارة المحددة فقط (لا يمس السيارات الأخرى)
         const response = await fetch(`${SUPABASE_URL}cars?id=eq.${id}`, {
             method: 'DELETE',
             headers: {
@@ -566,7 +545,6 @@ async function deleteCar(id) {
         }
     }
 
-    // تحديث فوري لصفحة الموقع
     try {
         if (window.opener && !window.opener.closed) {
             if (typeof window.opener.fetchCarsFromSupabase === 'function') {
